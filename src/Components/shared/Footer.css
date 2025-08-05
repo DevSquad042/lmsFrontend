@@ -1,0 +1,42 @@
+
+
+.Footer-container{
+    background-color: #1E293B;
+    color: white;
+    height: 50vh;
+    width: 100%;
+    display: flex;
+    justify-content:space-around ;
+    align-items: center;
+
+
+}
+
+.Sub-container{
+
+    font-weight: 500;
+    font-size: 14px;
+    height: 220px;
+     line-height:200% 
+
+
+}
+
+.Sub-container > h3{
+    font-size: 16px; 
+  
+}
+
+.Sub-container2{
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between ;
+}
+
+.Icons{
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+}
