@@ -1,0 +1,41 @@
+import React from 'react';
+import './Experts.css';
+
+type ExpertsProps = {
+  image: string;
+  name: string;
+  title: string;
+  rating: number;
+  students: number;
+};
+
+const Experts: React.FC<ExpertsProps> = ({
+  image,
+  name,
+  title,
+  rating,
+  students,
+}) => {
+  return (
+    <div className="expert-card">
+      <img src={image} alt={name} className="expert-image" />
+      <div className="expert-content">
+        <h3 className="expert-name">{name}</h3>
+        <p className="expert-title">{title}</p>
+        <hr className="expert-divider" />
+        <div className="expert-meta">
+          <div className="expert-rating">
+            <span className="star">⭐</span>
+            <span>{rating}</span>
+          </div>
+          <div className="expert-students">
+            <span>{students.toLocaleString()} Students</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Experts;
+
