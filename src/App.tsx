@@ -7,7 +7,7 @@ function App() {
   return (
     <div>
      
-     <Header3/>
+     <Header1/>
     </div>
   );
 }
