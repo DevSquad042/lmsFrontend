@@ -12,6 +12,13 @@
 .expert-card:hover {
   transform: translateY(-5px);
 }
+.expert-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  padding: 2rem;
+}
+
 
 .expert-image {
   width: 100%;
@@ -69,5 +76,10 @@
 }
 
 
+@media (max-width: 768px) {
+  .expert-card {
+    max-width: 100%;
+  }
+}
 
 

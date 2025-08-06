@@ -1,0 +1,55 @@
+.stat-block {
+  font-family: 'inter';
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  margin: 40px 0;
+  padding: 20px 40px;
+  box-sizing: border-box;
+}
+
+.stat-item {
+  flex: 1;
+  text-align: center;
+  padding: 20px;
+}
+
+.with-border {
+  border-right: 1px solid #e5e7eb;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.stat-title {
+  font-size: 15px;
+  color: #4b5563;
+}
+
+/* ✅ Responsive: Stack on smaller screens */
+@media (max-width: 768px) {
+  .stat-block {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .with-border {
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .stat-item {
+    padding: 16px 12px;
+  }
+}
+

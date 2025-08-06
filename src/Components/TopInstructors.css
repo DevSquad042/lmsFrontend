@@ -1,0 +1,38 @@
+.top-instructors {
+  padding: 2rem;
+  background-color: #f9f9f9;
+  font-family: 'inter';
+}
+
+.top-instructors-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.top-instructors-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+  text-align: left;
+  color: #1e293b;
+}
+
+.top-instructors-see-all {
+  font-size: 1rem;
+  color: #3b82f6;
+  text-decoration: none;
+  cursor: pointer;
+}
+.top-instructors-see-all:hover {
+  text-decoration: underline;
+}
+
+.top-instructors-grid {
+  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  padding: 2rem;
+}

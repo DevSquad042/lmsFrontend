@@ -5,7 +5,8 @@
   padding: 14px 24px;
   background-color: #fff;
   border-bottom: 1px solid #ddd;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'inter';
+  margin: 0px 30px;
 }
 
 .header-left {

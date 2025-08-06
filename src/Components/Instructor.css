@@ -1,0 +1,52 @@
+.section-container {
+  width: 100%;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+}
+
+.instuctor {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 40px 200px;
+  gap: 20px;
+}
+
+.instuctor > img {
+  width: 350px;
+  height: 330px;
+  object-fit: cover;
+}
+
+.text-container {
+  font-size: 16px;
+}
+
+.text-container h3 {
+  font-size: 20px;
+  padding-bottom: 10px;
+}
+
+/* ✅ Responsive for screens smaller than 768px */
+@media (max-width: 768px) {
+  .instuctor {
+    flex-direction: column;
+    margin: 20px;
+    text-align: center;
+  }
+
+  .instuctor > img {
+    width: 60%;
+    height: auto;
+  }
+
+  .text-container {
+    font-size: 12px;
+    padding-top: 10px;
+  }
+
+  .text-container h3 {
+    font-size: 18px;
+  }
+}
+
