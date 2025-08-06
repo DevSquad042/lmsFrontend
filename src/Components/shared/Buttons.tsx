@@ -3,11 +3,17 @@ import './Button.css';
 
 type ButtonProps = {
   label: string;
-  onClick: () => void;
-  backgroundColor?: string; // optional background color
+  onClick?: () => void;
+  backgroundColor?: string;
+  showArrow?: boolean;
 };
 
-const Button: React.FC<ButtonProps> = ({ label, onClick, backgroundColor }) => {
+const Button: React.FC<ButtonProps> = ({
+  label,
+  onClick,
+  backgroundColor,
+  showArrow = false,
+}) => {
   return (
     <button
       className="custom-btn"
@@ -15,9 +21,14 @@ const Button: React.FC<ButtonProps> = ({ label, onClick, backgroundColor }) => {
       style={{ backgroundColor }}
     >
       {label}
+      {showArrow && <span className="arrow">➔</span>}
     </button>
   );
 };
 
 export default Button;
+
+
+
+
 

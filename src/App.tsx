@@ -1,16 +1,20 @@
 
-import Header3 from './Components/shared/Header3'
+
+import Home from "./Pages/Home"
+
+
+
+
 
 
 
 function App() {
   return (
     <div>
-     
-     <Header1/>
+      <Home/>
     </div>
-  );
-}
+  )
+};
 
 export default App;
 

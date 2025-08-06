@@ -1,10 +1,17 @@
 .course-card {
-  width: 300px;
+  flex: 1 1 300px; /* Allow flexibility */
+  max-width: 340px; /* Prevent it from getting too wide */
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 0 15px rgba(0, 0, 255, 0.1);
-  padding: 16px;
+  padding: 20px;
   font-family: Arial, sans-serif;
+  transition: transform 0.3s ease;
+}
+
+
+.course-card:hover {
+  transform: translateY(-5px);
 }
 
 .course-image {
@@ -51,6 +58,8 @@
 
 @media (max-width: 768px) {
   .course-card {
+    max-width: 100%;
+    flex: 1 1 100%;
     max-width: 100%;
   }
 }
