@@ -1,0 +1,63 @@
+.Footer-container {
+  background-color: #1E293B;
+  color: white;
+  height: 50vh;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 30px;
+}
+
+.Sub-container {
+  font-weight: 500;
+  font-size: 14px;
+  height: 190px;
+  line-height: 200%;
+}
+
+.Sub-container > h3 {
+  font-size: 16px;
+}
+
+.Sub-container2 {
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.Icons {
+  width: 200px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+}
+
+/* ✅ Responsive for screens smaller than 768px */
+@media (max-width: 768px) {
+  .Footer-container {
+    flex-direction: column;
+    height: auto;
+    text-align: center;
+    align-items: center;
+
+  }
+
+  .Sub-container, .Sub-container2 {
+    width: 90%;
+    font-size: 13px;
+  }
+
+  .Sub-container > h3 {
+    font-size: 15px;
+  }
+
+  .Icons {
+    width: 100%;
+    font-size: 18px;
+    justify-content: center;
+    gap: 20px;
+  }
+}
