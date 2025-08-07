@@ -1,6 +1,5 @@
+import ProfilePage6 from "./Pages/ProfilePage6";
 
-
-import Home from "./Pages/Home"
 
 
 
@@ -11,7 +10,9 @@ import Home from "./Pages/Home"
 function App() {
   return (
     <div>
-      <Home/>
+    < ProfilePage6/>
+
+     
     </div>
   )
 };
