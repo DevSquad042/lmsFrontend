@@ -1,6 +1,6 @@
-import React, { useState, type FormEvent } from "react";
+import React, { useState } from "react";
 import '../assets/css/LoginForm.css'
-import LoginImage from "../../assets/Images/my-login-image.jpg";
+import LoginImage from '../assets/Images/login-image.png';
 
 import { FaFacebookF, FaMicrosoft } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";

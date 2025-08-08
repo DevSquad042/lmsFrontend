@@ -1,4 +1,4 @@
-import ProfilePage6 from "./Pages/ProfilePage6";
+import LoginForm from "./Pages/LoginForm";
 
 
 
@@ -10,7 +10,7 @@ import ProfilePage6 from "./Pages/ProfilePage6";
 function App() {
   return (
     <div>
-    < ProfilePage6/>
+    <LoginForm/>
 
      
     </div>
