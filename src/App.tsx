@@ -1,4 +1,6 @@
-import LoginForm from "./Pages/LoginForm";
+// import LoginForm from './Pages/LoginForm';
+import Register  from './Pages/register'
+
 
 
 
@@ -10,7 +12,7 @@ import LoginForm from "./Pages/LoginForm";
 function App() {
   return (
     <div>
-    <LoginForm/>
+    <Register/>
 
      
     </div>
