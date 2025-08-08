@@ -1,7 +1,7 @@
 import React from 'react';
 import './Experts.css';
 
-type ExpertsProps = {
+export type ExpertsProps = {
   image: string;
   name: string;
   title: string;

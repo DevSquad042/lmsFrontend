@@ -1,0 +1,35 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 3rem;
+}
+
+.arrow {
+  padding: 0.5rem;
+  border: 1px solid #E5E7EB;
+  border-radius: 0.5rem;
+  background: white;
+}
+
+.arrow:hover {
+  background: #F9FAFB;
+}
+
+.page {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid #E5E7EB;
+  border-radius: 0.5rem;
+  background: white;
+}
+
+.page:hover {
+  background: #F9FAFB;
+}
+
+.active {
+  background: #2563EB;
+  color: white;
+  border-color: #2563EB;
+}

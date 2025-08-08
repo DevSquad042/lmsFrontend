@@ -1,0 +1,229 @@
+
+.sidebar {
+  width: 220px;
+  padding: 1rem;
+  border-right: 1px solid #eee;
+  font-size: 0.85rem;
+}
+
+.filterHeader {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.filterButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background-color: white;
+  color: #374151;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filterButton:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.filterIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.section {
+  margin-bottom: 1rem;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.3rem 0;
+  font-size: 0.9rem;
+  user-select: none;
+}
+
+.sectionHeader h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.sectionContent {
+  margin-top: 0.3rem;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.3rem 0 0;
+}
+
+li {
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filterOption {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+  cursor: pointer;
+}
+
+.checkbox {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 0.25rem;
+  border: 1px solid #d1d5db;
+  cursor: pointer;
+  accent-color: #2563eb;
+}
+
+.filterText {
+  font-size: 0.85rem;
+  color: #374151;
+  user-select: none;
+}
+
+.starRating {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+}
+
+.starFilled {
+  color: #fbbf24;
+  font-size: 1rem;
+}
+
+.starEmpty {
+  color: #d1d5db;
+  font-size: 1rem;
+}
+
+.seeMoreButton {
+  margin-top: 0.5rem;
+  padding: 0.25rem 0;
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.seeMoreButton:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+.priceRange {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.rangeSlider {
+  width: 100%;
+  height: 0.375rem;
+  border-radius: 0.375rem;
+  background: #e5e7eb;
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.rangeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: #2563eb;
+  cursor: pointer;
+}
+
+.rangeSlider::-moz-range-thumb {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: #2563eb;
+  cursor: pointer;
+  border: none;
+}
+
+.priceLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .sidebar {
+    max-width: none;
+    width: 100%;
+  }
+
+  .filterHeader {
+    justify-content: center;
+  }
+
+  .section {
+    margin-bottom: 0.5rem;
+  }
+
+  .sectionHeader {
+    padding: 0.75rem;
+  }
+
+  .sectionContent {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .filterButton {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .sectionHeader h4 {
+    font-size: 1rem;
+  }
+
+  .filterOption {
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+  }
+
+  .checkbox {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .filterText {
+    font-size: 1rem;
+  }
+
+  .starFilled,
+  .starEmpty {
+    font-size: 1.125rem;
+  }
+}

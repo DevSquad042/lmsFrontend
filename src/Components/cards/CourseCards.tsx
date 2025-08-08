@@ -1,7 +1,8 @@
 
 import './CourseCard.css';
 
-type CourseCardProps = {
+export type CourseCardProps = {
+  id: string;
   image: string;
   title: string;
   author: string;
@@ -28,6 +29,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
 
   return (
     <div className="course-card">
+      
       <img src={image} alt={title} className="course-image" />
       <h3 className="course-title">{title}</h3>
       <p className="course-author">By {author}</p>

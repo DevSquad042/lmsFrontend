@@ -1,5 +1,5 @@
 // import LoginForm from './Pages/LoginForm';
-import Register  from './Pages/register'
+import Category from './Pages/Category'
 
 
 
@@ -12,7 +12,7 @@ import Register  from './Pages/register'
 function App() {
   return (
     <div>
-    <Register/>
+    <Category/>
 
      
     </div>
