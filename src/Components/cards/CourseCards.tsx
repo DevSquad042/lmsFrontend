@@ -1,7 +1,8 @@
 
 import './CourseCard.css';
 
-type CourseCardProps = {
+export type CourseCardProps = {
+  id: string;
   image: string;
   title: string;
   author: string;
