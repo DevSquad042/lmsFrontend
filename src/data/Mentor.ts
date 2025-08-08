@@ -1,7 +1,7 @@
-import type { ExpertsProps } from '../Components/cards/Experts';
+import type { Mentor } from '../Types/Mentor';
 import mentorImg from '../assets/mentor.jpg';
 
-export const mentors: ExpertsProps[] = Array(6).fill({
+export const mentors: Mentor[] = Array(6).fill({
   id: undefined, // Optional ID for unique identification
   name: 'Ronald Richards',
   role: 'UI/UX Designer',
