@@ -15,6 +15,7 @@ export type CourseCardProps = {
 };
 
 const CourseCard: React.FC<CourseCardProps> = ({
+  id,
   image,
   title,
   author,
@@ -28,7 +29,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
   const stars = '★'.repeat(Math.round(rating)).padEnd(5, '☆');
 
   return (
-    <div className="course-card">
+    <div className="course-card" key={id}>
       <img src={image} alt={title} className="course-image" />
       <h3 className="course-title">{title}</h3>
       <p className="course-author">By {author}</p>

@@ -6,39 +6,65 @@ interface Props {
   course: Course;
 }
 
-const CourseCards: React.FC<Props> = ({ course }) => (
-  <div className={styles.card}>
-    {/* Image container wrapper */}
-    <div className={styles.imageContainer}>
-      <img src={course.image} alt={course.title} />
-    </div>
-    
-    {/* Content wrapper */}
-    <div className={styles.content}>
-      <h3>{course.title}</h3>
-      <p>By {course.author}</p>
+/**
+ * ISSUES FIXED:
+ * 1. Component name was inconsistent (CourseCards vs CourseCard)
+ * 2. Missing accessibility features
+ * 3. No error handling for missing data
+ * EDUCATION: Always use consistent naming and include accessibility features
+ */
+const CourseCard: React.FC<Props> = ({ course }) => {
+  // Handle missing or invalid rating gracefully
+  const safeRating = Math.max(0, Math.min(5, course.rating || 0));
+  
+  return (
+    <article className={styles.card} role="article">
+      {/* Image container with proper alt text and loading optimization */}
+      <div className={styles.imageContainer}>
+        <img 
+          src={course.image} 
+          alt={`Course thumbnail for ${course.title}`}
+          loading="lazy"
+          onError={(e) => {
+            // Fallback image handling
+            e.currentTarget.src = '/placeholder-course.jpg';
+          }}
+        />
+      </div>
       
-      <div className={styles.rating}>
-        {/* Stars wrapper */}
-        <div className={styles.stars}>
-          {[...Array(5)].map((_, i) => (
-            <FaStar key={i} color={i < course.rating ? '#FFC107' : '#ccc'} />
-          ))}
+      {/* Content wrapper with semantic structure */}
+      <div className={styles.content}>
+        <h3 className={styles.title}>{course.title}</h3>
+        <p className={styles.author}>By {course.author}</p>
+        
+        {/* Rating section with accessibility */}
+        <div className={styles.rating} role="img" aria-label={`Rating: ${safeRating} out of 5 stars`}>
+          <div className={styles.stars}>
+            {[...Array(5)].map((_, i) => (
+              <FaStar 
+                key={i} 
+                color={i < safeRating ? '#FFC107' : '#ccc'}
+                aria-hidden="true"
+              />
+            ))}
+          </div>
+          <span className={styles.reviewCount}>
+            ({course.reviews?.toLocaleString() || 0} Reviews)
+          </span>
         </div>
-        {/* Review count class */}
-        <span className={styles.reviewCount}>({course.reviews} Ratings)</span>
+        
+        {/* Course details */}
+        <p className={styles.details}>{course.details}</p>
+        
+        {/* Price container with currency formatting */}
+        <div className={styles.priceContainer}>
+          <strong className={styles.price}>
+            ${course.price?.toFixed(2) || '0.00'}
+          </strong>
+        </div>
       </div>
-      
-      {/*  Details class */}
-      <p className={styles.details}>{course.details}</p>
-      
-      {/*  Price container wrapper */}
-      <div className={styles.priceContainer}>
-        <strong>${course.price}</strong>
-      </div>
-    </div>
-  </div>
-);
+    </article>
+  );
+};
 
-export default CourseCards;
-
+export default CourseCard;
