@@ -5,7 +5,7 @@ import '../assets/Images/Frame 427319048.png'
 import { FaFacebook } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa6";
 import { FaMicrosoft } from "react-icons/fa";
-import Button from '../Components/shared/Buttons'; // Assuming you have a Button component
+import Button from '../Components/shared/Buttons'; 
 
 
 interface FormValues {
