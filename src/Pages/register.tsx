@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+
 import NavBar from '../Components/shared/Header1'; 
-import '../Register/register.css'; 
-import '../assets/Images/Frame 427319048.png'
-import { FaFacebook } from "react-icons/fa";
+import '../assets/Images/login-image.png' 
+import '../assets/css/register.css'
+import { FaFacebook } from 'react-icons/fa'
 import { FaGoogle } from "react-icons/fa6";
 import { FaMicrosoft } from "react-icons/fa";
 import Button from '../Components/shared/Buttons'; 
+// import Button from '../Components/shared/Buttons'; // Assuming you have a Button component
+import { useState } from 'react';
 
 
 interface FormValues {
@@ -17,7 +19,7 @@ interface FormValues {
   confirmPassword: string;
 }
 
-const register: React.FC = () => {
+const Register: React.FC = () => {
     
   const [values, setValues] = useState<FormValues>({
     fullName: '',
@@ -81,7 +83,7 @@ const register: React.FC = () => {
 
       <div className="imageSection">
         <img
-          src="../src/assets/Images/Frame 427319048.png"
+          src="../assets/Images/login-image.png"
           alt="Registration Background"
           className="imagePlaceholder"
         />
@@ -187,4 +189,4 @@ const register: React.FC = () => {
   );
 };
 
-export default register
+export default Register

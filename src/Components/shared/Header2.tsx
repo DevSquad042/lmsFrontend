@@ -4,7 +4,7 @@ import { FaShoppingCart, FaSearch } from 'react-icons/fa';
 import { IoIosNotificationsOutline } from "react-icons/io"
 import Logo1 from '../../assets/logo/Logo.png'
 
-const Header1: React.FC = () => {
+const Header2: React.FC = () => {
   return (
     <header className="header">
       <div className="header-left">
@@ -33,4 +33,4 @@ const Header1: React.FC = () => {
   );
 };
 
-export default Header1;
+export default Header2;
