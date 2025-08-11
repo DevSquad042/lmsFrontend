@@ -1,0 +1,146 @@
+/* ==========================================
+   COURSE CARD COMPONENT STYLES
+   ========================================== */
+
+.course-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+    border-radius: 10px;
+    border-color: black;
+border: 1px;
+    background-color: var(--gray-700);
+    transition: background-color 0.2s ease;
+width: 880px;
+    justify-content: space-between;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.course-image-container {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.course-image {
+  width: 6rem;
+  height: 4rem;
+  border-radius: 0.5rem;
+  object-fit: cover;
+}
+
+.heart-badge {
+  position: absolute;
+  top: -0.25rem;
+  left: -0.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: var(--gray-800);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heart-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+  color: var(--white);
+}
+
+.course-info {
+  flex: 1;
+}
+
+.course-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: 0.25rem;
+}
+
+.course-instructor {
+  font-size: 0.875rem;
+  color: var(--gray-600);
+  margin-bottom: 0.5rem;
+}
+
+.course-details {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.rating-score {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--yellow-500);
+}
+
+.stars-container {
+  display: flex;
+  gap: 0.125rem;
+}
+
+.star {
+  width: 1rem;
+  height: 1rem;
+}
+
+.star-filled {
+  color: var(--yellow-500);
+  fill: yellow;
+}
+
+.star-empty {
+  color: var(--gray-300);
+}
+
+.rating-count,
+.course-meta {
+  font-size: 0.875rem;
+  color: var(--gray-500);
+}
+
+.course-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.action-btn{
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.action-btn.save-btn {
+  color: var(blue);
+}
+
+.action-btn.save-btn:hover {
+  color: var(--primary-blue-dark);
+}
+
+.action-btn.remove-btn {
+  color: var(--red-600);
+}
+
+.action-btn.remove-btn:hover {
+  color: var(--red-500);
+}
+
+.course-price {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.price-amount {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--gray-900);
+}

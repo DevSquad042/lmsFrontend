@@ -1,5 +1,5 @@
 import React from 'react';
-import MentorCard from './cards/card1/MentorCard'; 
+import MentorCard from '../Components/cards/MentorCard'; 
 import { mentors } from '../data/Mentor'; 
 import './TopInstructors.css';
 
