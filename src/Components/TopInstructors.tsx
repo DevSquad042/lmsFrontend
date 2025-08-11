@@ -33,7 +33,7 @@ const TopInstructors: React.FC = () => {
       
       <div className="top-instructors-grid">
         {topInstructors.map((mentor) => (
-          <MentorCard key={mentor.id} mentor={mentor} showRating={false} />
+          <MentorCard key={mentor.id} mentor={mentor} showRating={true} />
         ))}
       </div>
     </section>

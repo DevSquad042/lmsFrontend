@@ -1,5 +1,12 @@
 
-import TeachersPage from "./Pages/TeachersPage";
+import Hero from "./Components/Hero";
+import Header1 from "./Components/shared/Header1";
+import StatBlock from "./Components/StatBlock";
+import TopCategories from "./Components/TopCategories";
+import TopCourses from "./Components/TopCourses";
+import TopInstructors from "./Components/TopInstructors";
+
+
 
 
 
@@ -10,7 +17,12 @@ import TeachersPage from "./Pages/TeachersPage";
 const App = () => {
   return (
     <div>
-      <TeachersPage/>
+      <Header1/>
+      <Hero/>
+      <StatBlock></StatBlock>
+      <TopCategories/>
+      <TopCourses/>
+      <TopInstructors></TopInstructors>
      
     </div>
   )
