@@ -1,0 +1,249 @@
+/* ProfileSettings.css */
+
+/* Main container */
+.profile-settings-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background-color: #f9fafb;
+  min-height: 100vh;
+  font-family: "inter";
+}
+
+/* Sidebar styling */
+.profile-settings-container .profile-sidebar {
+  flex: 0 0 250px;
+}
+
+/* Main content area */
+.profile-settings-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: "inter";
+}
+
+/* Card styles (Profile Info, Image, Likes) */
+.profile-info-card,
+.profile-image-card,
+.profile-likes-card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px px 1px rgba(0, 0, 0, 0.05);
+}
+
+/* Section titles */
+.profile-info-card h2,
+.profile-image-card h2,
+.profile-likes-card h2 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  color: #111827;
+  font-family: "inter";
+}
+
+/* Form group layout */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  font-family: "inter";
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #374151;
+  font-family: "inter";
+}
+
+.form-group input,
+.form-group select {
+    font-family: "inter";
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #2563eb;
+}
+
+
+/* Image preview box */
+.profile-image-card {
+  background: #fff;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
+  /* max-width: 400px; */
+}
+
+.image-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  height: 180px;
+  margin-bottom: 15px;
+  overflow: hidden;
+  max-width: 400px;
+}
+
+.image-preview img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: cover;
+}
+
+.form-group-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.half-width {
+  flex: 1;
+}
+
+.upload-btn {
+  padding: 10px 15px;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  border: 1.5px solid black;
+  border-radius: 6px;
+  cursor: pointer;
+  height: fit-content;
+}
+
+.upload-btn:hover {
+  background-color: #969696;
+}
+
+.save-image-btn {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #000000;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.save-image-btn:hover {
+  background-color: #3d3e3d;
+}
+
+#imageInput{
+    font-size: 14px;
+    color: #111827 !important;
+}
+
+.image-preview{
+    padding: 40px;
+    border: 1.5px solid rgb(104, 104, 104);
+}
+
+.image-preview img{
+    background-color: grey;
+    width: 100%;
+}
+
+.image-preview p {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.form-group-half-width {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group-half-width label, .form-group-half-width2 label{
+     font-size: 0.9rem;
+  margin: 5px 0px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.form-group label{
+     font-size: 0.9rem;
+ margin: 15px 0px;
+ margin-bottom: 10px;
+  font-weight: 500;
+  color: #374151;
+}
+
+
+.form-group textarea{
+    padding: 10px;
+}
+
+.form-group-half-width input, .form-group-half-width2 input{
+    padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border 0.2s ease;
+}
+
+.form-group-half-width2{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group-half-width select{
+      padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border 0.2s ease;
+}
+
+.form-group-half-width2{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group-half-width2 label{
+     font-size: 0.9rem;
+  margin: 5px 0px;
+  font-weight: 500;
+  color: #374151;
+}
+
+/* File input */
+.profile-image-card input[type="file"] {
+  font-size: 0.85rem;
+}
+
+/* Responsive layout */
+@media (max-width: 900px) {
+  .profile-settings-container {
+    flex-direction: column;
+  }
+
+  .profile-settings-container .profile-sidebar {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+}
+
+
+

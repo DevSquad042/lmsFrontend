@@ -1,6 +1,6 @@
 
 import { FaQuoteLeft } from 'react-icons/fa';
-import './Testimonial.css';
+import './CardsStyle/Testimonial.css';
 
 interface TestimonialCardProps {
   text: string;

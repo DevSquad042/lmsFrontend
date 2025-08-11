@@ -1,4 +1,5 @@
 
+import TeachersPage from "./Pages/TeachersPage";
 
 
 
@@ -6,17 +7,17 @@
 
 
 
-
-function App() {
+const App = () => {
   return (
     <div>
-
-
+      <TeachersPage/>
      
     </div>
   )
-};
+}
 
-export default App;
+export default App
+
+
 
 

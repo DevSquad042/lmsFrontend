@@ -58,6 +58,10 @@
   gap: 8px;
 }
 
+hr{
+  width: 100%;
+}
+
 /* Name Styling */
 .name {
   font-size: 1.125rem;
@@ -75,8 +79,27 @@
   margin: 0;
   font-weight: 500;
   line-height: 1.4;
+
 }
 
+/* message button */
+.buttonSendMessage{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 20px;
+  background-color: #0d67f7;
+  color: #ffffff;
+  font-family: "Inter", "San-serif";
+  border: none;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.buttonSendMessage span{
+  margin-right: 10px;
+}
 /* Stats Container */
 .stats {
   display: flex;
@@ -84,7 +107,6 @@
   align-items: center;
   gap: 8px;
   font-size: 0.875rem;
-  margin-top: 8px;
   flex-wrap: wrap;
 }
 

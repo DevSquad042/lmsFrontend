@@ -1,5 +1,5 @@
 
-import './Header3.css';
+import './SharedStyles/Header3.css';
 import Logo from '../../assets/logo/Logo.png'
 import { AiOutlineStar } from "react-icons/ai";
 

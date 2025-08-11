@@ -1,5 +1,5 @@
 
-import './TopCategories.css';
+import './ComponentStyles/TopCategories.css';
 import CategoryCard from './cards/CategoryCard'
 import { FaCode, FaStar, FaAtom, FaPaintBrush } from 'react-icons/fa';
 
