@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import '../assets/css/LoginForm.css'
+import './FormStyles/LoginForm.css'
 import LoginImage from '../assets/Images/login-image.png';
 
 import { FaFacebookF, FaMicrosoft } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import Header1 from '../Components/shared/Header1'
-import Button from "../Components/shared/Buttons"
+import Header1 from '../shared/Header1'
+import Button from "../shared/Buttons"
 import { FaArrowRight } from "react-icons/fa";
 
 const LoginForm: React.FC = () => {

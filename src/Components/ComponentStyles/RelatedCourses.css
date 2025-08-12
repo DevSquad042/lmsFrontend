@@ -1,7 +1,7 @@
 .top-courses {
-  padding: 4rem 0;
   background-color: #ffffff;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Inter';
+  width: 100%;
 }
 
 .top-courses-header {
@@ -9,14 +9,13 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2.5rem;
-  max-width: 1280px;
-  margin-left: auto;
-  margin-right: auto;
+  /* Remove fixed max-width */
+  width: 100%;
   padding: 0 2rem;
 }
 
 .top-courses-title {
-  font-size: 2rem;
+  font-size: 25px;
   font-weight: 700;
   margin: 0;
   color: #111827;
@@ -39,49 +38,14 @@
 
 /* Grid Container */
 .top-courses-grid {
-  max-width: 1280px;
-  margin: 0 auto;
+  /* Remove max-width restriction */
+  width: 100%;
   padding: 0 2rem;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
 }
 
-/* Responsive Design - Matches Home Page Layout */
-@media (max-width: 480px) {
-  .top-courses {
-    padding: 2.5rem 0;
-  }
-  
-  .top-courses-header {
-    padding: 0 1rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .top-courses-title {
-    font-size: 1.5rem;
-  }
-  
-  .top-courses-grid {
-    padding: 0 1rem;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    /* Alternative: Horizontal scroll for mobile like in design */
-    /* 
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    gap: 1rem;
-    padding: 0 1rem 0.5rem 1rem;
-    */
-  }
-  
-  /* For horizontal scroll option */
-  .top-courses-grid > * {
-    /* min-width: 280px; */
-    /* scroll-snap-align: start; */
-  }
-}
 
 @media (min-width: 481px) and (max-width: 768px) {
   .top-courses {

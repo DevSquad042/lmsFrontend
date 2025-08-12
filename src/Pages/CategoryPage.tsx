@@ -1,13 +1,13 @@
-import React from 'react';
+
 import { courses } from '../data/Course';
 import { mentors } from '../data/Mentor';
 import CourseCard from '../Components/cards/CourseCard';
 import MentorCard from '../Components/cards/MentorCard' // Fixed import name
 import Filter from '../Components/Filters/Filter';
 import Pagination from '../Components/Pagination';
-import styles from '../assets/css/global.module.css';
+import styles from '../Styles/global.module.css';
 import Header2 from '../Components/shared/Header2';
-import Footer from '../Components/shared/Footer';
+import Footer from '../Components/Layout/Footer';
 
 /**
  * ISSUES FIXED:

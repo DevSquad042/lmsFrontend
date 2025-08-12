@@ -1,6 +1,6 @@
 // components/Filter.tsx
 import { useState } from 'react';
-import styles from './Filter.module.css';
+import styles from './FolderStyles/Filter.module.css';
 import { FaChevronDown, FaChevronUp, FaFilter } from 'react-icons/fa';
 
 interface FilterProps {

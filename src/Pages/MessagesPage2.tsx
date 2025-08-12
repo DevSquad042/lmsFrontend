@@ -6,8 +6,8 @@ import {  useState, useEffect, useRef } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import Header2 from "../Components/shared/Header2";
 import ProfileSidebar from "../Components/shared/ProfileSidebar";
-import Footer from "../Components/shared/Footer";
-import "../assets/css/ProfilePage6.css";
+import Footer from "../Components/Layout/Footer";
+import "../Styles/MessagesPage2.css";
 import profile from '../assets/Images/profile.png'
 
 // Message type
@@ -17,7 +17,7 @@ interface Message {
   type: "sent" | "received";
 }
 
-const ProfilePage6: FC = () => {
+const MessagesPage2: FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     { id: 1, text: "Hi there! 👋", type: "received" },
     { id: 2, text: "Hello! How are you?", type: "sent" },
@@ -104,6 +104,6 @@ const ProfilePage6: FC = () => {
   );
 };
 
-export default ProfilePage6;
+export default MessagesPage2;
 
 

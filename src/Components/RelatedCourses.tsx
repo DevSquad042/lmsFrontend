@@ -1,6 +1,6 @@
 import React from 'react';
 import CourseCard from './cards/CourseCard'; // Fixed import path
-import './TopCourses.css';
+import './ComponentStyles/RelatedCourses.css';
 import type { Course } from '../Types/Course'; // Import the proper type
 import courseImg from '../assets/Images/course.jpg';
 

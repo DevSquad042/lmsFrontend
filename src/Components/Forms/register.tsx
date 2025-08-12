@@ -1,11 +1,11 @@
 
-import NavBar from '../Components/shared/Header1'; 
+import NavBar from '../shared/Header1'; 
 import '../assets/Images/login-image.png' 
-import '../assets/css/register.css'
+import './FormStyles/register.css'
 import { FaFacebook } from 'react-icons/fa'
 import { FaGoogle } from "react-icons/fa6";
 import { FaMicrosoft } from "react-icons/fa";
-import Button from '../Components/shared/Buttons'; // Assuming you have a Button component
+import Button from '../shared/Buttons'; // Assuming you have a Button component
 import { useState } from 'react';
 
 

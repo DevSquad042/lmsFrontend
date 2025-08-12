@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaPlay, FaFacebook, FaMicrosoft, FaGithub } from 'react-icons/fa';
-import styles from './CourseSidebar.module.css';
+import styles from './ComponentStyles/CourseSidebar.module.css';
 import { FcGoogle } from 'react-icons/fc';
 import { FaXTwitter } from 'react-icons/fa6';
 

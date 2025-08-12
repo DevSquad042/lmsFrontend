@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaStar } from 'react-icons/fa';
-import styles from './CourseHero.module.css';
+import styles from './ComponentStyles/CourseHero.module.css';
 
 interface CourseHeroProps {
   course: {

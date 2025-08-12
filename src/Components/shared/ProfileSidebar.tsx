@@ -1,5 +1,5 @@
 
-import './ProfileSidebar.css';
+import './SharedStyles/ProfileSidebar.css';
 import profileImage from '../../assets/Images/profileImage.png'
 
 import { FaShareAlt } from 'react-icons/fa';

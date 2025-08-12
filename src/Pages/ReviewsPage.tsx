@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import '../assets/css/ProfilePage3.css';
+import '../Styles/ReviewPage.css';
 import ProfileSidebar from '../Components/shared/ProfileSidebar';
 import Header2 from '../Components/shared/Header2';
-import Footer from '../Components/shared/Footer';
+import Footer from '../Components/Layout/Footer';
 
 const reviewsPerPage = 4;
 
@@ -54,7 +54,7 @@ const reviews = [
   },
 ];
 
-const ProfilePage3: React.FC = () => {
+const ReviewPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(reviews.length / reviewsPerPage);
@@ -105,5 +105,5 @@ const ProfilePage3: React.FC = () => {
   );
 };
 
-export default ProfilePage3;
+export default ReviewPage;
 

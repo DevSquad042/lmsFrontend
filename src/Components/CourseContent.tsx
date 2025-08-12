@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { FaStar, FaPlay, FaUsers, FaChevronDown, FaChevronUp } from 'react-icons/fa';
-import styles from './CourseContent.module.css';
+import styles from './ComponentStyles/CourseContent.module.css';
 
 interface CourseContentProps {
   activeTab: string;
