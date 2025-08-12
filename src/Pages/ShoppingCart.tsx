@@ -1,128 +1,124 @@
-// ==========================================
-// SHOPPING CART PAGE COMPONENT
-// ==========================================
-// Main container component that orchestrates all cart functionality
-// Handles: State management, data flow, page layout
-
-import React, { useState } from 'react';
-import Header from '../Components/shared/Header2';
-import Breadcrumb from '../Components/Breadcrumb';
-import CartCourse from '../Components/cards/CartCourses';
-import OrderSummaryCard from '../Components/cards/OrderSummaryCard';
-import Footer from '../Components/shared/Footer';
-import type { Course, OrderSummary } from '../../src/Types/Index';
-import '../Components/cards/CartCourses.css';
+import React, { useState } from "react";
+import Header from "../Components/shared/Header2";
+import Breadcrumb from "../Components/Breadcrumb";
+import OrderSummaryCard from "../Components/cards/OrderSummaryCard";
+import Footer from "../Components/shared/Footer";
+import type { Course, OrderSummary } from "../../src/Types/Index";
+import "./ShoppingCart.css";
 
 const ShoppingCart: React.FC = () => {
-  // ==========================================
-  // STATE MANAGEMENT
-  // ==========================================
-  
   // Courses in cart state
   const [courses, setCourses] = useState<Course[]>([
     {
-      id: '1',
-      title: 'Introduction to User Experience Design',
-      instructor: 'John Doe',
-      price: 45.00,
+      id: "1",
+      title: "Introduction to User Experience Design",
+      instructor: "John Doe",
+      price: 45.0,
       rating: 4.6,
       totalRatings: 250,
       totalHours: 22,
       lectures: 155,
-      level: 'All levels',
-      image: '/api/placeholder/96/64'
+      level: "All levels",
+      image: "/api/placeholder/96/64",
     },
     {
-      id: '2',
-      title: 'Introduction to User Experience Design',
-      instructor: 'John Doe',
-      price: 45.00,
+      id: "2",
+      title: "Introduction to User Experience Design",
+      instructor: "John Doe",
+      price: 45.0,
       rating: 4.6,
       totalRatings: 250,
       totalHours: 22,
       lectures: 155,
-      level: 'All levels',
-      image: '/api/placeholder/96/64'
+      level: "All levels",
+      image: "/api/placeholder/96/64",
     },
-    {
-      id: '3',
-      title: 'Introduction to User Experience Design',
-      instructor: 'John Doe',
-      price: 45.00,
-      rating: 4.6,
-      totalRatings: 250,
-      totalHours: 22,
-      lectures: 155,
-      level: 'All levels',
-      image: '/api/placeholder/96/64'
-    }
   ]);
 
   // Order summary state
   const [orderSummary] = useState<OrderSummary>({
-    price: 300.00,
-    discount: -10.00,
-    tax: 20.00,
-    total: 290.00
+    price: 90.0,
+    discount: -10.0,
+    tax: 8.0,
+    total: 88.0,
   });
 
-  // ==========================================
-  // EVENT HANDLERS
-  // ==========================================
-  
   // Handle course removal from cart
   const handleRemove = (id: string): void => {
-    setCourses(prevCourses => prevCourses.filter(course => course.id !== id));
+    setCourses((prevCourses) =>
+      prevCourses.filter((course) => course.id !== id)
+    );
   };
 
   // Handle save for later functionality
   const handleSaveForLater = (id: string): void => {
-    console.log('Saving course for later:', id);
-    // Implementation for save for later functionality
+    console.log("Saving course for later:", id);
   };
 
   // Handle checkout process
   const handleCheckout = (): void => {
-    console.log('Proceeding to checkout with courses:', courses);
-    // Implementation for checkout process
+    console.log("Proceeding to checkout with courses:", courses);
   };
 
-  // ==========================================
-  // RENDER
-  // ==========================================
-  
   return (
     <div className="shopping-cart-page">
-      {/* Header Section */}
       <Header />
-      
-      {/* Breadcrumb Navigation */}
       <Breadcrumb />
-      
-      {/* Main Content Area */}
+
       <div className="main-content">
         <div className="content-grid">
           {/* Left Column - Cart Items */}
           <div className="cart-section">
             <div className="cart-container">
-              {/* Cart Header */}
               <div className="cart-header">
                 <h1 className="cart-title">Shopping Cart</h1>
                 <p className="cart-subtitle">
-                  {courses.length} Course{courses.length !== 1 ? 's' : ''} in cart
+                  {courses.length} Course{courses.length !== 1 ? "s" : ""} in
+                  cart
                 </p>
               </div>
-              
-              {/* Course List */}
-              <div className="course-list">
+
+              <div className="cart-table">
+                <div className="table-header">
+                  <div className="header-details">Details</div>
+                  <div className="header-price">Price</div>
+                </div>
+
                 {courses.length > 0 ? (
                   courses.map((course) => (
-                    <CartCourse
-                      key={course.id}
-                      course={course}
-                      onRemove={handleRemove}
-                      onSaveForLater={handleSaveForLater}
-                    />
+                    <div key={course.id} className="table-row">
+                      <div className="course-details">
+                        <h3 className="course-title">{course.title}</h3>
+                        <p className="course-instructor">
+                          By {course.instructor}
+                        </p>
+                        <div className="course-rating">
+                          <span className="rating">
+                            {course.rating.toFixed(1)}
+                          </span>
+                          <span className="lectures">
+                            {course.lectures} Lectures, {course.level}
+                          </span>
+                        </div>
+                        <div className="course-actions">
+                          <button
+                            className="save-btn"
+                            onClick={() => handleSaveForLater(course.id)}
+                          >
+                            Save for later
+                          </button>
+                          <button
+                            className="remove-btn"
+                            onClick={() => handleRemove(course.id)}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                      <div className="course-price">
+                        ${course.price.toFixed(2)}
+                      </div>
+                    </div>
                   ))
                 ) : (
                   <div className="empty-cart">
@@ -132,7 +128,7 @@ const ShoppingCart: React.FC = () => {
               </div>
             </div>
           </div>
-          
+
           {/* Right Column - Order Summary */}
           <div className="summary-section">
             <OrderSummaryCard
@@ -142,10 +138,10 @@ const ShoppingCart: React.FC = () => {
           </div>
         </div>
       </div>
-      
-      {/* Footer Section */}
+
       <Footer />
     </div>
   );
 };
+
 export default ShoppingCart;

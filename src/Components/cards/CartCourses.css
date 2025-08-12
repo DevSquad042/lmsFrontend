@@ -1,4 +1,101 @@
 /* ==========================================
+   SHOPPING CART PAGE STYLES
+   ========================================== */
+
+.shopping-cart-page {
+  min-height: 100vh;
+  background-color: var(--gray-50);
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1.5rem;
+  gap: 2rem;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem 1.5rem;
+}
+
+.content-grid {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  flex-wrap: wrap; /* allows stacking on smaller screens */
+}
+
+.cart-section {
+  flex: 1 1 600px; /* grows but has a min width for desktop */
+}
+
+.cart-container {
+  background-color: var(--white);
+  border-radius: 0.5rem;
+  border: 1px solid var(--gray-200);
+  overflow: hidden;
+}
+
+.cart-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.cart-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 0.25rem;
+}
+
+.cart-subtitle {
+  color: var(--gray-600);
+  font-size: 1rem;
+}
+
+.course-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.empty-cart {
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.empty-cart p {
+  color: var(--gray-500);
+  font-size: 1.125rem;
+}
+
+.summary-section {
+  flex: 0 0 300px; /* fixed width for the order summary */
+}
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .content-grid {
+    flex-direction: column;
+  }
+
+  .summary-section {
+    flex: 1 1 100%;
+    margin-top: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
+
+  .cart-header {
+    padding: 1rem;
+  }
+
+  .cart-title {
+    font-size: 1.25rem;
+  }
+}
+
+/* ==========================================
    COURSE CARD COMPONENT STYLES
    ========================================== */
 
@@ -7,14 +104,17 @@
   align-items: flex-start;
   gap: 1rem;
   padding: 1rem;
-    border-radius: 10px;
-    border-color: black;
-border: 1px;
-    background-color: var(--gray-700);
-    transition: background-color 0.2s ease;
-width: 880px;
-    justify-content: space-between;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  border: 1px solid black;
+  background-color: var(--gray-700);
+  transition: background-color 0.2s ease;
+  width: 880px;
+  justify-content: space-between;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.course-card:hover {
+  background-color: var(--gray-600);
 }
 
 .course-image-container {
@@ -109,21 +209,21 @@ width: 880px;
   gap: 1rem;
 }
 
-.action-btn{
+.action-btn {
   background: none;
   border: none;
   cursor: pointer;
   font-size: 0.875rem;
   font-weight: 500;
-  transition: color 0.2s;
+  transition: color 0.2s ease;
 }
 
 .action-btn.save-btn {
-  color: var(blue);
+  color: var(--blue-600);
 }
 
 .action-btn.save-btn:hover {
-  color: var(--primary-blue-dark);
+  color: var(--blue-800);
 }
 
 .action-btn.remove-btn {
@@ -143,4 +243,28 @@ width: 880px;
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--gray-900);
+}
+
+/* Responsive Design for Course Cards */
+@media (max-width: 1024px) {
+  .course-card {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .course-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .course-image {
+    width: 100%;
+    height: auto;
+  }
+
+  .course-price {
+    text-align: left;
+    margin-top: 0.5rem;
+  }
 }
