@@ -1,0 +1,232 @@
+:root {
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --muted: #8b8f98;
+  --border: #e7e9ee;
+  --primary: #0b1220;
+  --danger: #d9534f;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 28px auto;
+  padding: 20px;
+  background: var(--bg);
+}
+
+/* header */
+.pageTitleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.pageTitle {
+  margin: 0;
+  font-size: 20px;
+}
+.breadcrumbs {
+  color: var(--muted);
+  font-size: 13px;
+}
+.muted {
+  color: var(--muted);
+}
+
+/* layout */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 20px;
+  align-items: start;
+}
+
+/* generic card */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px;
+  box-shadow: 0 1px 0 rgba(16, 24, 40, 0.02);
+  margin-bottom: 12px;
+}
+
+/* left column */
+.leftCol .card {
+  padding: 22px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.field label,
+.formField label {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.field input,
+.formField input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #fbfdff;
+}
+
+/* headings */
+.sectionTitle {
+  margin-top: 12px;
+  margin-bottom: 12px;
+  font-size: 15px;
+}
+
+/* payment form */
+.paymentCard .radioRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.radio input {
+  accent-color: var(--primary);
+}
+.radioLabel {
+  font-size: 15px;
+}
+.cardIcons {
+  opacity: 0.95;
+}
+
+.formField {
+  margin-bottom: 12px;
+}
+
+/* two column row for expiry / cvc */
+.rowTwo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* divider and paypal line */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 12px 0;
+  border-radius: 2px;
+}
+.radioBottom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.paypalIcon {
+  margin-left: auto;
+}
+
+/* right column */
+.rightCol {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+}
+
+/* order item */
+.orderItem {
+  display: flex;
+  gap: 12px;
+}
+.thumb {
+  width: 90px;
+  height: 60px;
+  background: #ddd;
+  border-radius: 6px;
+  object-fit: cover;
+}
+.desc .category {
+  font-size: 12px;
+  color: #7b8a9a;
+}
+.title {
+  font-weight: 600;
+  margin-top: 5px;
+}
+.meta {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+.price,
+.itemPrice {
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+/* coupon button */
+.couponBtn {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+}
+
+/* summary card */
+.line {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px dashed #f1f1f1;
+}
+.total {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 12px;
+  font-weight: 700;
+}
+.neg {
+  color: var(--danger);
+}
+
+/* proceed button - at bottom of right column */
+.proceedBtn {
+  width: 100%;
+  background: var(--primary);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  margin-top: 12px;
+  box-shadow: 0 2px 6px rgba(11,18,32,0.15);
+}
+
+/* small screens */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+  .rowTwo {
+    grid-template-columns: 1fr;
+  }
+  .rightCol {
+    position: relative;
+    top: auto;
+  }
+}

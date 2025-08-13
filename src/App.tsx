@@ -1,16 +1,9 @@
-import ProfilePage6 from "./Pages/ProfilePage6";
-
-
-
-
-
-
-
+import Checkout from "./Pages/Checkout";
 
 function App() {
   return (
     <div>
-    < ProfilePage6/>
+    < Checkout/>
 
      
     </div>
