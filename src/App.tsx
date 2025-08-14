@@ -1,13 +1,11 @@
 
+import Checkout from "./Pages/Checkout";
 
-import ShoppingCart from './Pages/ShoppingCart'
-
-
-const App = () => {
+function App() {
   return (
     <div>
-      <ShoppingCart/>
-    </div>
+    < Checkout/>
+     </div>
   )
 }
 
