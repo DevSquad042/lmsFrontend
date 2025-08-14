@@ -5,7 +5,7 @@ import Header2 from "../Components/shared/Header2"
 import ProfileSidebar from "../Components/shared/ProfileSidebar"
 import Pagination from "../Components/Pagination"
 
-import '../CoursesPage.css'
+import '../Styles/CoursesPage.css'
 
 const CoursesPage = () => {
   return (

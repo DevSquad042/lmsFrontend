@@ -1,4 +1,4 @@
-import './ComponentStyles/Hero.css'
+import './Hero.css'
 import heroimg from '../assets/Images/heroimg.png'
 import Button from './shared/Buttons'
 
