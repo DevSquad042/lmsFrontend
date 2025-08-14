@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 import { MdOutlineEmail } from 'react-icons/md';
 import type { Mentor } from '../../Types/Mentor';
 import styles from './CardsStyle/MentorCard.module.css';
+=======
+import type { Mentor } from '../../../src/Types/Mentor';
+import styles from './MentorCard.module.css'; // Fixed: was MentorsSection.module.css
+>>>>>>> d0a47a046bb0ebaf054c85a33dbfd5b4486da6ea
 
 interface Props {
   mentor: Mentor;

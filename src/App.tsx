@@ -1,21 +1,12 @@
 
-import TeachersPage from "./Pages/TeachersPage";
 
-
-
-
-
-
-
-
-
+import ShoppingCart from './Pages/ShoppingCart'
 
 
 const App = () => {
   return (
     <div>
-    <TeachersPage/>
-     
+      <ShoppingCart/>
     </div>
   )
 }
