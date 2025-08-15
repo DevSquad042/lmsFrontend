@@ -1,22 +1,11 @@
-import Shopping from '../src/Pages/ShoppingCart'
-
-
-
-
-
-
-
+import ShoppingCart from "../src/Pages/ShoppingCart";
 
 function App() {
   return (
     <div>
-
-<Shopping />
-     
+      <ShoppingCart />
     </div>
-  )
-};
+  );
+}
 
 export default App;
-
-

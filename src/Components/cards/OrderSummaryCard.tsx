@@ -1,5 +1,5 @@
 import React from "react";
-import type { OrderSummaryProps } from "../../../src/Types/Index";
+import type { OrderSummaryProps } from "../../Types/Index";
 import "./OrderSummaryCard.css";
 
 const OrderSummaryCard: React.FC<OrderSummaryProps> = ({
