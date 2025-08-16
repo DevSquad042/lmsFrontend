@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import './FormStyles/LoginForm.css'
-import LoginImage from '../assets/Images/login-image.png';
+import './FormStyles/LoginForm.css';
+import loginImage from "../../assets/Images/login-image.png"; // ✅ Import it like this
 
 import { FaFacebookF, FaMicrosoft } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import Header1 from '../shared/Header1'
-import Button from "../shared/Buttons"
+import Header1 from '../shared/Header1';
+import Button from "../shared/Buttons";
 import { FaArrowRight } from "react-icons/fa";
 
 const LoginForm: React.FC = () => {
@@ -14,8 +14,6 @@ const LoginForm: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Replace with your sign-in logic
     console.log("Email:", email);
     console.log("Password:", password);
   };
@@ -47,16 +45,17 @@ const LoginForm: React.FC = () => {
               required
             />
 
-            {/* <button type="submit" className="sign-in-button">
-              Sign In
-            </button> */}
-
-            <Button label={<>Sign in <FaArrowRight /></>} style={{
+            <Button
+              label={<>Sign in <FaArrowRight /></>}
+              style={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 gap: "16px"
-            }}  onClick={() => handleSubmit (new Event ('submit') as unknown as React.FormEvent)}  backgroundColor="#020617"  />
+              }}
+              onClick={() => handleSubmit(new Event('submit') as unknown as React.FormEvent)}
+              backgroundColor="#020617"
+            />
           </form>
 
           <div className="divider">
@@ -64,20 +63,24 @@ const LoginForm: React.FC = () => {
           </div>
 
           <div className="social-buttons">
-            <button  type= "button" className= "social-button facebook">
-            <FaFacebookF /> Facebook 
+            <button type="button" className="social-button facebook">
+              <FaFacebookF /> Facebook
             </button>
             <button type="button" className="social-button google">
-            <FcGoogle /> Google
+              <FcGoogle /> Google
             </button>
             <button type="button" className="social-button microsoft">
-            <FaMicrosoft /> Microsoft 
+              <FaMicrosoft /> Microsoft
             </button>
           </div>
         </div>
 
         <div className="login-image-section">
-          <img src={LoginImage} alt="login background" />
+          <img
+            src={loginImage} 
+            alt="Registration Background"
+            className="imagePlaceholder"
+          />
         </div>
       </div>
     </>
@@ -85,3 +88,4 @@ const LoginForm: React.FC = () => {
 };
 
 export default LoginForm;
+

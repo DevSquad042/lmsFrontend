@@ -1,0 +1,45 @@
+body{
+    background-color:#FFFFFF;
+}
+.order-status{
+    width: 100%;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+   
+}
+
+
+.order-status__icon {
+  background-color: #28a745; /* Green background */
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.order-status__tick {
+  color: white; /* White tick */
+ width:104px ;
+ height: 104px;
+}
+.order-status__title{
+    font-family: 'inter';
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 120%;
+    
+}
+
+.order-status__message{
+    font-family: 'inter';
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 140%;
+
+}

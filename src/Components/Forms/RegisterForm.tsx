@@ -1,17 +1,15 @@
 
+import { useState } from 'react';
 import NavBar from '../shared/Header1'; 
-import '../assets/Images/login-image.png' 
-import './FormStyles/register.css'
+import RegisterImage from "../../assets/Images/register-image.png"; 
+import './FormStyles/RegisterForm.css'
 import { FaFacebook } from 'react-icons/fa'
 import { FaGoogle } from "react-icons/fa6";
 import { FaMicrosoft } from "react-icons/fa";
-<<<<<<< HEAD:src/Components/Forms/register.tsx
-import Button from '../shared/Buttons'; // Assuming you have a Button component
-=======
-import Button from '../Components/shared/Buttons'; 
-// import Button from '../Components/shared/Buttons'; // Assuming you have a Button component
->>>>>>> d0a47a046bb0ebaf054c85a33dbfd5b4486da6ea:src/Pages/register.tsx
-import { useState } from 'react';
+import Button from '../shared/Buttons';
+
+
+
 
 
 interface FormValues {
@@ -87,10 +85,10 @@ const Register: React.FC = () => {
 
       <div className="imageSection">
         <img
-          src="../assets/Images/login-image.png"
-          alt="Registration Background"
-          className="imagePlaceholder"
-        />
+            src={ RegisterImage} 
+            alt="Registration Background"
+            className="imagePlaceholder"
+          />
         
 
       </div>
