@@ -1,0 +1,82 @@
+/* General rating container */
+.rating-summary {
+  max-width: 400px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+  color: #fff;
+}
+
+/* Star styling */
+.star-icon {
+  cursor: pointer;
+  transition: color 0.2s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.star-filled {
+  color: #FFD700; /* Gold */
+}
+
+.star-empty {
+  color: #fff; /* White */
+}
+
+.star-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Rating bars container */
+.rating-bars {
+  margin-top: 1rem;
+}
+
+.rating-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.bar-bg {
+  background: #eee;
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  background: #FFD700;
+  height: 100%;
+}
+
+/* Form styling */
+.rating-form {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.submit-btn {
+  background: #FFD700;
+  color: #000;
+  border: none;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .star-icon {
+    font-size: 20px !important;
+  }
+}

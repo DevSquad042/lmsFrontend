@@ -1,0 +1,168 @@
+:root {
+  --gold: #FFD700;
+  --text: #111;
+  --muted: #666;
+  --bg: #fff;
+  --bar-bg: #eee;
+}
+
+* { 
+    box-sizing: border-box; 
+}
+body, html, #root { 
+    margin: 0; 
+    padding: 0; 
+    background: var(--bg); 
+    color: var(--text); 
+}
+
+.page { 
+    max-width: 900px; 
+    margin: 0 auto; 
+    padding: 16px;  
+}
+
+.review-section { 
+    border: 1px solid #ddd; 
+    border-radius: 8px; padding: 16px; 
+}
+
+.summary-row { 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+}
+
+.avg {
+    font-size: 1.25rem; 
+}
+
+.total { 
+    color: var(--muted); 
+}
+
+.stars-inline {
+    display: flex; 
+    gap: 4px; 
+    align-items: center; 
+}
+
+.star-icon { 
+  transition: color .2s ease,
+  transform .1s ease; 
+  cursor: pointer; 
+}
+
+.star-filled {
+    color: var(--gold);
+}
+
+.star-empty { color: #fff;
+  text-shadow: 0 0 1px #bbb; 
+}
+
+.star-icon:hover { 
+  transform: scale(1.08); 
+}
+
+.rating-bars { 
+  margin: 12px 0 16px; 
+}
+
+.rating-bar { 
+    display: flex; 
+    align-items: center; 
+    gap: 8px;
+    margin: 6px 0; 
+}
+
+.bar-label { 
+    width: 36px; 
+    text-align: right; 
+}
+.bar-bg { 
+    flex: 1; 
+    height: 8px; 
+    background: var(--bar-bg); 
+    border-radius: 999px; 
+    overflow: hidden; 
+}
+.bar-fill { 
+    height: 100%; 
+    background: var(--gold); 
+}
+
+
+.review-form { 
+    display: grid; 
+    gap: 8px; 
+    margin: 16px 0; 
+}
+
+.form-label { 
+    font-weight: 600; 
+}
+
+.comment-input { 
+    width: 100%; 
+    padding: 8px; 
+    border: 1px solid #ddd; 
+    border-radius: 6px; 
+    font: inherit; 
+}
+
+.submit-btn { 
+    background: var(--gold); 
+    border: 0; 
+    padding: 8px 12px; 
+    border-radius: 6px; 
+    font-weight: 700; 
+    cursor: pointer; 
+}
+
+.submit-btn:disabled { 
+    opacity: 0.6; 
+    cursor: not-allowed; 
+}
+
+.review-list { 
+    display: grid; 
+    gap: 12px; 
+}
+
+.review-item { 
+    border-top: 1px solid #eee; 
+    padding-top: 12px; 
+}
+
+.review-header { 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+}
+
+.review-text { 
+    margin: 4px 0; 
+}
+
+.review-date { 
+    color: var(--muted); 
+}
+
+.pagination { 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    justify-content: flex-end; 
+    margin-top: 12px; 
+}
+
+.pagination button { 
+    padding: 6px 10px; 
+}
+@media (max-width: 520px) {
+  .summary-row { 
+    flex-wrap: wrap; 
+    gap: 6px; 
+}
+}

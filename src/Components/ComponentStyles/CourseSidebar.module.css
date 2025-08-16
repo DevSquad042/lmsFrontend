@@ -1,0 +1,225 @@
+.sidebar {
+  position: sticky;
+  top: 0;
+  align-self: start;
+}
+
+.previewCard {
+  background: #ffffff;
+  border-radius: 0.375rem;;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.videoContainer {
+  position: relative;
+  width: 100%;
+  height: 12rem;
+}
+
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.playOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.playButton {
+  width: 4rem;
+  height: 4rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.playButton:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.05);
+}
+
+.playIcon {
+  color: #374151;
+  margin-left: 0.125rem;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.cardContent {
+  padding: 1rem;
+}
+
+.priceSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.priceContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.currentPrice {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.originalPrice {
+  font-size: 1rem;
+  color: #6b7280;
+  text-decoration: line-through;
+}
+
+.discountBadge {
+  background: #dcfce7;
+  color: #166534;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.addToCartBtn {
+  width: 100%;
+  background: #111827;
+  color: #ffffff;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 0.75rem;
+  transition: background-color 0.2s ease;
+}
+
+.addToCartBtn:hover {
+  background: #1f2937;
+}
+
+.buyNowBtn {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  background: #ffffff;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: all 0.2s ease;
+}
+
+.buyNowBtn:hover {
+  background: #f9fafb;
+}
+
+.shareSection {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1rem;
+}
+
+.shareHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.shareLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.socialIcons {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.socialIcon {
+  color: #1877f2;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  width: 1rem;
+  height: 1rem;
+}
+
+.socialIcon:hover {
+  color: #166fe5;
+}
+
+.googleIcon {
+  color: #ea4335;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: color 0.2s ease;
+}
+
+.googleIcon:hover {
+  color: #d33b2c;
+}
+
+.twitterIcon {
+  color: #000000;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: color 0.2s ease;
+}
+
+.twitterIcon:hover {
+  color: #374151;
+}
+
+.Icons {
+  width: 200px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+}
+
+.microsoftIcon {
+  color: #00bcf2;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  width: 1rem;
+  height: 1rem;
+}
+
+.microsoftIcon:hover {
+  color: #0078d4;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .sidebar {
+    position: static;
+  }
+}
+
+  .Icons {
+    width: 100%;
+    font-size: 18px;
+    justify-content: center;
+    gap: 20px;
+  }

@@ -2,10 +2,10 @@
 import { courses } from '../data/Course';
 import { mentors } from '../data/Mentor';
 import CourseCard from '../Components/cards/CourseCard';
-import MentorCard from '../Components/cards/MentorCard' // Fixed import name
+import MentorCard from '../Components/cards/MentorCard' 
 import Filter from '../Components/Filters/Filter';
 import Pagination from '../Components/Pagination';
-import styles from '../Styles/global.module.css';
+import styles from '../Styles/CategoryPage.module.css';
 import Header2 from '../Components/shared/Header2';
 import Footer from '../Components/Layout/Footer';
 

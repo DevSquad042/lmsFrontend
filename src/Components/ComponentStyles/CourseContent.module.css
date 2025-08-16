@@ -1,0 +1,395 @@
+.contentCard {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.tabsContainer {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tabsNav {
+  display: flex;
+  gap: 2rem;
+  padding: 0 1.5rem;
+}
+
+.tab {
+  padding: 1rem 0.5rem;
+  border-bottom: 2px solid transparent;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #6b7280;
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab:hover {
+  color: #374151;
+}
+
+.tabActive {
+  border-bottom-color: #2563eb;
+  color: #2563eb;
+}
+
+.tabContent {
+  padding: 1.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 1rem 0;
+}
+
+.description {
+  color: #374151;
+  line-height: 1.6;
+  margin: 0 0 1.5rem 0;
+}
+
+.section {
+  scroll-margin-top: 70px; /* offset for sticky bar */
+}
+
+/* Instructor Styles */
+.instructorCard {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.instructorImage {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.instructorInfo {
+  flex: 1;
+}
+
+.instructorName {
+  color: #2563eb;
+  font-weight: 600;
+  font-size: 1.125rem;
+  margin: 0 0 0.25rem 0;
+}
+
+.instructorTitle {
+  color: #6b7280;
+  margin: 0 0 0.75rem 0;
+}
+
+.instructorStats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.statIcon {
+  width: 0.875rem;
+  height: 0.875rem;
+  color: #6b7280;
+}
+
+.instructorBio {
+  color: #374151;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Syllabus Styles */
+.syllabusContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.syllabusItem {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.syllabusHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  text-align: left;
+}
+
+.syllabusHeader:hover {
+  background-color: #f9fafb;
+}
+
+.syllabusLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.syllabusTitle {
+  font-weight: 500;
+  color: #111827;
+}
+
+.syllabusRight {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.syllabusContent {
+  padding: 0 1rem 1rem 1rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.reviewsGrid {
+  display: grid;
+  grid-template-columns: 1fr 2fr; /* main content first, summary second */
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+/* Review summary feels like a sidebar */
+.reviewSummary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  position: sticky;
+  top: 1rem;
+}
+
+.ratingLarge {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #f59e0b;
+}
+
+.starsLarge {
+  display: flex;
+  gap: 0.125rem;
+  margin-bottom: 0.25rem;
+}
+
+.reviewCount {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.ratingBreakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.ratingRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ratingLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: 4rem;
+}
+
+.ratingStarSmall {
+  color: #f59e0b;
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.ratingBar {
+  flex: 1;
+  height: 0.5rem;
+  background: #e5e7eb;
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+
+.ratingBarFill {
+  height: 100%;
+  background: #f59e0b;
+  transition: width 0.3s ease;
+}
+
+.ratingPercentage {
+  width: 2rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  text-align: right;
+}
+
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.reviewItem {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 1.5rem;
+}
+
+.reviewItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.reviewHeader {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.reviewAvatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.reviewMeta {
+  flex: 1;
+}
+
+.reviewAuthor {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.reviewName {
+  font-weight: 500;
+  color: #111827;
+}
+
+.reviewStars {
+  display: flex;
+  gap: 0.125rem;
+}
+
+.reviewDate {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.75rem;
+}
+
+.reviewText {
+  color: #374151;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.viewMoreBtn {
+  margin-top: 1.5rem;
+  padding: 0.5rem 1.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.viewMoreBtn:hover {
+  background: #f9fafb;
+}
+
+.starFilled {
+  color: #f59e0b;
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.starEmpty {
+  color: #d1d5db;
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+/* Tabs Layout */
+.tabsContainer {
+  overflow-x: auto;
+  white-space: nowrap;
+  margin-bottom: 1rem;
+}
+
+.tabsNav {
+  display: flex;
+  gap: 1rem;
+}
+
+.tab {
+  padding: 0.75rem 1.25rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.tabActive {
+  border-bottom: 3px solid #2563eb;
+  color: #2563eb;
+}
+
+/* Sliding Content */
+.tabContentWrapper {
+  overflow: hidden;
+  width: 100%;
+}
+
+.tabContentInner {
+  display: flex;
+  width: 400%; /* 4 tabs */
+  transition: transform 0.4s ease-in-out;
+}
+
+.tabPane {
+  width: 100%;
+  flex-shrink: 0;
+  padding: 1rem;
+}
+
+@media (max-width: 768px) {
+  .reviewsGrid {
+    grid-template-columns: 1fr;
+  }
+  .reviewSummary {
+    position: static;
+    order: 2; /* summary below reviews */
+  }
+}
