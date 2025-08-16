@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import '../assets/css/CoursePage.css'; // Import the general page CSS
+import '../Styles/CoursePage.css'; // Import the general page CSS
 
 import CourseHero from '../Components/CourseHero';
 import CourseContent from '../Components/CourseContent';
 import RelatedCourses from '../Components/RelatedCourses';
 import TestimonialCard from '../Components/TestimonialsSection';
-import Footer from '../Components/shared/Footer';
+import Footer from '../Components/Layout/Footer';
 import Header2 from '../Components/shared/Header2';
 import { courseData, instructorData, reviewsData, syllabusData } from '../data/coursedata';
 import CourseSidebar from '../Components/CourseSidebar';
@@ -38,7 +38,7 @@ const CourseDetailPage: React.FC = () => {
         </div>
 
         {/* Sidebar */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 course-sidebar-wrapper">
             <CourseSidebar course={courseData} />
           </div>
       </div>

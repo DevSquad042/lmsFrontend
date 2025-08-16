@@ -53,13 +53,13 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({ course }) => {
             <div className={styles.shareHeader}>
               <span className={styles.shareLabel}>Share</span>
               <div className={styles.socialIcons}>
-          <div className='Icons'>
-          <FaFacebook />
-          <FaGithub />
-          <FcGoogle />
-          <FaXTwitter />
-          <FaMicrosoft />
-          </div>
+                <div className={styles.Icons}>
+                  <FaFacebook />
+                  <FaGithub />
+                  <FcGoogle />
+                  <FaXTwitter />
+                  <FaMicrosoft />
+                </div>
               </div>
             </div>
           </div>

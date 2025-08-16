@@ -1,7 +1,3 @@
-/* global.module.css
- * Global styles for the application
- */
-/* Global Layout */
 .pageContainer {
   min-height: 100vh;
   background: #f9fafb;
@@ -95,13 +91,14 @@
 /* Course Section */
 .courseSection {
   margin-bottom: 3rem;
+  display: grid;
 }
 
 /* Grid Layouts */
 .grid {
   display: grid;
   gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .mentorGrid {
@@ -122,6 +119,7 @@
   margin-bottom: 3rem;
   padding-top: 2rem;
   border-top: 1px solid #e5e7eb;
+  background: #ffffff;
 }
 
 .mentorsSection h2,
@@ -158,8 +156,7 @@
   }
   
   .grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+   grid-template-columns: repeat(2, 1fr);
   }
   
   .mentorGrid {

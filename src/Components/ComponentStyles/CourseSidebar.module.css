@@ -1,6 +1,7 @@
 .sidebar {
   position: sticky;
-  top: 1.5rem;
+  top: 0;
+  align-self: start;
 }
 
 .previewCard {
