@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { getSummary, getReviews, postReview } from "./api";
-import { Review, ReviewList, ReviewSummary } from "../Types/rating";
-import { StarIcon } from "./StarIcon";
-import "./styles.css";
+import { getSummary, getReviews, postReview } from "../API/starIconAPI";
+import type { Review, ReviewList, ReviewSummary } from "../Types/rating";
+import { StarIcon } from "../assets/react-icon/StarIcon";
+import "./ComponentStyles/Rating.css";
 
 type Props = { productId: string; currentUser?: string };
 
-export const ReviewSection: React.FC<Props> = ({ productId, currentUser = "Guest" }) => {
+const ReviewSection: React.FC<Props> = ({ productId, currentUser = "Guest" }) => {
   const [summary, setSummary] = useState<ReviewSummary | null>(null);
   const [list, setList] = useState<ReviewList | null>(null);
   const [loading, setLoading] = useState(true);
@@ -149,3 +149,4 @@ export const ReviewSection: React.FC<Props> = ({ productId, currentUser = "Guest
     </section>
   );
 };
+export default ReviewSection;

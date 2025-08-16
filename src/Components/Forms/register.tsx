@@ -5,7 +5,12 @@ import './FormStyles/register.css'
 import { FaFacebook } from 'react-icons/fa'
 import { FaGoogle } from "react-icons/fa6";
 import { FaMicrosoft } from "react-icons/fa";
+<<<<<<< HEAD:src/Components/Forms/register.tsx
 import Button from '../shared/Buttons'; // Assuming you have a Button component
+=======
+import Button from '../Components/shared/Buttons'; 
+// import Button from '../Components/shared/Buttons'; // Assuming you have a Button component
+>>>>>>> d0a47a046bb0ebaf054c85a33dbfd5b4486da6ea:src/Pages/register.tsx
 import { useState } from 'react';
 
 

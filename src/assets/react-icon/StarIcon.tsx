@@ -1,6 +1,6 @@
 import React from "react";
 import { FaStar } from "react-icons/fa";
-import "./ComponentStyles/Rating.css";
+import "../../Components/ComponentStyles/StarIcon.css";
 
 interface StarIconProps {
   filled?: boolean;

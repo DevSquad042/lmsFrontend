@@ -1,6 +1,7 @@
 
 
-import { Rating } from "./Components/Rating";
+//import { ReviewSection } from "./Components/Rating";
+import ReviewSection from "./Components/Rating";
 import CourseDetailPage from "./Pages/CoursePage";
 
 
@@ -9,8 +10,9 @@ function App() {
     <div>
 
      <CourseDetailPage/>
+     <ReviewSection productId="p1" currentUser="DemoUser"/>
    
-     <Rating/>
+     {/*<ReviewSection productId="p1" currentUser="DemoUser"/>*/}
      
     </div>
   )
