@@ -1,5 +1,6 @@
-import type { Mentor } from '../../../Types/Mentor';
-import styles from './MentorCard.module.css'; // Fixed: was MentorsSection.module.css
+// import type { mentors } from '../../data/Mentor';
+import type { Mentor } from '../../Types/Mentor';
+import styles from '../cards/MentorCard.module.css'; // Fixed: was MentorsSection.module.css
 
 interface Props {
   mentor: Mentor;

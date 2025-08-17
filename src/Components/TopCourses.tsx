@@ -72,7 +72,7 @@ const TopCourses: React.FC = () => {
   return (
     <section className="top-courses">
       <header className="top-courses-header">
-        <h2 className="top-courses-title">Top Courses</h2>
+        <p className="top-courses-title">More Courses by Ronald <br /> Richards</p>
         <a href="/courses" className="top-courses-see-all" aria-label="View all courses">
           See All
         </a>

@@ -1,0 +1,265 @@
+/* ==========================================
+   REVIEW CARD COMPONENT STYLES
+   ========================================== */
+
+.review-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.review-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+  border-color: #d1d5db;
+}
+
+.review-card:last-child {
+  margin-bottom: 0;
+}
+
+/* ==========================================
+   REVIEW HEADER SECTION
+   ========================================== */
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 16px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.user-avatar-container {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #f3f4f6;
+  transition: border-color 0.2s ease;
+}
+
+.review-card:hover .user-avatar-container {
+  border-color: #e5e7eb;
+}
+
+.user-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.user-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+  line-height: 1.2;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+/* ==========================================
+   RATING AND META SECTION
+   ========================================== */
+
+.review-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  /* flex-shrink: 0; */
+
+}
+
+.rating-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stars-wrapper {
+  display: flex;
+  gap: 2px;
+}
+
+.star {
+  font-size: 16px;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.star-filled {
+  color: #fbbf24;
+}
+
+.star-empty {
+  color: #d1d5db;
+}
+
+.rating-number {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  margin-left: 4px;
+}
+
+.review-date {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 400;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* ==========================================
+   REVIEW CONTENT SECTION
+   ========================================== */
+
+.review-content {
+  margin-top: 0;
+}
+
+.review-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #374151;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+   ========================================== */
+
+@media (max-width: 768px) {
+  .review-card {
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  
+  .review-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .review-meta {
+    align-items: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .review-date {
+    text-align: left;
+  }
+  
+  .user-name {
+    font-size: 16px;
+  }
+  
+  .review-text {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .review-card {
+    padding: 14px;
+    border-radius: 8px;
+  }
+  
+  .user-avatar-container {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .user-info {
+    gap: 10px;
+  }
+  
+  .user-name {
+    font-size: 15px;
+  }
+  
+  .review-text {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  
+  .star {
+    font-size: 14px;
+  }
+  
+  .rating-number {
+    font-size: 14px;
+  }
+  
+  .review-date {
+    font-size: 12px;
+  }
+}
+
+/* ==========================================
+   ACCESSIBILITY ENHANCEMENTS
+   ========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .review-card,
+  .user-avatar-container,
+  .star {
+    transition: none;
+  }
+  
+  .review-card:hover {
+    transform: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .review-card {
+    border-width: 2px;
+    border-color: #000000;
+  }
+  
+  .review-card:hover {
+    border-color: #0066cc;
+  }
+  
+  .star-filled {
+    color: #cc9900;
+  }
+  
+  .star-empty {
+    color: #666666;
+  }
+}
+
+/* Focus states for accessibility */
+.review-card:focus-within {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
