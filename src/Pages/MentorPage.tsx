@@ -1,7 +1,7 @@
 import React from "react";
 import "../assets/css/MentorPage.css";
 import Header1 from "../Components/shared/Header1";
-import Footer from "../Components/shared/Footer";
+import Footer from "../Components/Layout/Footer";
 import TopCourses from "../Components/TopCourses";
 import Rating from "../Components/cards/RatingSummary";
 import Review from "../Components/cards/ReviewCard";
