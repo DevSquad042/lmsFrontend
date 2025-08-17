@@ -1,0 +1,124 @@
+.filter-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 15px 20px;
+  border-radius: 8px;
+  background-color: white;
+  margin: 30px auto 0;
+  width: 100%;
+  font-family: "Inter", sans-serif;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.filter-title h3 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filter-title span {
+  font-size: 14px;
+  font-weight: 400;
+  color: #6b7280;
+}
+
+.filter-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  width: 100%;
+}
+
+/* Search Box */
+.filter-search {
+  position: relative;
+  flex: 1;
+  min-width: 250px;
+}
+
+.filter-search input {
+  width: 50%;
+  padding: 10px 38px 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  outline: none;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.filter-search input:focus {
+  border-color: #2563eb;
+}
+
+.search-icon2 {
+  position: absolute;
+  left: 45%; 
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6b7280;
+  font-size: 16px;
+  pointer-events: none;
+}
+
+/* Sort & Filter Buttons Section */
+.filter-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-sort {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filter-sort .span1 {
+  color: #6b6c6c;
+  font-size: 14px;
+}
+
+.sort-btn,
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #d1d5db;
+  background-color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.sort-btn:hover,
+.filter-btn:hover {
+  background-color: #f9fafb;
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.sort-btn span {
+  margin-right: 4px;
+}
+
+/* Mobile Fix */
+@media (max-width: 600px) {
+  .filter-bottom {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-left {
+    justify-content: space-between;
+  }
+}

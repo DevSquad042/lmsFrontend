@@ -1,6 +1,6 @@
 import type { Course } from '../../Types/Course';
 import { FaStar } from 'react-icons/fa';
-import styles from './CourseCard.module.css';
+import styles from './CardsStyle/CourseCard.module.css';
 
 interface Props {
   course: Course;

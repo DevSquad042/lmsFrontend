@@ -1,8 +1,8 @@
-import React from 'react';
+
 import instructor1 from '../assets/Images/instructor1.png';
 import instructor2 from '../assets/Images/instructor2.png';
 import Button from './shared/Buttons';
-import './Instructor.css';
+import './ComponentStyles/Instructor.css';
 
 const InstructorJourney: React.FC = () => {
   return (

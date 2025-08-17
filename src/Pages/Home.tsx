@@ -4,7 +4,7 @@ import TopCourses from '../Components/TopCourses'
 import TopInstructors from '../Components/TopInstructors'
 import TestimonialsSection from '../Components/TestimonialsSection'
 import InstructorJourney from '../Components/InstructorJourney'
-import Footer from '../Components/shared/Footer'
+import Footer from '../Components/Layout/Footer'
 import Header1 from '../Components/shared/Header1'
 import Hero from '../Components/Hero'
 

@@ -1,0 +1,203 @@
+/* Shopping Cart Page Styles */
+.shopping-cart-page {
+  min-height: 100vh;
+  background-color: var(--gray-50);
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1.5rem;
+  gap: 2rem;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem 1.5rem;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.cart-section {
+  grid-column: 1;
+}
+
+.cart-container {
+  background-color: var(--white);
+  border-radius: 0.5rem;
+  border: 1px solid var(--gray-200);
+  overflow: hidden;
+}
+
+.cart-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.cart-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 0.25rem;
+}
+
+.cart-subtitle {
+  color: var(--gray-600);
+  font-size: 1rem;
+}
+
+/* Table Layout Styles */
+.cart-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.table-header {
+  display: flex;
+  padding: 1rem 1.5rem;
+  background-color: var(--gray-50);
+  border-bottom: 1px solid var(--gray-200);
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.header-details {
+  flex: 2;
+}
+
+.header-price {
+  flex: 1;
+  text-align: right;
+}
+
+.table-row {
+  display: flex;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--gray-100);
+  align-items: flex-start;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.course-details {
+  flex: 2;
+}
+
+.course-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--gray-900);
+}
+
+.course-instructor {
+  font-size: 0.875rem;
+  color: var(--gray-600);
+  margin-bottom: 0.5rem;
+}
+
+.course-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--gray-600);
+  margin-bottom: 1rem;
+}
+
+.course-price {
+  flex: 1;
+  text-align: right;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--gray-900);
+}
+
+.course-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.save-btn {
+  background: none;
+  border: none;
+  color: var(--blue-600);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+}
+
+.save-btn:hover {
+  text-decoration: underline;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: var(--red-600);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+}
+
+.remove-btn:hover {
+  text-decoration: underline;
+}
+
+.empty-cart {
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.empty-cart p {
+  color: var(--gray-500);
+  font-size: 1.125rem;
+}
+
+.summary-section {
+  grid-column: 2;
+  position: sticky;
+  top: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-section {
+    grid-column: 1;
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
+
+  .cart-header {
+    padding: 1rem;
+  }
+
+  .cart-title {
+    font-size: 1.25rem;
+  }
+
+  .table-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .course-price {
+    text-align: left;
+    width: 100%;
+  }
+}

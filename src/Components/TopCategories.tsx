@@ -1,9 +1,9 @@
 
-import './TopCategories.css';
+import './ComponentStyles/TopCategories.css';
 import CategoryCard from './cards/CategoryCard'
 import { FaCode, FaStar, FaAtom, FaPaintBrush } from 'react-icons/fa';
 
-const TopCategoriesSection: React.FC = () => {
+const TopCategories: React.FC = () => {
   return (
     <section className="top-categories-section">
       <div className="top-categories-header">
@@ -20,5 +20,5 @@ const TopCategoriesSection: React.FC = () => {
   );
 };
 
-export default TopCategoriesSection;
+export default TopCategories;
 

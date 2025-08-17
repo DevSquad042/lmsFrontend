@@ -1,4 +1,4 @@
-import './Header2.css';
+import './SharedStyles/Header2.css';
 import { IoMdHeartEmpty } from "react-icons/io";
 import { FaShoppingCart, FaSearch } from 'react-icons/fa';
 import { IoIosNotificationsOutline } from "react-icons/io"
