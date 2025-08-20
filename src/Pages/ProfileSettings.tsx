@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Footer from "../Components/Layout/Footer";
 import Header2 from "../Components/shared/Header2";
 import ProfileSidebar from "../Components/shared/ProfileSidebar";
-import "../assets/css/ProfileSettings.css";
+import "../Styles/ProfileSettings.css";
 
 interface Likes {
   interest: string;

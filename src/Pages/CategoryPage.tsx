@@ -5,17 +5,11 @@ import CourseCard from '../Components/cards/CourseCard';
 import MentorCard from '../Components/cards/MentorCard' 
 import Filter from '../Components/Filters/Filter';
 import Pagination from '../Components/Pagination';
-import styles from '../Styles/CategoryPage.module.css';
+import styles from '../Styles/CategoryPage.module.css'
 import Header2 from '../Components/shared/Header2';
 import Footer from '../Components/Layout/Footer';
 
-/**
- * ISSUES FIXED:
- * 1. Import statement formatting (removed extra spaces)
- * 2. Component import name consistency
- * 3. Added proper semantic HTML structure
- * 4. Added loading states and error boundaries consideration
- */
+
 const CategoryPage: React.FC = () => {
   return (
     <div className={styles.pageContainer}>

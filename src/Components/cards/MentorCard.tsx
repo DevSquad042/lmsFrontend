@@ -1,7 +1,7 @@
 
 import { MdOutlineEmail } from 'react-icons/md';
 import type { Mentor } from '../../../src/Types/Mentor';
-import styles from './MentorCard.module.css'; // Fixed: was MentorsSection.module.css
+import styles from '../cards/CardsStyle/MentorCard.module.css'; // Fixed: was MentorsSection.module.css
 
 
 interface Props {

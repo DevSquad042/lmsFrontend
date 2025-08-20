@@ -1,9 +1,9 @@
 import { FaCheck } from "react-icons/fa";
 import Header2 from "../Components/shared/Header2";
 import Footer from "../Components/Layout/Footer";
-import '../Styles/Orders.css'
+import '../Styles/Orders1.css'
 
-const Orders: React.FC = () => {
+const Orders1: React.FC = () => {
   return (
     <div className="orders-page">
       <Header2 />
@@ -21,6 +21,6 @@ const Orders: React.FC = () => {
   );
 };
 
-export default Orders;
+export default Orders1;
 
 

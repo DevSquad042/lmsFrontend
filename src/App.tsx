@@ -1,61 +1,46 @@
-// import Testimony from './Components/TestimonialsSection'
-// import { mentors } from './data/Mentor';
-// import TopInstructors from './Components/TopInstructors';
-// import MentorCard from './Components/cards/MentorCard';
-// import Courses from './Components/TopCourses'
-// import Categories from './Components/TopCategories'
-// import Stat from './Components/StatBlock'
-// import Instructor from './Components/InstructorJourney'
-// import RonaldProfile from './Components/cards/Ronald';
-// import InstructorProfile from './Pages/InstructorPage';
+import { Routes, Route } from "react-router-dom";
+import Home from "./Pages/Home";
+import LoginForm from "./Components/Forms/LoginForm";
+import Register from "./Components/Forms/RegisterForm";
+import CategoryPage from "./Pages/CategoryPage";
+import CheckoutPage from "./Pages/Checkout";
+import CourseDetailPage from "./Pages/CourseDetailsPage";
+import CoursesPages from "./Pages/CoursesPage";
+// import MentorsPage from "./Pages/MentorPage";
+import MessaagesPage from "./Pages/MessagesPage";
+import MessagesPage2 from "./Pages/MessagesPage2";
+import Orders1 from "./Pages/Orders1";
+import ProfileSettings from "./Pages/ProfileSettings";
+import ReviewPage from "./Pages/ReviewsPage";
+import ShoppingCart from "./Pages/ShoppingCart";
+import TeachersPage from "./Pages/TeachersPage";
 
-
-
-
-
-
-
-
-// function App() {
-//   return (
-//     <div>
-// <InstructorProfile />
-//     </div>
-//   );
-    
-    
-  
-// };
-
-// export default App;
-
-// import React from "react";
-import InstructorCard from "./Pages/MentorPage";
-import Image from "./assets/images/profileImage.png";
-
-function App() {
+const App = () => {
   return (
-    <><InstructorCard
-      name="Ronald Richards"
-      title="UI/UX Designer, Web developer, and Teacher"
-      students={1000}
-      // courses={12}
-      review={154}
-      about="Ronald Richard is a highly skilled UX/UI Designer with over a decade of experience in crafting user-centric digital solutions. With a background in graphic design and a keen eye for detail, Ronald specializes in creating intuitive interfaces that delight users and drive business results."
-      expertise={[
-        'User Experience (UX) Design',
-'User Interface (UI) Design',
-'Information Architecture',
-'Interaction Design',
-'Visual Design',
-'Usability Testing',
-'Wireframing and Prototyping' ,
-'Design Thinking',
-      ]}
-      experience="Ronald Richard has an extensive professional background in UX/UI design, having worked with renowned companies such as [Company Name] and [Company Name]. His portfolio includes a diverse range of projects spanning web applications, mobile apps, and e-commerce platforms."
-      image={Image}
-    /></>
-  );
+    <Routes>
+      <Route path="/"element={<Home/>}/>
+      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<LoginForm />} />
+      <Route path="/categories" element={<CategoryPage />} />
+       <Route path="/course" element={< CourseDetailPage/>} />
+       <Route path="/cart" element={< ShoppingCart/>} />
+       <Route path="/checkout" element={<CheckoutPage/>} />
+       <Route path="/order1" element={< Orders1/>} />
+       {/* <Route path="/mentor " element={< MentorsPage/>} /> */}
+        <Route path="/profile1" element={< ProfileSettings/>} />
+         <Route path="/profile2" element={< CoursesPages/>} />
+         <Route path="/profile3" element={< ReviewPage/>} />
+          <Route path="/profile4" element={< TeachersPage/>} />
+           <Route path="/profile5" element={< MessaagesPage/>} />
+            <Route path="/profile6" element={< MessagesPage2/>} />
+
+      
+
+
+    </Routes>
+  )
 }
 
-export default App;
+export default App
+
+

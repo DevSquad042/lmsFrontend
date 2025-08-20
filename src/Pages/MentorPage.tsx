@@ -1,5 +1,5 @@
 import React from "react";
-import "../assets/css/MentorPage.css";
+import "../Styles/MentorPage.css";
 import Header1 from "../Components/shared/Header1";
 import Footer from "../Components/Layout/Footer";
 import TopCourses from "../Components/TopCourses";
@@ -20,7 +20,7 @@ interface InstructorCardProps {
   image: string;
 }
 
-const InstructorCard: React.FC<InstructorCardProps> = ({
+const  MentorsPage: React.FC<InstructorCardProps> = ({
   name,
   title,
   students,
@@ -140,4 +140,4 @@ const InstructorCard: React.FC<InstructorCardProps> = ({
   );
 };
 
-export default InstructorCard;
+export default MentorsPage;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../Styles/CoursePage.css'; // Import the general page CSS
+import '../Styles/CourseDetails.css'; // Import the general page CSS
 
 import CourseHero from '../Components/CourseHero';
 import CourseContent from '../Components/CourseContent';
