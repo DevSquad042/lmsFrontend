@@ -1,20 +1,15 @@
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../../store/index";
+import { registerUser } from "../../store/slices/authSlice";
 
-import { useState } from 'react';
-import NavBar from '../shared/Header1'; 
-import RegisterImage from "../../assets/Images/register-image.png"; 
-import styles from './RegisterForm.module.css'
-import { FaFacebook } from 'react-icons/fa6'
-// import { FaGoogle } from "react-icons/fa6";
-import { FaMicrosoft } from "react-icons/fa";
-import Button from '../shared/Buttons';
-import type { AppDispatch } from '../../Store';
-import { useDispatch } from 'react-redux';
-import { registerUser } from '../../Store/slices/authSlice';
-import { FcGoogle } from 'react-icons/fc';
+import styles from "./FormStyles/register.module.css";
+import { FaFacebookF, FaMicrosoft } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 
-
-
-
+import Header1 from "../shared/Header1";
+import Button from "../shared/Buttons";
+import RegisterImage from "../../assets/Images/login-image.png"; // reuse same image for consistency
 
 interface FormValues {
   firstName: string;
@@ -73,16 +68,17 @@ const Register: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
- const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
-  if (validate()) {
-    const { confirmPassword, ...rest } = values;
-    console.log("Confirm password checked:", confirmPassword); // usage
-    dispatch(registerUser(rest));
-    setSubmitted(true); // mark as submitted
-  }
-};
-
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validate()) {
+      // dispatch(registerUser(values));
+      // setSubmitted(true);
+      console.log(values);
+      const {confirmPassword, ...rest} = values; 
+      
+      dispatch(registerUser(rest));
+    }
+  };
 
   // Social login stubs
   const handleGoogleLogin = () => console.log("Google register clicked");
@@ -90,21 +86,13 @@ const Register: React.FC = () => {
   const handleMicrosoftLogin = () => console.log("Microsoft register clicked");
 
   return (
-    <div className='NavBar'>
-      <NavBar />
-      <div/>
-      <div className="container">
-      {/* Placeholder for the image */}
-
-      <div className="imageSection">
-        <img
-            src={ RegisterImage} 
-            alt="Registration Background"
-            className="imagePlaceholder"
-          />
-        
-
-      </div>
+    <>
+      <Header1 />
+      <div className={styles.container}>
+        {/* Left image */}
+        <div className={styles.imageSection}>
+          <img src={RegisterImage} alt="register background" />
+        </div>
 
         {/* Right form */}
         <div className={styles.formSection}>
@@ -184,7 +172,7 @@ const Register: React.FC = () => {
               onClick={handleFacebookLogin}
               className={`${styles.socialBtn} ${styles.facebook}`}
             >
-              <FaFacebook /> Facebook
+              <FaFacebookF /> Facebook
             </button>
             <button
               type="button"
@@ -207,7 +195,7 @@ const Register: React.FC = () => {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
