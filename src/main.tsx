@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -10,5 +11,18 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <App />
     </BrowserRouter>
+=======
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import { store } from "./store";
+import App from "./App";
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
+>>>>>>> 6419c8a94bbaab3b845da453bff2c78d4e0ffa7a
   </React.StrictMode>
 );

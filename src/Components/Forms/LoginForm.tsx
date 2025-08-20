@@ -2,15 +2,17 @@ import React, { useState } from "react";
 import './FormStyles/LoginForm.css';
 import loginImage from "../../assets/Images/login-image.png"; // ✅ Import it like this
 
-import { FaFacebookF, FaMicrosoft } from "react-icons/fa";
+import styles from "./FormStyles/LoginForm.module.css";
+import { FaFacebookF, FaMicrosoft, FaArrowRight } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import Header1 from '../shared/Header1';
 import Button from "../shared/Buttons";
 import { FaArrowRight } from "react-icons/fa";
 
 const LoginForm: React.FC = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const dispatch = useDispatch<AppDispatch>();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,24 +23,23 @@ const LoginForm: React.FC = () => {
   return (
     <>
       <Header1 />
-      <div className="login-container">
-        <div className="login-form-section">
+      <div className={styles.container}>
+        {/* Left form section */}
+        <div className={styles.formSection}>
           <h2>Sign in to your account</h2>
           <form onSubmit={handleSubmit}>
-            <label htmlFor="email">Email</label>
+            <label>Email</label>
             <input
               type="email"
-              id="email"
               placeholder="Username or Email ID"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
 
-            <label htmlFor="password">Password</label>
+            <label>Password</label>
             <input
               type="password"
-              id="password"
               placeholder="Enter Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -58,7 +59,7 @@ const LoginForm: React.FC = () => {
             />
           </form>
 
-          <div className="divider">
+          <div className={styles.divider}>
             <span>Sign in with</span>
           </div>
 

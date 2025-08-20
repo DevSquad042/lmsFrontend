@@ -13,56 +13,57 @@ import Button from '../shared/Buttons';
 
 
 interface FormValues {
-  fullName: string;
+  firstName: string;
   lastName: string;
-  username: string;
+  userName: string;
   email: string;
   password: string;
   confirmPassword: string;
 }
 
 const Register: React.FC = () => {
-    
+  const dispatch = useDispatch<AppDispatch>();
+
   const [values, setValues] = useState<FormValues>({
-    fullName: '',
-    lastName: '',
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    firstName: "",
+    lastName: "",
+    userName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const [errors, setErrors] = useState<Partial<FormValues>>({});
   const [submitted, setSubmitted] = useState(false);
 
-  const handleChange = (field: keyof FormValues) => (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setValues({ ...values, [field]: e.target.value });
-  };
+  const handleChange =
+    (field: keyof FormValues) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setValues({ ...values, [field]: e.target.value });
+    };
 
   const validate = () => {
     const newErrors: Partial<FormValues> = {};
 
-    if (!values.fullName) newErrors.fullName = 'Full Name is required.';
-    if (!values.lastName) newErrors.lastName = 'Last Name is required.';
-    if (!values.username) newErrors.username = 'Username is required.';
+    if (!values.firstName) newErrors.firstName = "Full Name is required.";
+    if (!values.lastName) newErrors.lastName = "Last Name is required.";
+    if (!values.userName) newErrors.userName = "Username is required.";
     if (!values.email) {
-      newErrors.email = 'Email is required.';
+      newErrors.email = "Email is required.";
     } else if (
       !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
     ) {
-      newErrors.email = 'Invalid email address.';
+      newErrors.email = "Invalid email address.";
     }
-    if (!values.password) newErrors.password = 'Password is required.';
+    if (!values.password) newErrors.password = "Password is required.";
     if (!values.confirmPassword)
-      newErrors.confirmPassword = 'Confirm Password is required.';
+      newErrors.confirmPassword = "Confirm Password is required.";
     if (
       values.password &&
       values.confirmPassword &&
       values.password !== values.confirmPassword
-    )
-      newErrors.confirmPassword = 'Passwords do not match.';
+    ) {
+      newErrors.confirmPassword = "Passwords do not match.";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -71,10 +72,19 @@ const Register: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      setSubmitted(true);
-      // Handle registration logic here
+      // dispatch(registerUser(values));
+      // setSubmitted(true);
+      console.log(values);
+      const {confirmPassword, ...rest} = values; 
+      
+      dispatch(registerUser(rest));
     }
   };
+
+  // Social login stubs
+  const handleGoogleLogin = () => console.log("Google register clicked");
+  const handleFacebookLogin = () => console.log("Facebook register clicked");
+  const handleMicrosoftLogin = () => console.log("Microsoft register clicked");
 
   return (
     <div className='NavBar'>
@@ -93,102 +103,109 @@ const Register: React.FC = () => {
 
       </div>
 
-      {/* Registration Form */}
-      <div className="formSection">
+        {/* Right form */}
+        <div className={styles.formSection}>
+          <h2>Create Your Account</h2>
+          <form onSubmit={handleSubmit}>
+            <div className={styles.inputGroup}>
+              <input
+                type="text"
+                placeholder="First Name"
+                value={values.firstName}
+                onChange={handleChange("firstName")}
+              />
+              <input
+                type="text"
+                placeholder="Last Name"
+                value={values.lastName}
+                onChange={handleChange("lastName")}
+              />
+            </div>
+            {errors.firstName && <p className={styles.error}>{errors.firstName}</p>}
+            {errors.lastName && <p className={styles.error}>{errors.lastName}</p>}
 
-        
-        
-
-        <h2 className = "Form-text">Create Your Account</h2>
-        <form onSubmit={handleSubmit}>
-          <h5 className='inputText'>Full Name</h5>
-          <div className="inputGroup">
             <input
               type="text"
-              placeholder="First Name"
-              value={values.fullName}
-              onChange={handleChange('fullName')}
+              placeholder="Username"
+              value={values.userName}
+              onChange={handleChange("userName")}
             />
+            {errors.userName && <p className={styles.error}>{errors.userName}</p>}
+
             <input
-              type="text"
-              placeholder="Last Name"
-              value={values.lastName}
-              onChange={handleChange('lastName')}
+              type="email"
+              placeholder="Email"
+              value={values.email}
+              onChange={handleChange("email")}
             />
-          </div>
-          {errors.fullName && <p style={{ color: 'red', fontSize: '0.8rem' }}>{errors.fullName}</p>}
-          {errors.lastName && <p style={{ color: 'red', fontSize: '0.8rem' }}>{errors.lastName}</p>}
+            {errors.email && <p className={styles.error}>{errors.email}</p>}
 
-          <h5 className='inputText'>Username</h5>
+            <div className={styles.passwordGroup}>
+            <input
+              type="password"
+              placeholder="Password"
+              value={values.password}
+              onChange={handleChange("password")}
+            />
+            {errors.password && <p className={styles.error}>{errors.password}</p>}
 
-          <input
-            type="text"
-            placeholder="Username"
-            value={values.username}
-            onChange={handleChange('username')}
-          />
-          {errors.username && <p style={{ color: 'red', fontSize: '0.8rem' }}>{errors.username}</p>}
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              value={values.confirmPassword}
+              onChange={handleChange("confirmPassword")}
+            />
+            {errors.confirmPassword && (
+              <p className={styles.error}>{errors.confirmPassword}</p>
+            )}
+            </div>
+            <div>
+            <Button
+              label="Create Account →"
+              className={styles.signUpBtn}
+              onClick={() =>
+                handleSubmit(new Event("submit") as unknown as React.FormEvent)
+              }
+            />
+            </div>
+          </form>
 
-          <h5 className='inputText'>Email</h5>
 
-          <input
-            type="email"
-            placeholder="Email"
-            value={values.email}
-            onChange={handleChange('email')}
-          />
-          {errors.email && <p style={{ color: 'red', fontSize: '0.8rem' }}>{errors.email}</p>}
-
-          <section className="parent-div">
-<div className="passwordSection">
-            <p>Password</p> 
-
-          <input
-            type="password"
-            placeholder="Password"
-            value={values.password}
-            onChange={handleChange('password')}
-          />
-          {errors.password && <p style={{ color: 'red', fontSize: '0.8rem' }}>{errors.password}</p>}
-             </div>
-          
-          <div className="inputGroup">
-
-          <div className='confirmPasswordSection'>
-<p>Confirm Password</p>
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            value={values.confirmPassword}
-            onChange={handleChange('confirmPassword')}
-          />
-          {errors.confirmPassword && <p style={{ color: 'red', fontSize: '0.8rem' }}>{errors.confirmPassword}</p>}
+          <div className={styles.divider}>
+            <span>Sign up with</span>
           </div>
 
-</div>
-          </section>
-         
-          <Button label="Create Account →" onClick={() => handleSubmit(new Event('submit') as unknown as React.FormEvent)} backgroundColor="#020617"  />
-        </form>
+          <div className={styles.socialButtons}>
+            <button
+              type="button"
+              onClick={handleFacebookLogin}
+              className={`${styles.socialBtn} ${styles.facebook}`}
+            >
+              <FaFacebookF /> Facebook
+            </button>
+            <button
+              type="button"
+              onClick={handleGoogleLogin}
+              className={`${styles.socialBtn} ${styles.google}`}
+            >
+              <FcGoogle /> Google
+            </button>
+            <button
+              type="button"
+              onClick={handleMicrosoftLogin}
+              className={`${styles.socialBtn} ${styles.microsoft}`}
+            >
+              <FaMicrosoft /> Microsoft
+            </button>
+          </div>
 
-<div className="signupText">
-  <span>Sign up with</span>
-</div>
-
-
-
-
-        <div className="signupOptions">
-          <button className='signupOption Facebook'> <FaFacebook /> Facebook</button>
-          <button className='signupOption Google'><FaGoogle /> Google</button>
-          <button className='signupOption Microsoft'><FaMicrosoft /> Microsoft</button>
+          {submitted && (
+            <p className={styles.success}>Registration submitted!</p>
+          )}
         </div>
-
-        {submitted && <p style={{ color: 'green', marginTop: '1rem' }}>Registration submitted!</p>}
       </div>
-      </div>
-    </div>
+    </>
   );
 };
 
-export default Register
+export default Register;

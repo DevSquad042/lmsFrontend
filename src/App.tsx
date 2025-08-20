@@ -15,9 +15,15 @@ import ReviewPage from "./Pages/ReviewsPage";
 import ShoppingCart from "./Pages/ShoppingCart";
 import TeachersPage from "./Pages/TeachersPage";
 
-const App = () => {
+
+
+
+
+function App() {
+
   return (
-    <Routes>
+  
+  <Routes>
       <Route path="/"element={<Home/>}/>
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<LoginForm />} />
@@ -33,11 +39,9 @@ const App = () => {
           <Route path="/profile4" element={< TeachersPage/>} />
            <Route path="/profile5" element={< MessaagesPage/>} />
             <Route path="/profile6" element={< MessagesPage2/>} />
+  </Routes>
 
-      
 
-
-    </Routes>
   )
 }
 
