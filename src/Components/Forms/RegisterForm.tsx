@@ -2,11 +2,15 @@
 import { useState } from 'react';
 import NavBar from '../shared/Header1'; 
 import RegisterImage from "../../assets/Images/register-image.png"; 
-import './FormStyles/RegisterForm.css'
-import { FaFacebook } from 'react-icons/fa'
-import { FaGoogle } from "react-icons/fa6";
+import styles from './RegisterForm.module.css'
+import { FaFacebook } from 'react-icons/fa6'
+// import { FaGoogle } from "react-icons/fa6";
 import { FaMicrosoft } from "react-icons/fa";
 import Button from '../shared/Buttons';
+import type { AppDispatch } from '../../Store';
+import { useDispatch } from 'react-redux';
+import { registerUser } from '../../Store/slices/authSlice';
+import { FcGoogle } from 'react-icons/fc';
 
 
 
@@ -69,17 +73,16 @@ const Register: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validate()) {
-      // dispatch(registerUser(values));
-      // setSubmitted(true);
-      console.log(values);
-      const {confirmPassword, ...rest} = values; 
-      
-      dispatch(registerUser(rest));
-    }
-  };
+ const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+  if (validate()) {
+    const { confirmPassword, ...rest } = values;
+    console.log("Confirm password checked:", confirmPassword); // usage
+    dispatch(registerUser(rest));
+    setSubmitted(true); // mark as submitted
+  }
+};
+
 
   // Social login stubs
   const handleGoogleLogin = () => console.log("Google register clicked");
@@ -181,7 +184,7 @@ const Register: React.FC = () => {
               onClick={handleFacebookLogin}
               className={`${styles.socialBtn} ${styles.facebook}`}
             >
-              <FaFacebookF /> Facebook
+              <FaFacebook /> Facebook
             </button>
             <button
               type="button"
@@ -204,7 +207,7 @@ const Register: React.FC = () => {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

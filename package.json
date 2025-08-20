@@ -16,10 +16,7 @@
     "react-dom": "^19.1.0",
     "react-icon": "^1.0.0",
     "react-icons": "^5.5.0",
-<<<<<<< HEAD
-=======
     "react-redux": "^9.2.0",
->>>>>>> 6419c8a94bbaab3b845da453bff2c78d4e0ffa7a
     "react-router-dom": "^7.8.1"
   },
   "devDependencies": {
