@@ -89,6 +89,10 @@
   text-decoration: none;
   color: #0077ff;
   transition: 0.2s;
+  -webkit-transition: 0.2s;
+  -moz-transition: 0.2s;
+  -ms-transition: 0.2s;
+  -o-transition: 0.2s;
 }
 
 .course-right a:hover {
