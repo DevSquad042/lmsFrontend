@@ -7,10 +7,12 @@ type ButtonProps = {
   backgroundColor?: string;
   showArrow?: boolean;
   style?: object;
+  className?: string; // allows extending styles
 };
 
 const Button: React.FC<ButtonProps> = ({
   label,
+  className = "",
   onClick,
   backgroundColor,
   showArrow = false,
@@ -18,7 +20,7 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   return (
     <button
-      className="custom-btn"
+      className={`button ${className}`}
       onClick={onClick}
       style={{ backgroundColor, ...style }}
     >

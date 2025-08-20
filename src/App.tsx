@@ -1,16 +1,17 @@
 
 
 //import { ReviewSection } from "./Components/Rating";
-import ReviewSection from "./Components/Rating";
-import CourseDetailPage from "./Pages/CoursePage";
+import LoginForm from "./Components/Forms/LoginForm";
+import Register from "./Components/Forms/register";
+
 
 
 function App() {
   return (
     <div>
 
-     <CourseDetailPage/>
-     <ReviewSection productId="p1" currentUser="DemoUser"/>
+     <Register/>
+     <LoginForm/>
    
      {/*<ReviewSection productId="p1" currentUser="DemoUser"/>*/}
      

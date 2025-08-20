@@ -1,82 +1,105 @@
 import React, { useState } from "react";
-import './FormStyles/LoginForm.css'
-import LoginImage from '../assets/Images/login-image.png';
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../../store/index";
+import { loginUser } from "../../store/slices/authSlice";
 
-import { FaFacebookF, FaMicrosoft } from "react-icons/fa";
+import styles from "./FormStyles/LoginForm.module.css";
+import { FaFacebookF, FaMicrosoft, FaArrowRight } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import Header1 from '../shared/Header1'
-import Button from "../shared/Buttons"
-import { FaArrowRight } from "react-icons/fa";
+
+import Header1 from "../shared/Header1";
+import Button from "../shared/Buttons";
+import LoginImage from "../../assets/Images/login-image.png";
 
 const LoginForm: React.FC = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const dispatch = useDispatch<AppDispatch>();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    dispatch(loginUser({ email, password }));
+  };
 
-    // Replace with your sign-in logic
-    console.log("Email:", email);
-    console.log("Password:", password);
+  // Example handlers for social logins (stubbed out)
+  const handleGoogleLogin = () => {
+    console.log("Google login clicked");
+    // integrate Firebase/Auth0 here
+  };
+
+  const handleFacebookLogin = () => {
+    console.log("Facebook login clicked");
+  };
+
+  const handleMicrosoftLogin = () => {
+    console.log("Microsoft login clicked");
   };
 
   return (
     <>
       <Header1 />
-      <div className="login-container">
-        <div className="login-form-section">
+      <div className={styles.container}>
+        {/* Left form section */}
+        <div className={styles.formSection}>
           <h2>Sign in to your account</h2>
           <form onSubmit={handleSubmit}>
-            <label htmlFor="email">Email</label>
+            <label>Email</label>
             <input
               type="email"
-              id="email"
               placeholder="Username or Email ID"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
 
-            <label htmlFor="password">Password</label>
+            <label>Password</label>
             <input
               type="password"
-              id="password"
               placeholder="Enter Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-
-            {/* <button type="submit" className="sign-in-button">
-              Sign In
-            </button> */}
-
-            <Button label={<>Sign in <FaArrowRight /></>} style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "16px"
-            }}  onClick={() => handleSubmit (new Event ('submit') as unknown as React.FormEvent)}  backgroundColor="#020617"  />
+            <Button
+            className={styles.signUpBtn}
+              label="Sign In →"
+              onClick={() =>
+                handleSubmit(new Event("submit") as unknown as React.FormEvent)
+              }
+            />
           </form>
 
-          <div className="divider">
+          <div className={styles.divider}>
             <span>Sign in with</span>
           </div>
 
-          <div className="social-buttons">
-            <button  type= "button" className= "social-button facebook">
-            <FaFacebookF /> Facebook 
+          <div className={styles.socialButtons}>
+            <button
+              type="button"
+              onClick={handleFacebookLogin}
+              className={`${styles.socialBtn} ${styles.facebook}`}
+            >
+              <FaFacebookF /> Facebook
             </button>
-            <button type="button" className="social-button google">
-            <FcGoogle /> Google
+            <button
+              type="button"
+              onClick={handleGoogleLogin}
+              className={`${styles.socialBtn} ${styles.google}`}
+            >
+              <FcGoogle /> Google
             </button>
-            <button type="button" className="social-button microsoft">
-            <FaMicrosoft /> Microsoft 
+            <button
+              type="button"
+              onClick={handleMicrosoftLogin}
+              className={`${styles.socialBtn} ${styles.microsoft}`}
+            >
+              <FaMicrosoft /> Microsoft
             </button>
           </div>
         </div>
 
-        <div className="login-image-section">
+        {/* Right image section */}
+        <div className={styles.imageSection}>
           <img src={LoginImage} alt="login background" />
         </div>
       </div>
