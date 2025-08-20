@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import Header from "../Components/shared/Header2";
 import Breadcrumb from "../Components/Breadcrumb";
 import OrderSummaryCard from "../Components/cards/OrderSummaryCard";
-import Footer from "../Components/shared/Footer";
-import "../../src/assets/css/ShoppingCart.css";
+import Footer from "../Components/Layout/Footer";
+// import { Course, OrderSummary } from "../../src/Types/Index";
+import "../Styles/ShoppingCart.css";
 
 const ShoppingCart = () => {
   const [courses, setCourses] = useState([

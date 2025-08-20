@@ -1,7 +1,10 @@
+
+
+import MentorCard from '../Components/cards/MentorCard';
+
 import React from 'react';
-import MentorCard from '../Components/cards/MentorCard'; 
 import { mentors } from '../data/Mentor'; 
-import './TopInstructors.css';
+import './ComponentStyles/TopInstructors.css';
 
 /**
  * ISSUES FIXED:
@@ -33,7 +36,7 @@ const TopInstructors: React.FC = () => {
       
       <div className="top-instructors-grid">
         {topInstructors.map((mentor) => (
-          <MentorCard key={mentor.id} mentor={mentor} />
+          <MentorCard key={mentor.id} mentor={mentor} showRating={true} />
         ))}
       </div>
     </section>

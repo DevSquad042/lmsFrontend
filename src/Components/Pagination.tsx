@@ -1,5 +1,5 @@
-import React from 'react';
-import styles from './Pagination.module.css';
+
+import styles from './ComponentStyles/Pagination.module.css';
 
 const Pagination: React.FC = () => (
   <div className={styles.wrapper}>

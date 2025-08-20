@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 import React from "react";
 import CourseCard from "./cards/CourseCard"; // Fixed import path
 import "./TopCourses.css";
 import type { Course } from "../Types/Course"; // Import the proper type
 import courseImg from "../assets/Images/course.jpg";
+=======
+
+import CourseCard from './cards/CourseCard'; // Fixed import path
+import './ComponentStyles/TopCourses.css';
+import type { Course } from '../Types/Course'; // Import the proper type
+import courseImg from '../assets/Images/course.jpg';
+>>>>>>> 82ddb05d2701eb17acaecb8474d4a0a456b2e85c
 
 const TopCourses: React.FC = () => {
   // Use a proper Course array with unique data

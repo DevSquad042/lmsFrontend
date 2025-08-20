@@ -1,0 +1,106 @@
+/* src/components/messages/Messages.css */
+
+.messages-container {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* space between filter bar and list */
+.messages-list {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: calc(100vh - 320px); /* tweak to fit your layout */
+  overflow-y: auto;
+  padding-right: 6px; /* room for scrollbar */
+}
+
+/* message card */
+.message-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid #e6e9ee;
+  background: #fff;
+  transition: background 0.15s, transform 0.12s;
+}
+
+.message-card:hover {
+  background: #fbfdff;
+  transform: translateY(-2px);
+}
+
+.message-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid #e6e9ee;
+}
+
+/* main info */
+.message-info {
+  flex: 1;
+  min-width: 0; /* allow text truncation */
+}
+
+.message-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.message-name {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+  color: #0f172a;
+}
+
+.message-date {
+  font-size: 12px;
+  color: #9aa3ad;
+  white-space: nowrap;
+}
+
+/* preview text */
+.message-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  /* Add the standard properties for future support */
+  line-clamp: 2;
+  box-orient: vertical;
+
+  font-size: 14px;
+  color: #4b5563; /* Tailwind's text-gray-600 equivalent */
+}
+
+
+/* responsive tweak */
+@media (max-width: 880px) {
+  .messages-list {
+    max-height: calc(100vh - 260px);
+  }
+
+  .message-card {
+    padding: 12px;
+  }
+
+  .message-avatar {
+    width: 42px;
+    height: 42px;
+  }
+}

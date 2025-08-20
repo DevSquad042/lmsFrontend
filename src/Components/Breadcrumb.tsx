@@ -5,7 +5,7 @@
 // Handles: Page navigation hierarchy display
 
 import React from 'react';
-import './Breadcrumb.css';
+import '../Components/ComponentStyles/Breadcrumb.css';
 
 const Breadcrumb: React.FC = () => {
   return (

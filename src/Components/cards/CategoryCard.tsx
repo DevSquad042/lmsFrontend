@@ -1,5 +1,5 @@
 
-import './CategoryCard.css';
+import './CardsStyle/CategoryCard.css'
 
 interface CategoryCardProps {
   icon: React.ReactNode;

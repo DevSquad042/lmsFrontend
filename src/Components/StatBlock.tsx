@@ -1,5 +1,5 @@
-import React from 'react';
-import './StactBlock.css'
+
+import './ComponentStyles/StactBlock.css'
 
 const stats = [
   { value: '500+', title: 'Courses by our best mentors' },
