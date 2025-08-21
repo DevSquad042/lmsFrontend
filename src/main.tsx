@@ -1,14 +1,17 @@
 
-import React from "react";
 import ReactDOM from "react-dom/client";
+import App from "./App";
+import { Provider } from "react-redux";
+import Store from "./store/store";  // ✅ your Redux store
 import { BrowserRouter } from "react-router-dom";
-import './Styles/index.css'
-import App from './App.tsx'
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>
+  <Provider store={Store}>
+    <GoogleOAuthProvider clientId="192418480548-d82pi8325uh3tpju2nqqeicovl6dca2q.apps.googleusercontent.com">
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </GoogleOAuthProvider>
+  </Provider>
 );

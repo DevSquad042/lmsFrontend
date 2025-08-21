@@ -14,6 +14,7 @@ import ProfileSettings from "./Pages/ProfileSettings";
 import ReviewPage from "./Pages/ReviewsPage";
 import ShoppingCart from "./Pages/ShoppingCart";
 import TeachersPage from "./Pages/TeachersPage";
+import NotFoundPage from "./Pages/404page";
 
 
 
@@ -32,7 +33,8 @@ function App() {
        <Route path="/cart" element={< ShoppingCart/>} />
        <Route path="/checkout" element={<CheckoutPage/>} />
        <Route path="/order1" element={< Orders1/>} />
-       {/* <Route path="/mentor " element={< MentorsPage/>} /> */}
+
+    <Route path="*" element={< NotFoundPage/>} />
         <Route path="/profile1" element={< ProfileSettings/>} />
          <Route path="/profile2" element={< CoursesPages/>} />
          <Route path="/profile3" element={< ReviewPage/>} />

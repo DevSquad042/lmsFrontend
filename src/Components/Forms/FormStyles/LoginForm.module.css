@@ -39,25 +39,7 @@
   font-size: 14px;
 }
 
-.signUpBtn {
-  background-color: rgba(2, 6, 23, 1);
-  color: #fff;
-  font-size: 15px;
-  font-weight: 600;
-  font-family: 'Inter', sans-serif;
-  border: none;
-  width: 25%;
-  gap: 12px;
-  border-radius: 8px;  /* matches inputs */
-  padding: 12px; /* consistent padding */
-  margin-top: auto;
-  cursor: pointer;
-  transition: background-color 0.25s ease;
-}
 
-.signUpBtn:hover {
-  background-color: #25663D;
-}
 
 .signUpBtn:disabled {
   background-color: #A9A9A9;

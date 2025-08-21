@@ -1,18 +1,24 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import type { AppDispatch } from "../../store/index";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../../store";
 import { loginUser } from "../../store/slices/authSlice";
 
 import styles from "./FormStyles/LoginForm.module.css";
+import styles2 from "./FormStyles/register.module.css";
 import { FaFacebookF, FaMicrosoft } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
 import Header1 from "../shared/Header1";
 import Button from "../shared/Buttons";
 import LoginImage from "../../assets/Images/login-image.png";
+import { useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
+
 
 const LoginForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const { loading, error } = useSelector((state: RootState) => state.auth);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -21,19 +27,30 @@ const LoginForm: React.FC = () => {
     dispatch(loginUser({ email, password }));
   };
 
-  // handlers for social logins (stubbed out)
-  const handleGoogleLogin = () => {
-    console.log("Google login clicked");
-    // integrate Firebase/Auth0 here
-  };
+  // handlers for social logins (stubbed)
+  const handleFacebookLogin = () => console.log("Facebook login clicked");
+  const handleMicrosoftLogin = () => console.log("Microsoft login clicked");
 
-  const handleFacebookLogin = () => {
-    console.log("Facebook login clicked");
-  };
+  // Google Login
+const googleLogin = useGoogleLogin({
+  onSuccess: async (tokenResponse) => {
+    try {
+      // Get user info from Google using the access token
+      const res = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
+        headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+      });
 
-  const handleMicrosoftLogin = () => {
-    console.log("Microsoft login clicked");
-  };
+      // Send the user info or token to your backend
+      console.log("Google User:", res.data);
+
+      // You can also dispatch it to Redux (authSlice)
+      // dispatch(googleLoginUser(res.data));
+    } catch (error) {
+      console.error("Google login failed", error);
+    }
+  },
+  onError: () => console.log("Google Login Failed"),
+});
 
   return (
     <>
@@ -42,9 +59,14 @@ const LoginForm: React.FC = () => {
         {/* Left form section */}
         <div className={styles.formSection}>
           <h2>Sign in to your account</h2>
+
+          {/* Show error if login fails */}
+          {error && <p className={styles.error}>{error}</p>}
+
           <form onSubmit={handleSubmit}>
-            <label>Email</label>
+            <label htmlFor="email">Email</label>
             <input
+              id="email"
               type="email"
               placeholder="Username or Email ID"
               value={email}
@@ -52,8 +74,9 @@ const LoginForm: React.FC = () => {
               required
             />
 
-            <label>Password</label>
+            <label htmlFor="password">Password</label>
             <input
+              id="password"
               type="password"
               placeholder="Enter Password"
               value={password}
@@ -62,11 +85,9 @@ const LoginForm: React.FC = () => {
             />
 
             <Button
-              label="Sign In →"              
-              className={styles.signInBtn}
-              onClick={() =>
-                handleSubmit(new Event("submit") as unknown as React.FormEvent)
-              }
+              label={loading ? "Signing In..." : "Sign In →"}
+             className={styles2.signUpBtn}
+              // let <form onSubmit> handle submit, no manual event creation
             />
           </form>
 
@@ -82,13 +103,14 @@ const LoginForm: React.FC = () => {
             >
               <FaFacebookF /> Facebook
             </button>
-            <button
-              type="button"
-              onClick={handleGoogleLogin}
-              className={`${styles.socialBtn} ${styles.google}`}
-            >
-              <FcGoogle /> Google
-            </button>
+           <button
+  type="button"
+  onClick={() => googleLogin()}
+  className={`${styles.socialBtn} ${styles.google}`}
+>
+  <FcGoogle /> Google
+</button>
+
             <button
               type="button"
               onClick={handleMicrosoftLogin}

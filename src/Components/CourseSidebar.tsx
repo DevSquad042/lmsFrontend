@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaPlay, FaFacebook, FaMicrosoft, FaGithub } from 'react-icons/fa';
-import styles from './ComponentStyles/CourseSidebar.module.css';
+import styles from './cards/CardsStyle/CourseSidebar.module.css';
 import { FcGoogle } from 'react-icons/fc';
 import { FaXTwitter } from 'react-icons/fa6';
 
@@ -54,11 +54,11 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({ course }) => {
               <span className={styles.shareLabel}>Share</span>
               <div className={styles.socialIcons}>
                 <div className={styles.Icons}>
-                  <FaFacebook />
-                  <FaGithub />
-                  <FcGoogle />
-                  <FaXTwitter />
-                  <FaMicrosoft />
+                  <FaFacebook  className='icon'/>
+                  <FaGithub  className='icon'/>
+                  <FcGoogle  className='icon'/>
+                  <FaXTwitter  className='icon'/>
+                  <FaMicrosoft  className='icon'/>
                 </div>
               </div>
             </div>

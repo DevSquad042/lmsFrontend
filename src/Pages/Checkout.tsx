@@ -12,14 +12,14 @@ const CheckoutPage: React.FC = () => {
     <Header1/>
     <div className={styles.container}>
       {/* Page header */}
-      <div className={styles.pageTitleRow}>
-        <div >
+      < div className={styles.pageTitleRow}>
+        
           <h1 className={styles.pageTitle}>Checkout Page</h1>
           <nav className={styles.breadcrumbs}>
             <span>Details</span> › <span>Shopping Cart</span> ›{" "}
             <span className={styles.muted}>Checkout</span>
           </nav>
-        </div>
+        
       </div>
 
       {/* Main layout */}

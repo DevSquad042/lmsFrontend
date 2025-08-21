@@ -5,6 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaXTwitter } from "react-icons/fa6";
 
 import './Footer.css'
+import { Link } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   return (
@@ -17,9 +18,15 @@ const Footer: React.FC = () => {
 
       <div className='Sub-container'>
         <h3>Get Help</h3>
-        <p>Contact Us</p>
-        <p>Latest Articles</p>
-        <p>FAQ</p>
+        <Link to="mailto:bywatedu@webkul.in">
+          <p>Contact Us</p>
+        </Link>
+        <Link to="*">
+          <p>Latest Articles</p>
+        </Link>
+        <Link to="*">
+          <p>FAQ</p>
+        </Link>
       </div>
 
       <div  className='Sub-container'>
@@ -37,11 +44,21 @@ const Footer: React.FC = () => {
         <p>Tel: +(123) 456--7890</p>
         <p>Mail: bywatedu@webkul.in</p>
         <div className='Icons'>
+          <Link to="www.facebook.com">
           <FaFacebook />
+          </Link>
+          <Link to="www.github.com">
           <FaGithub />
+          </Link>
+          <Link to="https://www.google.com">
           <FcGoogle />
+          </Link>
+          <Link to="https://twitter.com">
           <FaXTwitter />
+          </Link>
+          <Link to="https://www.microsoft.com">
           <FaMicrosoft />
+          </Link>
         </div>
       </div>
     </div>

@@ -16,9 +16,9 @@ const InstructorJourney: React.FC = () => {
             Instructors from around the world teach millions of students on Byway. <br />
             We provide the tools and skills to teach what you love.
           </p>
-          <Button
+          <Button className='instructor-button'
             label="Start your Instructor Journey"
-            backgroundColor="black"
+            
             showArrow
           />
         </div>
@@ -32,9 +32,9 @@ const InstructorJourney: React.FC = () => {
             Learners around the world are launching new careers, advancing in <br />
             their fields, and enriching their lives.
           </p>
-          <Button
+          <Button className='instructor-button'
             label="Checkout Courses"
-            backgroundColor="black"
+         
             showArrow/>
         </div>
         <img src={instructor2} alt="Instructor" />

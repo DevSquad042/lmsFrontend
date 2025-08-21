@@ -3,17 +3,23 @@
 .course-detail-page {
   min-height: 100vh;
   background-color: #f9fafb; /* Light gray background for subtle contrast */
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter';
   color: #111827; /* Neutral dark text */
 }
 
   /* BREADCRUMB NAVIGATION*/
 .breadcrumb {
-  max-width: 1200px;
-  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  width:450px;
+  align-items: flex-start;
+  /* max-width: 1200px; */
+  /* margin: 0 auto; */
+  margin-left: 150px;
   padding: 12px 16px;
   font-size: 14px;
   color: #4b5563; /* Gray-600 */
+  font-weight: 500;
 }
 
 .breadcrumb span {

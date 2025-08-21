@@ -1,7 +1,7 @@
-.header{
+.header3{
     background-color:#0F172A ;
 }
-.nav{
+.nav3{
     height: 10vh;
     display: flex;
     justify-content: space-between;
@@ -9,13 +9,13 @@
     margin: 20px 70px;
     font-size: 15px;
 }
-.logo {
+.logo3 {
   width: 80px;  
   height: auto;
   object-fit: contain;
 }
 
-.nav-left{
+.nav-left3{
     width: 170px;
     display: flex;
     align-items: center;
