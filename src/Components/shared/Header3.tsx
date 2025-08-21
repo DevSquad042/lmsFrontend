@@ -5,10 +5,10 @@ import { AiOutlineStar } from "react-icons/ai";
 
 const Header3: React.FC = () => {
   return (
-    <header className="header">
-      <div className="nav">
-        <img src={Logo} alt="Byway Logo" className="logo" />
-     <div className='nav-left'>
+    <header className="header3">
+      <div className="nav3">
+        <img src={Logo} alt="Byway Logo" className="logo3" />
+     <div className='nav-left3'>
         < AiOutlineStar size={24} /> 
         <h3>Providing Rating</h3>
      </div>

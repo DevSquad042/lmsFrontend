@@ -1,11 +1,6 @@
 import type { Course } from '../Types/Course';
 import courseImg from '../assets/Images/course.jpg';
 
-/**
- * ISSUE: Original code generated the same course data 9 times
- * SOLUTION: Create more realistic and varied course data
- * EDUCATION: Always provide meaningful test data that represents real-world scenarios
- */
 export const courses: Course[] = [
   {
     id: 'course-1',

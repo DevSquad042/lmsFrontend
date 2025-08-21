@@ -71,12 +71,18 @@ const Register: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      // dispatch(registerUser(values));
-      // setSubmitted(true);
       console.log(values);
-      const {confirmPassword, ...rest} = values; 
-      
-      dispatch(registerUser(rest));
+
+      // Prepare payload (exclude confirmPassword but still keep it in state for validation)
+      const payload = {
+        name: `${values.firstName} ${values.lastName}`,
+        email: values.email,
+        password: values.password,
+        // Add other fields if needed
+      };
+
+      dispatch(registerUser(payload));
+      setSubmitted(true);
     }
   };
 
@@ -112,8 +118,12 @@ const Register: React.FC = () => {
                 onChange={handleChange("lastName")}
               />
             </div>
-            {errors.firstName && <p className={styles.error}>{errors.firstName}</p>}
-            {errors.lastName && <p className={styles.error}>{errors.lastName}</p>}
+            {errors.firstName && (
+              <p className={styles.error}>{errors.firstName}</p>
+            )}
+            {errors.lastName && (
+              <p className={styles.error}>{errors.lastName}</p>
+            )}
 
             <input
               type="text"
@@ -121,7 +131,9 @@ const Register: React.FC = () => {
               value={values.userName}
               onChange={handleChange("userName")}
             />
-            {errors.userName && <p className={styles.error}>{errors.userName}</p>}
+            {errors.userName && (
+              <p className={styles.error}>{errors.userName}</p>
+            )}
 
             <input
               type="email"
@@ -132,35 +144,36 @@ const Register: React.FC = () => {
             {errors.email && <p className={styles.error}>{errors.email}</p>}
 
             <div className={styles.passwordGroup}>
-            <input
-              type="password"
-              placeholder="Password"
-              value={values.password}
-              onChange={handleChange("password")}
-            />
-            {errors.password && <p className={styles.error}>{errors.password}</p>}
+              <input
+                type="password"
+                placeholder="Password"
+                value={values.password}
+                onChange={handleChange("password")}
+              />
+              {errors.password && (
+                <p className={styles.error}>{errors.password}</p>
+              )}
 
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              value={values.confirmPassword}
-              onChange={handleChange("confirmPassword")}
-            />
-            {errors.confirmPassword && (
-              <p className={styles.error}>{errors.confirmPassword}</p>
-            )}
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                value={values.confirmPassword}
+                onChange={handleChange("confirmPassword")}
+              />
+              {errors.confirmPassword && (
+                <p className={styles.error}>{errors.confirmPassword}</p>
+              )}
             </div>
             <div>
-            <Button
-              label="Create Account →"
-              className={styles.signUpBtn}
-              onClick={() =>
-                handleSubmit(new Event("submit") as unknown as React.FormEvent)
-              }
-            />
+              <Button
+                label="Create Account →"
+                className={styles.signUpBtn}
+                onClick={() =>
+                  handleSubmit(new Event("submit") as unknown as React.FormEvent)
+                }
+              />
             </div>
           </form>
-
 
           <div className={styles.divider}>
             <span>Sign up with</span>

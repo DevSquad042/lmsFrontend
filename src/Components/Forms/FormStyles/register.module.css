@@ -34,11 +34,11 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
-  width: 96%;
+  width: 100%;
 }
 
 .signUpBtn {
-  background-color: rgba(2, 6, 23, 1);
+  background-color: rgb(0, 0, 0);
   color: #fff;
   font-size: 15px;
   font-weight: 600;
@@ -48,11 +48,12 @@
   padding: 12px; /* consistent padding */
   margin-top: auto;
   cursor: pointer;
+  width: 40%;
   transition: background-color 0.25s ease;
 }
 
 .signUpBtn:hover {
-  background-color: #25663D;
+  background-color: hsl(0, 0%, 30%);
 }
 
 .signUpBtn:disabled {

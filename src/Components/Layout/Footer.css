@@ -16,6 +16,14 @@
   height: 190px;
   line-height: 200%;
 }
+.Sub-container a{
+  color: white;
+  text-decoration: none;
+}
+
+.Sub-container a:hover {
+  text-decoration: underline;
+}
 
 .Sub-container > h3 {
   font-size: 16px;
@@ -28,11 +36,16 @@
   justify-content: space-between;
 }
 
+
 .Icons {
   width: 200px;
   display: flex;
   justify-content: space-between;
   font-size: 20px;
+}
+.Icons a {
+  color: white;
+  text-decoration: none;
 }
 
 /* ✅ Responsive for screens smaller than 768px */

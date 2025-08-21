@@ -1,4 +1,5 @@
 .sidebar {
+ width: 350px;
   position: sticky;
   top: 0;
   align-self: start;
@@ -138,24 +139,29 @@
 }
 
 .shareHeader {
+  height: 50px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  flex-direction: column;
+
   justify-content: space-between;
 }
 
 .shareLabel {
-  font-size: 0.875rem;
+  font-size:16px;
   font-weight: 500;
   color: #374151;
 }
 
 .socialIcons {
+
   display: flex;
+  /* justify-content: space-between; */
   gap: 0.75rem;
   align-items: center;
 }
 
-.socialIcon {
+/* .socialIcon {
   color: #1877f2;
   cursor: pointer;
   transition: color 0.2s ease;
@@ -165,9 +171,9 @@
 
 .socialIcon:hover {
   color: #166fe5;
-}
+} */
 
-.googleIcon {
+/* .googleIcon {
   color: #ea4335;
   cursor: pointer;
   font-weight: 600;
@@ -189,16 +195,18 @@
 
 .twitterIcon:hover {
   color: #374151;
-}
+} */
 
 .Icons {
-  width: 200px;
+  width: 1000px;
+
   display: flex;
   justify-content: space-between;
-  font-size: 20px;
+  /* font-size: 200px; */
 }
 
-.microsoftIcon {
+
+/* .microsoftIcon {
   color: #00bcf2;
   cursor: pointer;
   transition: color 0.2s ease;
@@ -208,7 +216,7 @@
 
 .microsoftIcon:hover {
   color: #0078d4;
-}
+} */
 
 /* Responsive */
 @media (max-width: 1024px) {

@@ -1,28 +1,25 @@
-import React from 'react';
-import './SharedStyles/Button.css';
+import React from "react";
 
 type ButtonProps = {
   label: React.ReactElement | string;
   onClick?: () => void;
-  backgroundColor?: string;
+  className?: string;   // style it however you want via CSS or Tailwind
   showArrow?: boolean;
-  style?: object;
-  className?: string; // allows extending styles
+  disabled?: boolean;
 };
 
 const Button: React.FC<ButtonProps> = ({
   label,
   className = "",
   onClick,
-  backgroundColor,
   showArrow = false,
-  style
+  disabled = false,
 }) => {
   return (
     <button
-      className={`button ${className}`}
+      className={className}
       onClick={onClick}
-      style={{ backgroundColor, ...style }}
+      disabled={disabled}
     >
       {label}
       {showArrow && <span className="arrow">➔</span>}
@@ -31,6 +28,7 @@ const Button: React.FC<ButtonProps> = ({
 };
 
 export default Button;
+
 
 
 

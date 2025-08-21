@@ -1,62 +1,83 @@
-import type { Course } from '../../Types/Course';
-import { FaStar } from 'react-icons/fa';
-import styles from './CardsStyle/CourseCard.module.css';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState, AppDispatch } from "../../store/store";
+import { fetchCourses, patchCourseRating } from "../../store/slices/courseSlice";
+import { FaStar } from "react-icons/fa";
+import styles from "./CardsStyle/CourseCard.module.css";
 
-interface Props {
-  course: Course;
-}
+const CourseCard: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { data: courses, loading, error } = useSelector(
+    (state: RootState) => state.courses
+  );
 
-const CourseCard: React.FC<Props> = ({ course }) => {
-  // Handle missing or invalid rating gracefully
-  const safeRating = Math.max(0, Math.min(5, course.rating || 0));
-  
+  useEffect(() => {
+    dispatch(fetchCourses());
+  }, [dispatch]);
+
+  const handleRating = (id: string, rating: number) => {
+    // Local UI update (optional for instant feedback)
+    // dispatch(updateCourseRating({ id, rating }));
+
+    // Persist change to API
+    dispatch(patchCourseRating({ id, rating }));
+  };
+
+  if (loading) return <p>Loading courses...</p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
-    <article className={styles.card} role="article">
-      {/* Image container with proper alt text and loading optimization */}
-      <div className={styles.imageContainer}>
-        <img 
-          src={course.image} 
-          alt={`Course thumbnail for ${course.title}`}
-          loading="lazy"
-          onError={(e) => {
-            // Fallback image handling
-            e.currentTarget.src = '/placeholder-course.jpg';
-          }}
-        />
-      </div>
-      
-      {/* Content wrapper with semantic structure */}
-      <div className={styles.content}>
-        <h3 className={styles.title}>{course.title}</h3>
-        <p className={styles.author}>By {course.author}</p>
-        
-        {/* Rating section with accessibility */}
-        <div className={styles.rating} role="img" aria-label={`Rating: ${safeRating} out of 5 stars`}>
-          <div className={styles.stars}>
-            {[...Array(5)].map((_, i) => (
-              <FaStar 
-                key={i} 
-                color={i < safeRating ? '#FFC107' : '#ccc'}
-                aria-hidden="true"
+    <div className="course-grid">
+      {courses.map((course) => {
+        const safeRating = Math.max(0, Math.min(5, course.rating || 0));
+
+        return (
+          <article key={course.id} className={styles.card} role="article">
+            <div className={styles.imageContainer}>
+              <img
+                src={course.image}
+                alt={`Course thumbnail for ${course.title}`}
+                loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.src = "/placeholder-course.jpg";
+                }}
               />
-            ))}
-          </div>
-          <span className={styles.reviewCount}>
-            ({course.reviews?.toLocaleString() || 0} Reviews)
-          </span>
-        </div>
-        
-        {/* Course details */}
-        <p className={styles.details}>{course.details}</p>
-        
-        {/* Price container with currency formatting */}
-        <div className={styles.priceContainer}>
-          <strong className={styles.price}>
-            ${course.price?.toFixed(2) || '0.00'}
-          </strong>
-        </div>
-      </div>
-    </article>
+            </div>
+            <div className={styles.content}>
+              <h3 className={styles.title}>{course.title}</h3>
+              <p className={styles.author}>By {course.author}</p>
+
+              <div
+                className={styles.rating}
+                role="img"
+                aria-label={`Rating: ${safeRating} out of 5 stars`}
+              >
+                <div className={styles.stars}>
+                  {[...Array(5)].map((_, i) => (
+                    <FaStar
+                      key={i}
+                      color={i < safeRating ? "#FFC107" : "#ccc"}
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleRating(course.id, i + 1)}
+                    />
+                  ))}
+                </div>
+                <span className={styles.reviewCount}>
+                  ({course.reviews?.toLocaleString() || 0} Reviews)
+                </span>
+              </div>
+
+              <p className={styles.details}>{course.details}</p>
+              <div className={styles.priceContainer}>
+                <strong className={styles.price}>
+                  ${course.price?.toFixed(2) || "0.00"}
+                </strong>
+              </div>
+            </div>
+          </article>
+        );
+      })}
+    </div>
   );
 };
 
