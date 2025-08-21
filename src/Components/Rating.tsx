@@ -4,9 +4,9 @@ import type { Review, ReviewList, ReviewSummary } from "../Types/rating";
 import { StarIcon } from "../assets/react-icon/StarIcon";
 import "./ComponentStyles/Rating.css";
 
-type Props = { productId: string; currentUser?: string };
+type Props = { courseId: string; userId?: string };
 
-const ReviewSection: React.FC<Props> = ({ productId, currentUser = "Guest" }) => {
+const ReviewSection: React.FC<Props> = ({ courseId, userId = "Guest" }) => {
   const [summary, setSummary] = useState<ReviewSummary | null>(null);
   const [list, setList] = useState<ReviewList | null>(null);
   const [loading, setLoading] = useState(true);
@@ -21,13 +21,13 @@ const ReviewSection: React.FC<Props> = ({ productId, currentUser = "Guest" }) =>
 
   async function load() {
     setLoading(true);
-    const [s, l] = await Promise.all([getSummary(productId), getReviews(productId, page, pageSize)]);
+    const [s, l] = await Promise.all([getSummary(courseId), getReviews(courseId, page, pageSize)]);
     setSummary(s);
     setList(l);
     setLoading(false);
   }
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [productId, page]);
+  useEffect(() => { load(); /* eslint-disable-next-line */ }, [courseId, page]);
 
   const totalPages = useMemo(() => {
     if (!summary) return 1;
@@ -38,12 +38,12 @@ const ReviewSection: React.FC<Props> = ({ productId, currentUser = "Guest" }) =>
     if (!selected || !comment.trim()) return;
     setSubmitting(true);
     try {
-      const s = await postReview(productId, { user: currentUser, rating: selected, comment: comment.trim() });
+      const s = await postReview(courseId, { user: userId, rating: selected, comment: comment.trim() });
       setSummary(s);
       setComment("");
       // refresh first page to show newest at top
       setPage(1);
-      const l = await getReviews(productId, 1, pageSize);
+      const l = await getReviews(courseId, 1, pageSize);
       setList(l);
     } catch (e) {
       alert((e as Error).message);

@@ -6,13 +6,6 @@ interface Props {
   course: Course;
 }
 
-/**
- * ISSUES FIXED:
- * 1. Component name was inconsistent (CourseCards vs CourseCard)
- * 2. Missing accessibility features
- * 3. No error handling for missing data
- * EDUCATION: Always use consistent naming and include accessibility features
- */
 const CourseCard: React.FC<Props> = ({ course }) => {
   // Handle missing or invalid rating gracefully
   const safeRating = Math.max(0, Math.min(5, course.rating || 0));

@@ -26,7 +26,7 @@ const CourseDetailPage: React.FC = () => {
 
       <div className="main-content">
         <div>
-          <CourseHero course={courseData} />
+          <CourseHero  course={courseData} />
           <CourseContent
             activeTab={activeTab}
             setActiveTab={setActiveTab}

@@ -19,7 +19,7 @@ const CategoryPage: React.FC = () => {
         <div className={styles.container}>
           {/* Main content area */}
           <div className={styles.mainLayout}>
-            <aside>
+            <aside className={styles.sidebar}>
               <Filter />
             </aside>
             

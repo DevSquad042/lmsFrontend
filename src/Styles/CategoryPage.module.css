@@ -20,9 +20,10 @@
 /* Main Layout Structure */
 .mainLayout {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: repeat(280px, 3fr);
   gap: 2rem;
   margin-bottom: 3rem;
+  
 }
 
 /* Main Content Area */
@@ -91,11 +92,14 @@
 /* Course Section */
 .courseSection {
   margin-bottom: 3rem;
-  display: grid;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Grid Layouts */
 .grid {
+  padding: 0 1rem;
+  width: 100%;
   display: grid;
   gap: 1.5rem;
   grid-template-columns: repeat(3, 1fr);
@@ -219,14 +223,10 @@
   }
   
   .grid {
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
   }
   
   .mentorGrid {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  }
-  
-  .featuredGrid {
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   }
 }
