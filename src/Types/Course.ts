@@ -1,16 +1,18 @@
-// types/Course.ts
 export interface Course {
   id: string;
   title: string;
-  author: string;
-  rating: number;
-  reviews: number;
-  details: string;
+  instructor: string;
   price: number;
+  rating: number;
+  totalRatings: number;
+  totalHours: number;
+  lectures: number;
+  level: string;
   image: string;
-  chapters?: number;
-  category?: string;
-  hours?: number;
-  lectures?: number;
-  level?: string;
+}
+
+export interface CourseCardProps {
+  course: Course;
+  onRemove: (id: string) => void;
+  onSaveForLater: (id: string) => void;
 }

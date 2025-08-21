@@ -1,5 +1,5 @@
 
-import './Header1.css';
+import './SharedStyles/Header1.css';
 import { FaShoppingCart, FaSearch } from 'react-icons/fa';
 import Logo1 from '../../assets/logo/Logo.png'
 

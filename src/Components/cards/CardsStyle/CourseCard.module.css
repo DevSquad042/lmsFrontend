@@ -2,12 +2,12 @@
  * Styles for the CourseCard component
  */
 .card {
+  width: 100%;
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  height: 100%;
   display: flex;
   flex-direction: column;
   cursor: pointer;
@@ -23,7 +23,7 @@
 /* Image Container */
 .imageContainer {
   position: relative;
-  width: 100%;
+ 
   height: 200px;
   overflow: hidden;
   background: #f8f9fa;
@@ -32,7 +32,9 @@
 .imageContainer img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit:none;
+  padding: 0px 10px;
+  border-radius: px;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -127,7 +129,7 @@
 .priceContainer strong {
   font-size: 1.375rem;
   font-weight: 700;
-  color: #2563eb;
+  color:black;
   display: inline-block;
 }
 

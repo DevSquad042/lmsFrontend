@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../Components/shared/Header2";
 import Breadcrumb from "../Components/Breadcrumb";
 import OrderSummaryCard from "../Components/cards/OrderSummaryCard";
-import Footer from "../Components/shared/Footer";
-import type { Course, OrderSummary } from "../../src/Types/Index";
-import "./ShoppingCart.css";
+import Footer from "../Components/Layout/Footer";
+// import { Course, OrderSummary } from "../../src/Types/Index";
+import "../Styles/ShoppingCart.css";
 
-const ShoppingCart: React.FC = () => {
-  // Courses in cart state
-  const [courses, setCourses] = useState<Course[]>([
+const ShoppingCart = () => {
+  const [courses, setCourses] = useState([
     {
       id: "1",
       title: "Introduction to User Experience Design",
@@ -19,44 +18,58 @@ const ShoppingCart: React.FC = () => {
       totalHours: 22,
       lectures: 155,
       level: "All levels",
-      image: "/api/placeholder/96/64",
+      image: "https://via.placeholder.com/96x64",
     },
     {
       id: "2",
-      title: "Introduction to User Experience Design",
-      instructor: "John Doe",
-      price: 45.0,
-      rating: 4.6,
-      totalRatings: 250,
-      totalHours: 22,
-      lectures: 155,
-      level: "All levels",
-      image: "/api/placeholder/96/64",
+      title: "Advanced UX Design",
+      instructor: "Jane Smith",
+      price: 55.0,
+      rating: 4.8,
+      totalRatings: 320,
+      totalHours: 28,
+      lectures: 180,
+      level: "Intermediate",
+      image: "https://via.placeholder.com/96x64",
+    },
+
+    {
+      id: "3",
+      title: "UX Design for Beginners",
+      instructor: "Alice Johnson",
+      price: 35.0,
+      rating: 4.5,
+      totalRatings: 180,
+      totalHours: 15,
+      lectures: 100,
+      level: "Beginner",
+      image: "https://via.placeholder.com/96x64",
     },
   ]);
 
-  // Order summary state
-  const [orderSummary] = useState<OrderSummary>({
-    price: 90.0,
-    discount: -10.0,
-    tax: 8.0,
-    total: 88.0,
+  const [orderSummary, setOrderSummary] = useState<OrderSummary>({
+    price: 0,
+    discount: 0,
+    tax: 0,
+    total: 0,
   });
 
-  // Handle course removal from cart
-  const handleRemove = (id: string): void => {
-    setCourses((prevCourses) =>
-      prevCourses.filter((course) => course.id !== id)
-    );
-  };
+  useEffect(() => {
+    const price = courses.reduce((sum, course) => sum + course.price, 0);
+    const discount = price > 0 ? -10 : 0;
+    const tax = price > 0 ? 8 : 0;
+    const total = price + discount + tax;
+    setOrderSummary({ price, discount, tax, total });
+  }, [courses]);
 
-  // Handle save for later functionality
-  const handleSaveForLater = (id: string): void => {
+  const handleRemove = (id) =>
+    setCourses((prev) => prev.filter((course) => course.id !== id));
+
+  const handleSaveForLater = (id) => {
     console.log("Saving course for later:", id);
   };
 
-  // Handle checkout process
-  const handleCheckout = (): void => {
+  const handleCheckout = () => {
     console.log("Proceeding to checkout with courses:", courses);
   };
 
@@ -64,10 +77,8 @@ const ShoppingCart: React.FC = () => {
     <div className="shopping-cart-page">
       <Header />
       <Breadcrumb />
-
       <div className="main-content">
         <div className="content-grid">
-          {/* Left Column - Cart Items */}
           <div className="cart-section">
             <div className="cart-container">
               <div className="cart-header">
@@ -77,13 +88,11 @@ const ShoppingCart: React.FC = () => {
                   cart
                 </p>
               </div>
-
               <div className="cart-table">
                 <div className="table-header">
                   <div className="header-details">Details</div>
                   <div className="header-price">Price</div>
                 </div>
-
                 {courses.length > 0 ? (
                   courses.map((course) => (
                     <div key={course.id} className="table-row">
@@ -128,8 +137,6 @@ const ShoppingCart: React.FC = () => {
               </div>
             </div>
           </div>
-
-          {/* Right Column - Order Summary */}
           <div className="summary-section">
             <OrderSummaryCard
               summary={orderSummary}
@@ -138,7 +145,6 @@ const ShoppingCart: React.FC = () => {
           </div>
         </div>
       </div>
-
       <Footer />
     </div>
   );

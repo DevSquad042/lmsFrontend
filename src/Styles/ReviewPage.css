@@ -12,11 +12,10 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
- ;
 }
 
 .review-card {
-    margin-top: 10px;
+  margin-top: 10px;
   background: #fff;
   padding: 20px;
   margin-bottom: 20px;
@@ -31,7 +30,7 @@
 }
 
 .review-rating {
-  color:#ffc107;
+  color: #ffc107;
   font-size: 18px;
   margin-bottom: 8px;
 }
@@ -43,7 +42,7 @@
 /* Pagination bar at bottom */
 .pagination-bar {
   display: flex;
-  justify-content:center;
+  justify-content: center;
   align-items: center;
   margin-top: auto;
   padding: 20px 0;
@@ -66,5 +65,3 @@
   cursor: pointer;
   font-size: 20px;
 }
-
-

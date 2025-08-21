@@ -9,10 +9,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2.5rem;
-  max-width: 1280px;
-  margin-left: auto;
-  margin-right: auto;
   padding: 0 2rem;
+  max-width: 100%; /* allow full width */
 }
 
 .top-instructors-title {
@@ -37,14 +35,13 @@
   text-decoration: underline;
 }
 
-/* Grid Container - 5 columns as shown in design */
+/* Grid Container - auto adjust columns */
 .top-instructors-grid {
-  max-width: 1280px;
-  margin: 0 auto;
   padding: 0 2rem;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.5rem;
+  width: 100%; /* take full width */
 }
 
 /* Responsive Design - Matches Home Page Layout */
@@ -69,54 +66,3 @@
   }
 }
 
-@media (min-width: 481px) and (max-width: 640px) {
-  .top-instructors {
-    padding: 3rem 0;
-  }
-  
-  .top-instructors-header {
-    padding: 0 1rem;
-  }
-  
-  .top-instructors-title {
-    font-size: 1.75rem;
-  }
-  
-  .top-instructors-grid {
-    padding: 0 1rem;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.25rem;
-  }
-}
-
-@media (min-width: 641px) and (max-width: 768px) {
-  .top-instructors-header {
-    padding: 0 1.5rem;
-  }
-  
-  .top-instructors-grid {
-    padding: 0 1.5rem;
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-  .top-instructors-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-@media (min-width: 1281px) {
-  .top-instructors {
-    padding: 5rem 0;
-  }
-  
-  .top-instructors-header {
-    padding: 0 2.5rem;
-  }
-  
-  .top-instructors-grid {
-    padding: 0 2.5rem;
-    gap: 2rem;
-  }
-}
