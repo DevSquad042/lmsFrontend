@@ -1,11 +1,10 @@
-
-import CourseCard from './cards/CourseCard'; // Fixed import path
+import CourseCard from './cards/CourseCard'; 
 import './ComponentStyles/TopCourses.css';
-import type { Course } from '../Types/Course'; // Import the proper type
+import type { Course } from '../Types/Course';
 import courseImg from '../assets/Images/course.jpg';
+import { Link } from "react-router-dom";
 
 const TopCourses: React.FC = () => {
-  // Use a proper Course array with unique data
   const courses: Course[] = [
     {
       id: 'top-course-1',
@@ -18,8 +17,8 @@ const TopCourses: React.FC = () => {
       image: courseImg,
       chapters: 18,
       category: 'Design',
-      hours: 22, // Renamed from totalHours
-      lectures: 155, // Renamed from totalLectures
+      hours: 22,
+      lectures: 155,
       level: 'Beginner'
     },
     {
@@ -69,13 +68,21 @@ const TopCourses: React.FC = () => {
     }
   ];
 
+  const handleScrollTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <section className="top-courses">
       <header className="top-courses-header">
         <p className="top-courses-title">Top Courses</p>
-        <a href="/courses" className="top-courses-see-all" aria-label="View all courses">
+        <Link 
+          to="/categories" 
+          className="top-courses-see-all" 
+          onClick={handleScrollTop}
+        >
           See All
-        </a>
+        </Link>
       </header>
 
       <div className="top-courses-grid">
@@ -88,3 +95,4 @@ const TopCourses: React.FC = () => {
 };
 
 export default TopCourses;
+

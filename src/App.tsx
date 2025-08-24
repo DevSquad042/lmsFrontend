@@ -17,36 +17,38 @@ import TeachersPage from "./Pages/TeachersPage";
 import NotFoundPage from "./Pages/404page";
 
 
-
-
-
 function App() {
-
   return (
   
-  <Routes>
-      <Route path="/"element={<Home/>}/>
-      <Route path="/register" element={<Register />} />
-      <Route path="/login" element={<LoginForm />} />
-      <Route path="/categories" element={<CategoryPage />} />
-       <Route path="/course" element={< CourseDetailPage/>} />
-       <Route path="/cart" element={< ShoppingCart/>} />
-       <Route path="/checkout" element={<CheckoutPage/>} />
-       <Route path="/order1" element={< Orders1/>} />
+ 
+    
 
-    <Route path="*" element={< NotFoundPage/>} />
-        <Route path="/profile1" element={< ProfileSettings/>} />
-         <Route path="/profile2" element={< CoursesPages/>} />
-         <Route path="/profile3" element={< ReviewPage/>} />
-          <Route path="/profile4" element={< TeachersPage/>} />
-           <Route path="/profile5" element={< MessaagesPage/>} />
-            <Route path="/profile6" element={< MessagesPage2/>} />
-  </Routes>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/categories" element={<CategoryPage />} />
+        <Route path="/course" element={<CourseDetailPage />} />
+        <Route path="/cart" element={<ShoppingCart />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/order1" element={<Orders1 />} />
 
+        <Route path="/profile1" element={<ProfileSettings />} />
+        <Route path="/profile2" element={<CoursesPages />} />
+        <Route path="/profile3" element={<ReviewPage />} />
+        <Route path="/profile4" element={<TeachersPage />} />
+        <Route path="/profile5" element={<MessaagesPage />} />
+        <Route path="/profile6" element={<MessagesPage2 />} />
 
-  )
+        {/* Always keep * route last */}
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+  
+  );
 }
 
-export default App
+export default App;
+
+
 
 
