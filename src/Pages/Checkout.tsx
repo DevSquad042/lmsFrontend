@@ -1,6 +1,9 @@
 import React from "react";
 import styles from "../Styles/Checkout.module.css";
-import { FaCcVisa, FaPaypal } from "react-icons/fa";
+import paypal from "../assets/logo/paypal.png";
+import visa from "../assets/logo/visa.png";
+import percent from "../assets/logo/percent.png"
+// import { FaCcVisa, FaPaypal } from "react-icons/fa";
 
 import uxImage from "../assets/Images/checkout.svg";
 import Header1 from "../Components/shared/Header1";
@@ -48,7 +51,7 @@ const CheckoutPage: React.FC = () => {
                   <span className={styles.radioLabel}>Credit/Debit Card</span>
                 </label>
                 <div className={styles.cardIcons}>
-                  <FaCcVisa size={28} />
+                  <img src={visa} alt="visa logo" />
                 </div>
               </div>
 
@@ -79,7 +82,7 @@ const CheckoutPage: React.FC = () => {
                 <input type="radio" name="method" />
                 <span className={styles.radioLabel}>PayPal</span>
                 <span className={styles.paypalIcon}>
-                  <FaPaypal />
+                   <img src={paypal} alt="paypal logo" />
                 </span>
               </label>
             </div>
@@ -88,6 +91,7 @@ const CheckoutPage: React.FC = () => {
 
         {/* RIGHT COL - ORDER SUMMARY */}
         <aside className={styles.rightCol}>
+          <h2 className={styles.sectionTitle}>Order Details</h2>
           <div className={styles.card}>
             <div className={styles.orderItem}>
               <img src={uxImage} alt="course thumbnail" className={styles.thumb} />
@@ -100,9 +104,13 @@ const CheckoutPage: React.FC = () => {
             </div>
           </div>
 
-          <div className={styles.card}>
-            <button className={styles.couponBtn}>APPLY COUPON CODE</button>
-          </div>
+
+           <div className="coupon">
+             <label className={styles.couponBtn}> 
+              <img src={percent} alt="" />
+              <span> APPLY COUPON CODE</span></label>
+           </div>
+        
 
           <div className={styles.card}>
             <div className={styles.line}>
