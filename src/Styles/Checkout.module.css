@@ -17,7 +17,7 @@
 
 /* header */
 .pageTitleRow {
-  width: 350px;
+  width: 400px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -28,11 +28,15 @@
   font-size: 20px;
 }
 .breadcrumbs {
-  color: var(--muted);
+width: 250px;
+  display: flex;
+  justify-content: space-between;
+  color:black;
   font-size: 13px;
+  font-weight: 500;
 }
-.muted {
-  color: var(--muted);
+.muted .active {
+  color: #2563eb; /* Blue link for active */
 }
 
 /* layout */
@@ -45,6 +49,7 @@
 
 /* generic card */
 .card {
+  background-color: #F8FAFC;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -65,17 +70,27 @@
   margin-bottom: 14px;
 }
 
-.field label,
-.formField label {
+.field label
+{
+  font-family: 'inter';
+  font-weight: 600;
   display: block;
-  font-size: 13px;
-  color: var(--muted);
+  font-size: 18px;
+  color:black;
+  margin-bottom: 8px;
+}
+.formField label {
+  font-family: 'inter';
+  font-weight: 400;
+
+  display: block;
+  font-size: 16px;
   margin-bottom: 8px;
 }
 
 .field input,
 .formField input {
-  width: 100%;
+  width: 90%;
   padding: 12px;
   border-radius: 8px;
   border: 1px solid var(--border);
@@ -143,6 +158,8 @@
   position: sticky;
   top: 24px;
   align-self: start;
+ 
+
 }
 
 /* order item */
@@ -152,10 +169,15 @@
 }
 .thumb {
   width: 90px;
-  height: 60px;
+  /* height: 60px; */
   background: #ddd;
   border-radius: 6px;
   object-fit: cover;
+}
+.sectionTitle{
+  font-weight: 600;
+  font-size: 20px;
+
 }
 .desc .category {
   font-size: 12px;
@@ -177,14 +199,47 @@
 }
 
 /* coupon button */
-.couponBtn {
+/* .couponBtn {
+  align-items: ;
   width: 100%;
   padding: 10px 14px;
   border-radius: 8px;
   border: 1px solid var(--border);
   background: transparent;
   cursor: pointer;
+} */
+
+/* .coupon{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+} */
+.couponBtn {
+  background: var(--card);
+  width: 100%;
+  margin: 20px 0px;
+  padding: 10px 0px;
+ 
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  display: inline-flex;      
+  align-items: center;       
+  cursor: pointer;
 }
+
+.couponBtn img {
+  width: 20px;                /* adjust size */
+  height: 20px;
+  margin-right: 6px; 
+  padding-left: 10px;         /* <– adds small space */
+}
+
+ 
 
 /* summary card */
 .line {

@@ -24,7 +24,9 @@ interface LoginData {
   password: string;
 }
 interface RegisterData {
-  name: string;
+  firstName: string;
+  lastName: string;
+  userName: string;
   email: string;
   password: string;
 }
@@ -48,11 +50,11 @@ export const loginUser = createAsyncThunk<User, LoginData>(
 // 🔹 Register thunk
 export const registerUser = createAsyncThunk<User, RegisterData>(
   "auth/registerUser",
-  async (data: any) => {
+  async ({ firstName, lastName, userName, email, password }) => {
     const response = await fetch("https://byway-hoce.onrender.com/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ firstName, lastName, userName, email, password }),
     });
 
     if (!response.ok) throw new Error("Registration failed");

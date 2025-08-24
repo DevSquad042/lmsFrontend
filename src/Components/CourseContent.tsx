@@ -2,13 +2,43 @@ import React, { useState, useRef } from 'react';
 import { FaStar, FaPlay, FaUsers, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import styles from './ComponentStyles/CourseContent.module.css';
 
+interface Instructor {
+  image: string;
+  name: string;
+  title: string;
+  rating: number;
+  reviews: number;
+  students: number;
+  courses: number;
+  bio: string;
+}
+
+interface Review {
+  id: string | number;
+  avatar: string;
+  name: string;
+  rating: number;
+  date: string;
+  text: string;
+}
+
+interface SyllabusItem {
+  title: string;
+  lessons: number;
+  duration: string;
+}
+
+interface Course {
+  reviews: number;
+}
+
 interface CourseContentProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
-  instructor: any;
-  reviews: any[];
-  syllabus: any[];
-  course: any;
+  instructor: Instructor;
+  reviews: Review[];
+  syllabus: SyllabusItem[];
+  course: Course;
 }
 
 const CourseContent: React.FC<CourseContentProps> = ({
@@ -22,11 +52,18 @@ const CourseContent: React.FC<CourseContentProps> = ({
   const [expandedSyllabus, setExpandedSyllabus] = useState<{ [key: number]: boolean }>({});
 
   // Refs for each section
+<<<<<<< HEAD
   const descriptionRef = useRef<HTMLDivElement>(null);
   const instructorRef = useRef<HTMLDivElement>(null);
   const syllabusRef = useRef<HTMLDivElement>(null);
   const reviewsRef = useRef<HTMLDivElement>(null);
   const resourcesRef = useRef<HTMLDivElement>(null);
+=======
+  const descriptionRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
+  const instructorRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
+  const syllabusRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
+  const reviewsRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
+>>>>>>> 30ce23699a537e1bee6b55313df107fc70d5b074
 
   const toggleSyllabus = (index: number) => {
     setExpandedSyllabus(prev => ({
@@ -44,7 +81,7 @@ const CourseContent: React.FC<CourseContentProps> = ({
     ));
   };
 
-  const tabs = [
+  const tabs: { key: string; label: string; ref: React.RefObject<HTMLDivElement> }[] = [
     { key: 'description', label: 'Description', ref: descriptionRef },
     { key: 'instructor', label: 'Instructor', ref: instructorRef },
     { key: 'syllabus', label: 'Syllabus', ref: syllabusRef },

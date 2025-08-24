@@ -75,7 +75,10 @@ const Register: React.FC = () => {
 
       // Prepare payload (exclude confirmPassword but still keep it in state for validation)
       const payload = {
-        name: `${values.firstName} ${values.lastName}`,
+      
+        firstName: values.firstName,
+        lastName: values.lastName,
+        userName: values.userName,
         email: values.email,
         password: values.password,
         // Add other fields if needed

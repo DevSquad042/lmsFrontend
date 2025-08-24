@@ -6,3 +6,4 @@ export interface Mentor {
   students: number;
   image: string;
 }
+
