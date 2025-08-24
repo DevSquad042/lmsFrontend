@@ -48,17 +48,18 @@ export const loginUser = createAsyncThunk<User, LoginData>(
 // 🔹 Register thunk
 export const registerUser = createAsyncThunk<User, RegisterData>(
   "auth/registerUser",
-  async ({ name, email, password }) => {
+  async (data: any) => {
     const response = await fetch("https://byway-hoce.onrender.com/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify(data),
     });
 
     if (!response.ok) throw new Error("Registration failed");
     return await response.json();
   }
 );
+
 
 // 🔹 Google Login thunk
 export const googleLogin = createAsyncThunk<User, string>(

@@ -82,7 +82,7 @@ const Register: React.FC = () => {
       };
 
       dispatch(registerUser(payload));
-      setSubmitted(true);
+      // setSubmitted(true);
     }
   };
 

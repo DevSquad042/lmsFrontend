@@ -79,7 +79,7 @@ const courseSlice = createSlice({
           course.rating = rating;
         }
       });
-  },
+    },
 });
 
 export const { updateCourseRating } = courseSlice.actions;

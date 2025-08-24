@@ -5,101 +5,102 @@ import ProfileSidebar from "../Components/shared/ProfileSidebar";
 import Pagination from "../Components/Pagination";
 import CourseCard from "../Components/cards/CourseCard";
 
+
 import "../Styles/CoursesPage.css";
 
-// Example data – replace with your API or props
+// Example data
 import type { Course } from "../Types/Course";
 const sampleCourses: Course[] = [
   {
     id: "1",
     title: "Beginner's Guide to Design",
-    author: "Ronald Richards",
+    instructor: "Ronald Richards",
     rating: 5,
     reviews: 1200,
-    details: "22 Total Hours. 155 Lectures. Beginner",
+    description: "22 Total Hours. 155 Lectures. Beginner",
     price: 49.99,
-    image: "/course-image.jpg"
+    thumbnail: "/course-image.jpg"
   },
   
     {
     id: "2",
     title: "React from Scratch",
-    author: "Jane Doe",
+    instructor: "Jane Doe",
     rating: 5,
     reviews: 1200,
-    details: "40 Total Hours. 200 Lectures. Intermediate",
+    description: "40 Total Hours. 200 Lectures. Intermediate",
     price: 199.99,
-    image: "/course-image.jpg"
+    thumbnail: "/course-image.jpg"
   },
     {
     id: "3",
     title: "Advanced JavaScript Concepts",
-    author: "John Smith",
+    instructor: "John Smith",
     rating: 5,
     reviews: 850,
-    details: "30 Total Hours. 175 Lectures. Advanced",
+    description: "30 Total Hours. 175 Lectures. Advanced",
     price: 179.99,
-    image: "/course-image.jpg"
+    thumbnail: "/course-image.jpg"
   },
     {
     id: "4",
     title: "Python for Data Science",
-    author: "Maria Garcia",
+    instructor: "Maria Garcia",
     rating: 5,
     reviews: 1200,
-    details: "45 Total Hours. 250 Lectures. Intermediate",
+    description: "45 Total Hours. 250 Lectures. Intermediate",
     price: 189.9,
-    image: "/course-image.jpg"
+    thumbnail: "/course-image.jpg"
   },
     {
     id: "5",
     title: "Beginner's Guide to Design",
-    author: "Ronald Richards",
+    instructor: "Ronald Richards",
     rating: 5,
     reviews: 1200,
-    details: "45 Total Hours. 250 Lectures. Intermediate",
+    description: "45 Total Hours. 250 Lectures. Intermediate",
     price: 49.99,
-    image: "/course-image.jpg"
+    thumbnail: "/course-image.jpg"
   },
     {
     id: "6",
     title: "React from Scratch",
-    author: "Jane Doe",
+    instructor: "Jane Doe",
     rating: 5,
     reviews: 1200,
-    details: "40 Total Hours. 200 Lectures. Intermediate",
+    description: "40 Total Hours. 200 Lectures. Intermediate",
     price: 199.99,
-    image: "/course-image.jpg"
+    thumbnail: "/course-image.jpg"
   },
     { 
     id: "7",
     title: "Advanced JavaScript Concepts",
-    author: "John Smith",
+    instructor: "John Smith",
     rating: 5,
     reviews: 850,
-    details: "30 Total Hours. 175 Lectures. Advanced",
+    description: "30 Total Hours. 175 Lectures. Advanced",
     price: 179.99,
-    image: "/course-image.jpg"
+    thumbnail: "/course-image.jpg"
   },
     { 
     id: "8",
     title: "Python for Data Science",
-    author: "Maria Garcia",
+    instructor: "Maria Garcia",
     rating: 5,
     reviews: 1200,
-    details: "45 Total Hours. 250 Lectures. Intermediate",
+    description: "45 Total Hours. 250 Lectures. Intermediate",
     price: 189.9,
-    image: "/course-image.jpg"
+    thumbnail: "/course-image.jpg"
   },
   {
     id: "9",
     title: "Beginner's Guide to Design",
-    author: "Ronald Richards",
+    instructor: "Ronald Richards",
     rating: 5,
     reviews: 1200,
-    details: "22 Total Hours. 155 Lectures. Beginner",
+    description: "22 Total Hours. 155 Lectures. Beginner",
     price: 49.99,
-    image: "/course-image.jpg"
+    thumbnail: "/course-image.jpg"
   }
 ];
 

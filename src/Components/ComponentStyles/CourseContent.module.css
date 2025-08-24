@@ -384,6 +384,47 @@
   padding: 1rem;
 }
 
+.resourcesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.resourceItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background: #f9fafb;
+  transition: background-color 0.2s ease;
+}
+
+.resourceItem:hover {
+  background: #f3f4f6;
+}
+
+.resourceLink {
+  font-weight: 500;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.resourceLink:hover {
+  text-decoration: underline;
+}
+
+.lockedResource {
+  color: #9ca3af; /* gray-400 */
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+
 @media (max-width: 768px) {
   .reviewsGrid {
     grid-template-columns: 1fr;

@@ -35,7 +35,7 @@ const CourseCard: React.FC = () => {
           <article key={course.id} className={styles.card} role="article">
             <div className={styles.imageContainer}>
               <img
-                src={course.image}
+                src={course.thumbnail}
                 alt={`Course thumbnail for ${course.title}`}
                 loading="lazy"
                 onError={(e) => {
@@ -45,7 +45,7 @@ const CourseCard: React.FC = () => {
             </div>
             <div className={styles.content}>
               <h3 className={styles.title}>{course.title}</h3>
-              <p className={styles.author}>By {course.author}</p>
+              <p className={styles.author}>By {course.instructor}</p>
 
               <div
                 className={styles.rating}
@@ -67,7 +67,7 @@ const CourseCard: React.FC = () => {
                 </span>
               </div>
 
-              <p className={styles.details}>{course.details}</p>
+              <p className={styles.details}>{course.description}</p>
               <div className={styles.priceContainer}>
                 <strong className={styles.price}>
                   ${course.price?.toFixed(2) || "0.00"}

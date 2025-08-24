@@ -26,6 +26,7 @@ const CourseContent: React.FC<CourseContentProps> = ({
   const instructorRef = useRef<HTMLDivElement>(null);
   const syllabusRef = useRef<HTMLDivElement>(null);
   const reviewsRef = useRef<HTMLDivElement>(null);
+  const resourcesRef = useRef<HTMLDivElement>(null);
 
   const toggleSyllabus = (index: number) => {
     setExpandedSyllabus(prev => ({
@@ -47,7 +48,10 @@ const CourseContent: React.FC<CourseContentProps> = ({
     { key: 'description', label: 'Description', ref: descriptionRef },
     { key: 'instructor', label: 'Instructor', ref: instructorRef },
     { key: 'syllabus', label: 'Syllabus', ref: syllabusRef },
-    { key: 'reviews', label: 'Reviews', ref: reviewsRef }
+    { key: 'reviews', label: 'Reviews', ref: reviewsRef },
+    ...(course.youtubeLink || course.pdf
+    ? [{ key: 'resources', label: 'Resources', ref: resourcesRef }]
+    : [])
   ];
 
   // Smooth scroll handler
@@ -205,6 +209,54 @@ const CourseContent: React.FC<CourseContentProps> = ({
 
           <button className={styles.viewMoreBtn}>View more Reviews</button>
         </div>
+       {/* Resources */}
+    <div ref={resourcesRef}>
+      <h3 className={styles.sectionTitle}>Resources</h3>
+      <div className={styles.resourcesContainer}>
+        {(!course.youtubeLink && !course.pdf) && (
+       <p>No resources available for this course.</p>
+     )}
+
+      {course.youtubeLink && (
+        <div className={styles.resourceItem}>
+          {course.purchased ? (
+          <a 
+            href={course.youtubeLink} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className={styles.resourceLink}
+          >
+            <FaPlay className={styles.icon} /> Watch supplementary video
+          </a>
+        ) : (
+          <span className={styles.lockedResource}>
+            <FaLock className={styles.icon} /> Video available after purchase
+          </span>
+        )}
+      </div>
+     )}
+
+    {course.pdf && (
+      <div className={styles.resourceItem}>
+        {course.purchased ? (
+          <a 
+            href={course.pdf} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className={styles.resourceLink}
+          >
+            <FaFilePdf className={styles.icon} /> Download course PDF
+          </a>
+        ) : (
+          <span className={styles.lockedResource}>
+            <FaLock className={styles.icon} /> PDF available after purchase
+          </span>
+        )}
+      </div>
+    )}
+  </div>
+</div>
+
       </div>
     </div>
   );
