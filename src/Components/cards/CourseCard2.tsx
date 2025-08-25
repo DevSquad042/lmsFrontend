@@ -5,31 +5,42 @@ import { fetchCourses, patchCourseRating } from "../../store/slices/courseSlice"
 import { FaStar } from "react-icons/fa";
 import styles from "./CardsStyle/CourseCard.module.css";
 
-const CourseCard: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+// 👇 New prop for optional filtering
+interface CourseCardProps {
+  mentorId?: string;
+}
 
+const CourseCard2: React.FC<CourseCardProps> = ({ mentorId }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const { data: courses, loading, error } = useSelector(
     (state: RootState) => state.courses
   );
 
   useEffect(() => {
-    dispatch(fetchCourses());
-  }, [dispatch]);
+    if (courses.length === 0) {
+      dispatch(fetchCourses());
+    }
+  }, [dispatch, courses.length]);
 
   const handleRating = (id: string, rating: number) => {
-    // Local UI update (optional for instant feedback)
-    // dispatch(updateCourseRating({ id, rating }));
-
-    // Persist change to API
     dispatch(patchCourseRating({ id, rating }));
   };
 
   if (loading) return <p>Loading courses...</p>;
   if (error) return <p>Error: {error}</p>;
 
+  // 👇 Filter by mentorId if provided
+  const filteredCourses = mentorId
+    ? courses.filter((c) => c.mentorId === mentorId)
+    : courses;
+
+  if (filteredCourses.length === 0) {
+    return <p>No courses available.</p>;
+  }
+
   return (
     <div className="course-grid">
-      {courses.map((course) => {
+      {filteredCourses.map((course) => {
         const safeRating = Math.max(0, Math.min(5, course.rating || 0));
 
         return (
@@ -82,4 +93,4 @@ const CourseCard: React.FC = () => {
   );
 };
 
-export default CourseCard;
+export default CourseCard2;

@@ -1,24 +1,35 @@
-
-
-import React from 'react';
-import MentorCard from '../Components/cards/MentorCard'; 
-import { mentors } from '../data/Mentor'; 
+import React, { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import {
+  fetchMentors,
+  selectMentors,
+  selectMentorsStatus,
+} from '../../features/mentors/mentorSlice';
+import MentorCard from './MentorCard';
 import './ComponentStyles/TopInstructors.css';
 
-/**
- * ISSUES FIXED:
- * 1. Now uses the existing mentor data instead of creating duplicate instructor data
- * 2. Uses the MentorCard component for consistency
- * 3. Eliminates code duplication between mentors and instructors
- * 4. Follows DRY (Don't Repeat Yourself) principle
- * 
- * EDUCATION: Always reuse existing components and data when they serve the same purpose.
- * Instructors and Mentors are essentially the same entity in this context.
- */
-
 const TopInstructors: React.FC = () => {
-  // Display only the first 4 mentors as "top instructors"
+  const dispatch = useAppDispatch();
+  const mentors = useAppSelector(selectMentors);
+  const status = useAppSelector(selectMentorsStatus);
+
+  // fetch mentors if not already loaded
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchMentors());
+    }
+  }, [status, dispatch]);
+
+  // slice first 4 mentors
   const topInstructors = mentors.slice(0, 4);
+
+  if (status === 'loading') {
+    return <p>Loading top instructors...</p>;
+  }
+
+  if (status === 'failed') {
+    return <p>Failed to load instructors.</p>;
+  }
 
   return (
     <section className="top-instructors">
@@ -35,10 +46,11 @@ const TopInstructors: React.FC = () => {
       
       <div className="top-instructors-grid">
         {topInstructors.map((mentor) => (
-          <MentorCard key={mentor.id} mentor={mentor} showRating={true} />
+          <MentorCard key={mentor.id} mentorId={mentor.id!} showRating />
         ))}
       </div>
     </section>
   );
-}
+};
+
 export default TopInstructors;

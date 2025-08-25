@@ -5,6 +5,7 @@
 import CategoryPage from "./Pages/CategoryPage";
 // import CheckoutPage from "./Pages/Checkout";
 import CourseDetailPage from "./Pages/CourseDetailsPage";
+import MentorsPage from "./Pages/MentorPage";
 // import CoursesPages from "./Pages/CoursesPage";
 // // import MentorsPage from "./Pages/MentorPage";
 // import MessaagesPage from "./Pages/MessagesPage";
@@ -26,6 +27,7 @@ function App() {
       <>
     <CourseDetailPage/>
     <CategoryPage/>
+    <MentorsPage/>
     </>
   
   // <Routes>

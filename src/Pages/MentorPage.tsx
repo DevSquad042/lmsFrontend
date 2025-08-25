@@ -1,89 +1,86 @@
-import React from "react";
-import "../Styles/MentorPage.css";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState, AppDispatch } from "../store/store";
+import { fetchMentors } from "../store/slices/mentorSlice";
+import { fetchCourses } from "../store/slices/courseSlice";
+
 import Header1 from "../Components/shared/Header1";
 import Footer from "../Components/Layout/Footer";
-import TopCourses from "../Components/TopCourses";
+import CourseCard from "../Components/cards/CourseCard2";
 import Rating from "../Components/cards/RatingSummary";
 import Review from "../Components/cards/ReviewCard";
-import Button from "../Components/shared/Buttons";
 import Image from "../assets/Images/Ellipse 19.jpg";
 
-interface InstructorCardProps {
-  name: string;
-  title: string;
-  students: number;
-  // courses: number;
-  review: number;
-  about: string;
-  expertise: string[];
-  experience: string;
-  image: string;
-}
+import "../Styles/MentorPage.css";
 
-const  MentorsPage: React.FC<InstructorCardProps> = ({
-  name,
-  title,
-  students,
-  // courses,
-  review,
-  about,
-  expertise,
-  experience,
-  image,
-}) => {
+const MentorsPage: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  // mentor state
+ const mentorsState = useSelector((state: RootState) => state.mentors);
+ const coursesState = useSelector((state: RootState) => state.courses);
+
+ const { data: mentors = [], loading: mentorsLoading = false, error: mentorsError = null } = mentorsState || {};
+ const { data: courses = [], loading: coursesLoading = false, error: coursesError = null } = coursesState || {};
+
+
+  useEffect(() => {
+    if (mentors.length === 0) dispatch(fetchMentors());
+    if (courses.length === 0) dispatch(fetchCourses());
+  }, [dispatch, mentors.length, courses.length]);
+
+  if (mentorsLoading || coursesLoading) return <p>Loading...</p>;
+  if (mentorsError) return <p>Error: {mentorsError}</p>;
+  if (coursesError) return <p>Error: {coursesError}</p>;
+
+  // For now, just display the first mentor
+  const mentor = mentors[0];
+  if (!mentor) return <p>No mentor found.</p>;
+
   return (
     <>
       <Header1 />
+
+      {/* Mentor Profile */}
       <section className="instructor-container">
         <div className="instructor-header">
           <div>
             <p className="instructor-label">INSTRUCTOR</p>
-            <h1 className="instructor-name">{name}</h1>
-            <p className="instructor-title">{title}</p>
+            <h1 className="instructor-name">{mentor.name}</h1>
+            <p className="instructor-title">{mentor.role}</p>
             <div className="instructor-stats">
               <span>
-                <strong>{students.toLocaleString()}</strong> Students
+                <strong>{mentor.students.toLocaleString()}</strong> Students
               </span>
-              {/* <span><strong>{courses}</strong> Courses</span> */}
               <span>
-                <strong>{review}</strong> Review
+                <strong>{mentor.rating}</strong> Rating
               </span>
             </div>
-        <div>
-          <h3>About Ronald</h3>
-          <p>{about}</p>
-
-          <h3>Areas of Expertise</h3>
-          <ul>
-            {expertise.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
-
-          <h3>Professional Experience</h3>
-          <p>{experience}</p>
-        </div>
           </div>
 
           <div className="instructor-profile">
-            <img src={image} alt={name} className="instructor-img" />
-            <div className="instructor-actions">
-              <Button backgroundColor="white" label={"Website"}/>
-              <Button backgroundColor="white" label={"Twitter"}/>
-              <Button backgroundColor="white" label={"Youtube"}/>
-
-            </div>
+            <img
+              src={mentor.image}
+              alt={mentor.name}
+              className="instructor-img"
+            />
           </div>
         </div>
-
       </section>
-      <TopCourses />
+
+      {/* Mentor’s Courses */}
+      <section className="more-courses">
+        <h2>More Courses by {mentor.name}</h2>
+        <CourseCard mentorId={mentor.id} />
+      </section>
+
+      {/* Rating Summary + Reviews */}
       <div className="rating-container-section">
         <div className="ratings-section">
           <Rating
             summary={{
-              average: review,
-              totalReviews: 1000,
+              average: mentor.rating,
+              totalReviews: 1000, // replace with real data when available
               breakdown: [
                 { stars: 5, percentage: 80 },
                 { stars: 4, percentage: 10 },
@@ -94,6 +91,7 @@ const  MentorsPage: React.FC<InstructorCardProps> = ({
             }}
           />
         </div>
+
         <aside className="reviews-section">
           <h2>Learner Reviews</h2>
           <Review
@@ -104,37 +102,13 @@ const  MentorsPage: React.FC<InstructorCardProps> = ({
               rating: 5,
               date: new Date().toISOString(),
               reviewText:
-                "I was initially apprehensive, having no prior design experience. But the instructor, John Doe, did an amazing job of breaking down complex concepts into easily digestible modules. The video lectures were engaging, and the real-world examples really helped solidify my understanding.",
-            }}
-            className="review-card"
-          />
-          <Review
-            review={{
-              id: "2",
-              userAvatar: Image,
-              userName: "Jane Smith",
-              rating: 4,
-              date: new Date().toISOString(),
-              reviewText:
-                "The course was well-structured and provided a solid foundation in design principles. I particularly enjoyed the hands-on projects that allowed me to apply what I learned.",
-            }}
-            className="review-card"
-          />
-
-          <Review
-            review={{
-              id: "3",
-              userAvatar: Image,
-              userName: "Alice Johnson",
-              rating: 5,
-              date: new Date().toISOString(),
-              reviewText:
-                "This course exceeded my expectations! The instructor's passion for design is evident, and the community support was invaluable. I feel much more confident in my design skills now.",
+                "This mentor explained concepts so clearly. I learned a lot!",
             }}
             className="review-card"
           />
         </aside>
       </div>
+
       <Footer />
     </>
   );

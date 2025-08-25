@@ -1,8 +1,6 @@
-
-import { courses } from '../data/Course';
-import { mentors } from '../data/Mentor';
+import React from 'react';
 import CourseCard from '../Components/cards/CourseCard';
-import MentorCard from '../Components/cards/MentorCard' 
+import MentorCard from '../Components/cards/MentorCard'; 
 import Filter from '../Components/Filters/Filter';
 import Pagination from '../Components/Pagination';
 import styles from '../Styles/CategoryPage.module.css'
@@ -42,9 +40,7 @@ const CategoryPage: React.FC = () => {
               {/* Course grid */}
               <section className={styles.courseSection}>
                 <div className={styles.grid}>
-                  {courses.map(course => (
-                    <CourseCard key={course.id} course={course} />
-                  ))}
+                    <CourseCard/>
                 </div>
                 <Pagination />
               </section>
@@ -53,21 +49,18 @@ const CategoryPage: React.FC = () => {
           
           {/* Popular Mentors Section */}
           <section className={styles.mentorsSection}>
-            <h2>Popular Mentors</h2>
+           <h2>Popular Mentors</h2>
             <div className={styles.mentorGrid}>
-              {mentors.map(mentor => (
-                <MentorCard key={mentor.id} mentor={mentor} />
-              ))}
+               <MentorCard /> {/* MentorCard fetches & maps mentors itself */}
             </div>
-          </section>
+         </section>
+
           
           {/* Featured Courses Section */}
           <section className={styles.featuredSection}>
             <h2>Featured Courses</h2>
             <div className={styles.featuredGrid}>
-              {courses.slice(0, 4).map(course => (
-                <CourseCard key={`featured-${course.id}`} course={course} />
-              ))}
+                <CourseCard/>
             </div>
           </section>
         </div>

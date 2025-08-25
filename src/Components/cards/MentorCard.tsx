@@ -1,58 +1,73 @@
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState, AppDispatch } from "../../store/store";
+import { fetchMentors, patchMentorRating } from "../../store/slices/mentorSlice";
+import { FaStar } from "react-icons/fa";
+import styles from "./CardsStyle/MentorCard.module.css";
 
-import { MdOutlineEmail } from 'react-icons/md';
-import type { Mentor } from '../../../src/Types/Mentor';
-import styles from '../cards/CardsStyle/MentorCard.module.css'; // Fixed: was MentorsSection.module.css
+const MentorCard: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const mentorsState = useSelector((state: RootState) => state.mentors);
+  if (!mentorsState) return null; // or a loading spinner
+  const { data: mentors, loading, error } = mentorsState;
 
+  useEffect(() => {
+    dispatch(fetchMentors());
+  }, [dispatch]);
 
-interface Props {
-  mentor: Mentor;
-  showRating?: boolean; // If true, show rating. If false, show button.
-}
+  const handleRating = (id: string, rating: number) => {
+    dispatch(patchMentorRating({ id, rating }));
+  };
 
-const MentorCard: React.FC<Props> = ({ mentor, showRating = true }) => {
+  if (loading) return <p>Loading mentors...</p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
-    <article className={styles.card} role="article">
-      {/* Profile Image */}
-      <div className={styles.imageContainer}>
-        <img
-          src={mentor.image}
-          alt={`Profile picture of ${mentor.name}`}
-          loading="lazy"
-          onError={(e) => {
-            e.currentTarget.src = '/placeholder-avatar.jpg';
-          }}
-        />
-      </div>
+    <div className="mentor-grid">
+      {mentors.map((mentor) => {
+        const safeRating = Math.max(0, Math.min(5, mentor.rating || 0));
 
-      {/* Content */}
-      <div className={styles.content}>
-        <h4 className={styles.name}>{mentor.name}</h4>
-        <p className={styles.role}>{mentor.role}</p>
+        return (
+          <article key={mentor.id} className={styles.card} role="article">
+            <div className={styles.imageContainer}>
+              <img
+                src={mentor.image}
+                alt={`Profile picture of ${mentor.name}`}
+                loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.src = "/placeholder-avatar.jpg";
+                }}
+              />
+            </div>
 
-        <hr />
+            <div className={styles.content}>
+              <h3 className={styles.name}>{mentor.name}</h3>
+              <p className={styles.role}>{mentor.role}</p>
 
-        {/* Conditional rendering: Show either Rating or Button */}
-        {showRating ? (
-          <div className={styles.stats}>
-            <span
-              className={styles.rating}
-              aria-label={`Rating: ${mentor.rating} stars`}
-            >
-              ⭐ {mentor.rating}
-            </span>
-            <span className={styles.separator}>•</span>
-            <span className={styles.students}>
-              {mentor.students?.toLocaleString()} Students
-            </span>
-          </div>
-        ) : (
-          <button className={styles.buttonSendMessage}>
-            <span>Send Message</span>
-            <MdOutlineEmail size={20} />
-          </button>
-        )}
-      </div>
-    </article>
+              <div
+                className={styles.rating}
+                role="img"
+                aria-label={`Rating: ${safeRating} out of 5 stars`}
+              >
+                <div className={styles.stars}>
+                  {[...Array(5)].map((_, i) => (
+                    <FaStar
+                      key={i}
+                      color={i < safeRating ? "#FFC107" : "#ccc"}
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleRating(mentor.id, i + 1)}
+                    />
+                  ))}
+                </div>
+                <span className={styles.students}>
+                  {mentor.students.toLocaleString()} Students
+                </span>
+              </div>
+            </div>
+          </article>
+        );
+      })}
+    </div>
   );
 };
 

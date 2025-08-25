@@ -55,8 +55,8 @@ const CourseDetailPage: React.FC = () => {
           <CourseContent
             activeTab={activeTab}
             setActiveTab={setActiveTab}
-            instructor={course.instructor}   // ⚡ depends how backend sends instructor
-            reviews={course.reviews || []}   // ⚡ if reviews array exists
+            instructor={course.instructor}   //  depends how backend sends instructor
+            reviews={course.reviews || []}   //  if reviews array exists
             course={course}
           />
         </div>

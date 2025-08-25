@@ -52,18 +52,11 @@ const CourseContent: React.FC<CourseContentProps> = ({
   const [expandedSyllabus, setExpandedSyllabus] = useState<{ [key: number]: boolean }>({});
 
   // Refs for each section
-<<<<<<< HEAD
   const descriptionRef = useRef<HTMLDivElement>(null);
   const instructorRef = useRef<HTMLDivElement>(null);
   const syllabusRef = useRef<HTMLDivElement>(null);
   const reviewsRef = useRef<HTMLDivElement>(null);
   const resourcesRef = useRef<HTMLDivElement>(null);
-=======
-  const descriptionRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
-  const instructorRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
-  const syllabusRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
-  const reviewsRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
->>>>>>> 30ce23699a537e1bee6b55313df107fc70d5b074
 
   const toggleSyllabus = (index: number) => {
     setExpandedSyllabus(prev => ({
