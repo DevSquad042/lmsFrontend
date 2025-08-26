@@ -1,133 +1,94 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import Filter2 from "../Components/Filters/Filter2";
 import Footer from "../Components/Layout/Footer";
 import Header2 from "../Components/shared/Header2";
 import ProfileSidebar from "../Components/shared/ProfileSidebar";
 import Pagination from "../Components/Pagination";
 import CourseCard from "../Components/cards/CourseCard";
-
 import "../Styles/CoursesPage.css";
-
-// Example data – replace with your API or props
 import type { Course } from "../Types/Course";
-const sampleCourses: Course[] = [
-  {
-    id: "1",
-    title: "Beginner's Guide to Design",
-    author: "Ronald Richards",
-    rating: 5,
-    reviews: 1200,
-    details: "22 Total Hours. 155 Lectures. Beginner",
-    price: 49.99,
-    image: "/course-image.jpg"
-  },
-  
-    {
-    id: "2",
-    title: "React from Scratch",
-    author: "Jane Doe",
-    rating: 5,
-    reviews: 1200,
-    details: "40 Total Hours. 200 Lectures. Intermediate",
-    price: 199.99,
-    image: "/course-image.jpg"
-  },
-    {
-    id: "3",
-    title: "Advanced JavaScript Concepts",
-    author: "John Smith",
-    rating: 5,
-    reviews: 850,
-    details: "30 Total Hours. 175 Lectures. Advanced",
-    price: 179.99,
-    image: "/course-image.jpg"
-  },
-    {
-    id: "4",
-    title: "Python for Data Science",
-    author: "Maria Garcia",
-    rating: 5,
-    reviews: 1200,
-    details: "45 Total Hours. 250 Lectures. Intermediate",
-    price: 189.9,
-    image: "/course-image.jpg"
-  },
-    {
-    id: "5",
-    title: "Beginner's Guide to Design",
-    author: "Ronald Richards",
-    rating: 5,
-    reviews: 1200,
-    details: "45 Total Hours. 250 Lectures. Intermediate",
-    price: 49.99,
-    image: "/course-image.jpg"
-  },
-    {
-    id: "6",
-    title: "React from Scratch",
-    author: "Jane Doe",
-    rating: 5,
-    reviews: 1200,
-    details: "40 Total Hours. 200 Lectures. Intermediate",
-    price: 199.99,
-    image: "/course-image.jpg"
-  },
-    { 
-    id: "7",
-    title: "Advanced JavaScript Concepts",
-    author: "John Smith",
-    rating: 5,
-    reviews: 850,
-    details: "30 Total Hours. 175 Lectures. Advanced",
-    price: 179.99,
-    image: "/course-image.jpg"
-  },
-    { 
-    id: "8",
-    title: "Python for Data Science",
-    author: "Maria Garcia",
-    rating: 5,
-    reviews: 1200,
-    details: "45 Total Hours. 250 Lectures. Intermediate",
-    price: 189.9,
-    image: "/course-image.jpg"
-  },
-  {
-    id: "9",
-    title: "Beginner's Guide to Design",
-    author: "Ronald Richards",
-    rating: 5,
-    reviews: 1200,
-    details: "22 Total Hours. 155 Lectures. Beginner",
-    price: 49.99,
-    image: "/course-image.jpg"
-  }
-];
 
 const CoursesPages = () => {
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const itemsPerPage = 6;
+
+  // Simulated list of course IDs the user has paid for
+  const paidCourseIds = ["1", "3", "5", "7", "9", "10", "12", "14"];
+
+  useEffect(() => {
+    axios
+      .get("https://byway-hoce.onrender.com/api/courses")
+      .then((res) => {
+        setCourses(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching courses:", err);
+        setLoading(false);
+      });
+  }, []);
+
+  // Filter only the courses the user has paid for
+  const enrolledCourses = courses.filter((course) =>
+    paidCourseIds.includes(course.id)
+  );
+
+  // Filter by search query
+  const searchedCourses = enrolledCourses.filter((course) =>
+    course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    course.author.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Paginate the searched courses
+  const totalPages = Math.ceil(searchedCourses.length / itemsPerPage);
+  const paginatedCourses = searchedCourses.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
-    <div>
+    <div className="courses-wrapper">
       <Header2 />
       <section className="courses-section">
-        {/* Sidebar */}
-        <div className="sidebar-container">
+        <aside className="sidebar-container">
           <ProfileSidebar />
-        </div>
+        </aside>
 
-        {/* Main content */}
-        <div className="main-content">
-          {/* Filter Bar */}
-            <Filter2 title="Courses" count="(12)" />
+        <main className="main-content">
+          <Filter2
+            title="My Courses"
+            count={`(${searchedCourses.length})`}
+            searchQuery={searchQuery}
+            setSearchQuery={(query: string) => {
+              setSearchQuery(query);
+              setCurrentPage(1); // Reset pagination on search
+            }}
+          />
 
-           {/* Courses Grid */}
-          <div className="courses-grid">
-            {sampleCourses.map((course) => (
-              <CourseCard key={course.id} course={course} />
-            ))}
-          </div>
+          {loading ? (
+            <p>Loading courses...</p>
+          ) : searchedCourses.length === 0 ? (
+            <p>No courses match your search. Try a different keyword.</p>
+          ) : (
+            <>
+              <div className="courses-grid">
+                {paginatedCourses.map((course) => (
+                  <CourseCard key={course.id} course={course} />
+                ))}
+              </div>
 
-          {/* Pagination */}
-          <Pagination />
-        </div>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={(page: number) => setCurrentPage(page)}
+              />
+            </>
+          )}
+        </main>
       </section>
       <Footer />
     </div>

@@ -1,14 +1,42 @@
-
-import type { FC } from "react";
-import type { ChangeEvent } from 'react'
-import type {FormEvent} from 'react'
-import {  useState, useEffect, useRef } from "react";
+import type { FC, ChangeEvent, FormEvent } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import Header2 from "../Components/shared/Header2";
 import ProfileSidebar from "../Components/shared/ProfileSidebar";
 import Footer from "../Components/Layout/Footer";
 import "../Styles/MessagesPage2.css";
-import profile from '../assets/Images/profile.png'
+
+// ✅ Mocked API function
+const getMessages = (userId: number): Promise<Message[]> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([
+        {
+          id: 1,
+          text: `Hey Grace! 👋 (user ${userId})`, // using userId to silence warning
+          type: "received",
+        },
+        {
+          id: 2,
+          text: "Hi! How’s the project going?",
+          type: "sent",
+        },
+        {
+          id: 3,
+          text: "Smooth so far. Just waiting on the backend team 😅",
+          type: "received",
+        },
+      ]);
+    }, 1000);
+  });
+};
+
+// Sample user data
+const sampleUsers = [
+  { id: 1, name: "Ronald Richards", avatar: "https://i.pravatar.cc/48?img=12" },
+  { id: 2, name: "Devon Lane", avatar: "https://i.pravatar.cc/48?img=32" },
+];
 
 // Message type
 interface Message {
@@ -18,18 +46,26 @@ interface Message {
 }
 
 const MessagesPage2: FC = () => {
-  const [messages, setMessages] = useState<Message[]>([
-    { id: 1, text: "Hi there! 👋", type: "received" },
-    { id: 2, text: "Hello! How are you?", type: "sent" },
-    { id: 3, text: "I'm good. Thanks for asking.", type: "received" },
-  ]);
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
+  const userId = parseInt(id || "0", 10);
+  const user = sampleUsers.find((u) => u.id === userId);
+
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
-
-  // Reference for scrolling
   const chatEndRef = useRef<HTMLDivElement | null>(null);
 
-  // Scroll to bottom when messages change
+  // Load messages from mock API
+  useEffect(() => {
+    const loadMessages = async () => {
+      const data = await getMessages(userId);
+      setMessages(data);
+    };
+    loadMessages();
+  }, [userId]);
+
+  // Scroll to bottom on new message
   useEffect(() => {
     if (chatEndRef.current) {
       chatEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -52,6 +88,16 @@ const MessagesPage2: FC = () => {
 
     setMessages((prev) => [...prev, newMsg]);
     setNewMessage("");
+
+    // Simulate reply
+    setTimeout(() => {
+      const reply: Message = {
+        id: Date.now() + 1,
+        text: "Got it! I’ll ping the backend team again 😅",
+        type: "received",
+      };
+      setMessages((prev) => [...prev, reply]);
+    }, 1000);
   };
 
   return (
@@ -61,18 +107,22 @@ const MessagesPage2: FC = () => {
       <div className="profile-chat-body">
         <ProfileSidebar />
 
-        {/* Chat Section */}
         <div className="chat-section">
           <h2>Messages</h2>
+
           {/* Chat Header */}
           <div className="chat-header">
-            <FaArrowLeft className="chat-back-icon" />
+            <FaArrowLeft
+              className="chat-back-icon"
+              onClick={() => navigate("/profile5")}
+              style={{ cursor: "pointer" }}
+            />
             <img
-              src={profile}
-              alt="User"
+              src={user?.avatar || ""}
+              alt={user?.name || "User"}
               className="chat-profile-img"
             />
-            <span className="chat-user-name">John Doe</span>
+            <span className="chat-user-name">{user?.name || "Unknown User"}</span>
           </div>
 
           {/* Chat Messages */}
@@ -82,7 +132,6 @@ const MessagesPage2: FC = () => {
                 {msg.text}
               </div>
             ))}
-            {/* Invisible div for auto-scroll */}
             <div ref={chatEndRef}></div>
           </div>
 
@@ -105,5 +154,15 @@ const MessagesPage2: FC = () => {
 };
 
 export default MessagesPage2;
+
+
+
+
+
+
+
+
+
+
 
 

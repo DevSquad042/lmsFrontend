@@ -5,7 +5,7 @@ import Footer from "../Components/Layout/Footer";
 import TopCourses from "../Components/TopCourses";
 import Rating from "../Components/cards/RatingSummary";
 import Review from "../Components/cards/ReviewCard";
-import Button from "../Components/shared/Buttons";
+// import Button from "../Components/shared/Buttons";
 import Image from "../assets/Images/Ellipse 19.jpg";
 
 interface InstructorCardProps {
@@ -67,12 +67,12 @@ const  MentorsPage: React.FC<InstructorCardProps> = ({
 
           <div className="instructor-profile">
             <img src={image} alt={name} className="instructor-img" />
-            <div className="instructor-actions">
+            {/* <div className="instructor-actions">
               <Button backgroundColor="white" label={"Website"}/>
               <Button backgroundColor="white" label={"Twitter"}/>
               <Button backgroundColor="white" label={"Youtube"}/>
 
-            </div>
+            </div> */}
           </div>
         </div>
 

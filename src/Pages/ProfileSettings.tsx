@@ -1,4 +1,10 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState, AppDispatch } from "../store/store";
+import { updateProfile, fetchProfile } from "../store/slices/ProfileSlice";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Footer from "../Components/Layout/Footer";
 import Header2 from "../Components/shared/Header2";
 import ProfileSidebar from "../Components/shared/ProfileSidebar";
@@ -23,6 +29,10 @@ interface FormData {
 }
 
 const ProfileSettings: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const profile = useSelector((state: RootState) => state.profile.data);
+  const loading = useSelector((state: RootState) => state.profile.loading);
+
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
@@ -40,6 +50,19 @@ const ProfileSettings: React.FC = () => {
   });
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  useEffect(() => {
+    dispatch(fetchProfile());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        ...profile,
+        image: null,
+      });
+    }
+  }, [profile]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -70,17 +93,57 @@ const ProfileSettings: React.FC = () => {
     }
   };
 
+  const handleImageUpload = () => {
+    if (!formData.image) {
+      toast.warning("No image selected.");
+      return;
+    }
+
+    const data = new FormData();
+    data.append("image", formData.image);
+
+    console.log("Prepared image for upload:", data);
+    toast.success("Image ready to upload!");
+  };
+
+  const handleSubmit = () => {
+    const { firstName, lastName, headline, description, language, likes, image } = formData;
+    const requiredFields = [firstName, lastName, headline, description, language];
+    const likesFilled = Object.values(likes).every((val) => val.trim() !== "");
+
+    if (requiredFields.some((field) => field.trim() === "")) {
+      toast.error("Please fill out all required fields.");
+      return;
+    }
+
+    if (!likesFilled) {
+      toast.error("Please complete all 'Likes' fields.");
+      return;
+    }
+
+    if (!image) {
+      toast.warning("Please upload a profile image before submitting.");
+      return;
+    }
+
+    dispatch(updateProfile(formData));
+    toast.success("Profile updated successfully!");
+  };
+
   return (
     <div>
       <Header2 />
-
       <section className="profile-settings-container">
         <ProfileSidebar />
-
-        <div className="profile-settings-content">
+        <form
+          className="profile-settings-content"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+        >
           {/* Profile Info */}
           <div className="profile-info-card">
-            {/* Name Row */}
             <div className="form-group-row">
               <div className="form-group half-width">
                 <label>First Name</label>
@@ -104,8 +167,7 @@ const ProfileSettings: React.FC = () => {
               </div>
             </div>
 
-            {/* Headline */}
-            <div  className="form-group-half-width">
+            <div className="form-group-half-width">
               <label>Headline</label>
               <input
                 type="text"
@@ -116,7 +178,6 @@ const ProfileSettings: React.FC = () => {
               />
             </div>
 
-            {/* Description */}
             <div className="form-group">
               <label>Description</label>
               <textarea
@@ -127,8 +188,7 @@ const ProfileSettings: React.FC = () => {
               ></textarea>
             </div>
 
-            {/* Language */}
-            <div  className="form-group-half-width">
+            <div className="form-group-half-width">
               <label>Language</label>
               <select
                 name="language"
@@ -141,53 +201,44 @@ const ProfileSettings: React.FC = () => {
                 <option value="Spanish">Spanish</option>
               </select>
             </div>
-
           </div>
 
           {/* Image Upload */}
-          {/* Image Upload */}
-<div className="profile-image-card">
-  <h2>Image Preview</h2>
-
-  {/* Preview */}
-  <div className="image-preview">
-    {imagePreview ? (
-      <img src={imagePreview} alt="Preview" />
-    ) : (
-      <p>No image selected</p>
-    )}
-  </div>
-
-  {/* Add/Change Row */}
-  <div className="form-group-row">
-    <div className="form-group-half-width2">
-      <label htmlFor="imageInput">Add/Change Image</label>
-      <input
-        id="imageInput"
-        type="file"
-        accept="image/*"
-        onChange={handleImageChange}
-      />
-    </div>
-    <button
-      type="button"
-      className="upload-btn"
-      onClick={() => document.getElementById("imageInput")?.click()}
-    >
-      Upload Image
-    </button>
-  </div>
-
-  {/* Save Button */}
-  <button
-    type="button"
-    className="save-image-btn"
-    onClick={() => console.log("Image saved:", formData.image)}
-  >
-    Save Image
-  </button>
-</div>
-
+          <div className="profile-image-card">
+            <h2>Image Preview</h2>
+            <div className="image-preview">
+              {imagePreview ? (
+                <img src={imagePreview} alt="Preview" />
+              ) : (
+                <p>No image selected</p>
+              )}
+            </div>
+            <div className="form-group-row">
+              <div className="form-group-half-width2">
+                <label htmlFor="imageInput">Add/Change Image</label>
+                <input
+                  id="imageInput"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+              </div>
+              <button
+                type="button"
+                className="upload-btn"
+                onClick={() => document.getElementById("imageInput")?.click()}
+              >
+                Upload Image
+              </button>
+            </div>
+            <button
+              type="button"
+              className="save-image-btn"
+              onClick={handleImageUpload}
+            >
+              Save Image
+            </button>
+          </div>
 
           {/* Likes */}
           <div className="profile-likes-card">
@@ -205,15 +256,24 @@ const ProfileSettings: React.FC = () => {
               </div>
             ))}
           </div>
-        </div>
-      </section>
 
+          {/* Optional Loading Indicator */}
+          {loading && <p className="loading-text">Saving profile...</p>}
+        </form>
+      </section>
       <Footer />
+      <ToastContainer />
     </div>
   );
 };
 
 export default ProfileSettings;
+
+
+
+
+
+
 
 
 

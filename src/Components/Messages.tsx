@@ -1,6 +1,9 @@
+
 // src/components/messages/Messages.tsx
 
-import Filter2 from './Filters/Filter2' 
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import Filter2 from "./Filters/Filter2";
 import "./ComponentStyles/Messages.css";
 
 interface Message {
@@ -12,19 +15,47 @@ interface Message {
 }
 
 const sampleMessages: Message[] = [
-  { id: 1, name: "Ronald Richards", message: "Thank you for asking your doubt, I'll send you a pdf file which cover the problems you are facing. If you have any...", date: "18th March, 2024", avatar: "https://i.pravatar.cc/48?img=12" },
-  { id: 2, name: "Devon Lane", message: "I'll Get back to you as soon as possible.", date: "18th March, 2024", avatar: "https://i.pravatar.cc/48?img=32" },
-  // add more items or fetch from API later
+  {
+    id: 1,
+    name: "Ronald Richards",
+    message:
+      "Thank you for asking your doubt, I'll send you a pdf file which covers the problems you are facing. If you have any...",
+    date: "18th March, 2024",
+    avatar: "https://i.pravatar.cc/48?img=12",
+  },
+  {
+    id: 2,
+    name: "Devon Lane",
+    message: "I'll get back to you as soon as possible.",
+    date: "18th March, 2024",
+    avatar: "https://i.pravatar.cc/48?img=32",
+  },
+  // Add more items or fetch from API later
 ];
 
 const Messages: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleClick = (id: number) => {
+    console.log("Navigating to:", `/profile5/${id}`); // ✅ Debug log
+navigate(`/profile5/${id}`);
+
+  };
+
   return (
     <div className="messages-container">
       <Filter2 title="Messages" />
 
       <div className="messages-list">
         {sampleMessages.map((msg) => (
-          <div className="message-card" key={msg.id}>
+          <div
+            className="message-card"
+            key={msg.id}
+            onClick={() => handleClick(msg.id)}
+            role="button"
+            tabIndex={0}
+            style={{ cursor: "pointer" }}
+          >
             <img src={msg.avatar} alt={msg.name} className="message-avatar" />
             <div className="message-info">
               <div className="message-top">
@@ -41,3 +72,8 @@ const Messages: React.FC = () => {
 };
 
 export default Messages;
+
+
+
+
+
