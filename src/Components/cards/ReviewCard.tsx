@@ -1,15 +1,9 @@
-// ==========================================
-// REVIEW CARD COMPONENT
-// ==========================================
-// Individual review display component
-// Handles: User review display, rating, date formatting
+
 
 import React from 'react';
 import './ReviewCard.css';
 
-// ==========================================
-// TYPE DEFINITIONS
-// ==========================================
+
 
 export interface Review {
   id: string;
@@ -25,9 +19,6 @@ interface ReviewCardProps {
   className?: string;
 }
 
-// ==========================================
-// REVIEW CARD COMPONENT
-// ==========================================
 
 const ReviewCard: React.FC<ReviewCardProps> = ({ review, className = "" }) => {
   
