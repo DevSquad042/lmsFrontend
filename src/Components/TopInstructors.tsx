@@ -4,8 +4,8 @@ import {
   fetchMentors,
   selectMentors,
   selectMentorsStatus,
-} from '../../features/mentors/mentorSlice';
-import MentorCard from './MentorCard';
+} from '../store/slices/mentorSlice';
+import MentorCard from './cards/MentorCard';
 import './ComponentStyles/TopInstructors.css';
 
 const TopInstructors: React.FC = () => {

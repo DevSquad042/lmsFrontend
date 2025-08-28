@@ -1,77 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import type { RootState, AppDispatch } from '../store/store';
-import { fetchCourses } from '../store/slices/courseSlice';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import type { RootState, AppDispatch } from "../store/store";
+import { fetchCourseById } from "../store/slices/courseSlice";
+import CourseDetails from "../Components/cards/CourseCard";
+import CourseSidebar from "../Components/CourseSidebar";
+import Reviews from "../Components/Rating";
+import CourseContent from "../Components/CourseContent"; // Import the new component
+import styles from "../Styles/CourseDetailsPage.module.css";
 
-import '../Styles/CourseDetails.css';
-
-import CourseHero from '../Components/CourseHero';
-import CourseContent from '../Components/CourseContent';
-import RelatedCourses from '../Components/RelatedCourses';
-import TestimonialCard from '../Components/TestimonialsSection';
-import Footer from '../Components/Layout/Footer';
-import Header2 from '../Components/shared/Header2';
-import CourseSidebar from '../Components/CourseSidebar';
-
-
-const CourseDetailPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+const CoursePage: React.FC = () => {
+  const { courseId } = useParams<{ courseId: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const { data: courses, loading, error } = useSelector(
+  const { selectedCourse, loading, error } = useSelector(
     (state: RootState) => state.courses
   );
 
-  const [activeTab, setActiveTab] = useState('description');
-
-  // Fetch courses if not already loaded
-  useEffect(() => {
-    if (courses.length === 0) {
-      dispatch(fetchCourses());
+  const fetchData = () => {
+    if (courseId) {
+      dispatch(fetchCourseById(courseId));
     }
-  }, [dispatch, courses.length]);
+  };
 
-  // Find course by id
-  const course = courses.find((c) => c.id === id);
+  useEffect(() => {
+    fetchData();
+  }, [dispatch, courseId]);
 
   if (loading) return <p>Loading course...</p>;
   if (error) return <p>Error: {error}</p>;
-  if (!course) return <p>Course not found.</p>;
+  if (!selectedCourse) return <p>No course found.</p>;
 
   return (
-    <div className="course-detail-page">
-      <Header2 />
-
-      {/* Breadcrumb */}
-      <div className="breadcrumb">
-        <span>Home</span> <span>›</span>
-        <span>Categories</span> <span>›</span>
-        <span className="active">{course.title}</span>
+    <div className={styles.coursePage}>
+      <div className={styles.mainContent}>
+        <CourseDetails course={selectedCourse} />
+        <CourseContent course={selectedCourse} />
+        <Reviews course={selectedCourse} onReviewAdded={fetchData} />
       </div>
-
-      <div className="main-content">
-        <div>
-          <CourseHero course={course} />
-          <CourseContent
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            instructor={course.instructor}   //  depends how backend sends instructor
-            reviews={course.reviews || []}   //  if reviews array exists
-            course={course}
-          />
-        </div>
-
-        {/* Sidebar */}
-        <div className="lg:col-span-1 course-sidebar-wrapper">
-          <CourseSidebar course={course} />
-        </div>
-      </div>
-
-      <TestimonialCard />
-      <RelatedCourses />
-      <Footer />
+      <CourseSidebar course={selectedCourse} />
     </div>
   );
 };
 
-export default CourseDetailPage;
+export default CoursePage;

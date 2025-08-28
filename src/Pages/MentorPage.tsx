@@ -6,7 +6,7 @@ import { fetchCourses } from "../store/slices/courseSlice";
 
 import Header1 from "../Components/shared/Header1";
 import Footer from "../Components/Layout/Footer";
-import CourseCard from "../Components/cards/CourseCard2";
+import CourseCard from "../Components/cards/CourseCard";
 import Rating from "../Components/cards/RatingSummary";
 import Review from "../Components/cards/ReviewCard";
 import Image from "../assets/Images/Ellipse 19.jpg";
@@ -16,26 +16,23 @@ import "../Styles/MentorPage.css";
 const MentorsPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  // mentor state
- const mentorsState = useSelector((state: RootState) => state.mentors);
- const coursesState = useSelector((state: RootState) => state.courses);
+  // ✅ Defensive destructuring for mentors
+  const mentorState = useSelector((state: RootState) => state.mentors);
+  const mentors = mentorState?.data ?? [];
+  const mentorsLoading = mentorState?.loading ?? false;
+  const mentorsError = mentorState?.error ?? null;
 
- const { data: mentors = [], loading: mentorsLoading = false, error: mentorsError = null } = mentorsState || {};
- const { data: courses = [], loading: coursesLoading = false, error: coursesError = null } = coursesState || {};
-
+  // ✅ Defensive destructuring for courses
+  const courseState = useSelector((state: RootState) => state.courses);
+  const coursesLoading = courseState?.loading ?? false;
+  const coursesError = courseState?.error ?? null;
 
   useEffect(() => {
     if (mentors.length === 0) dispatch(fetchMentors());
-    if (courses.length === 0) dispatch(fetchCourses());
-  }, [dispatch, mentors.length, courses.length]);
+    dispatch(fetchCourses());
+  }, [dispatch, mentors.length]);
 
-  if (mentorsLoading || coursesLoading) return <p>Loading...</p>;
-  if (mentorsError) return <p>Error: {mentorsError}</p>;
-  if (coursesError) return <p>Error: {coursesError}</p>;
-
-  // For now, just display the first mentor
-  const mentor = mentors[0];
-  if (!mentor) return <p>No mentor found.</p>;
+  const mentor = mentors[0]; // Example: show first mentor
 
   return (
     <>
@@ -43,35 +40,51 @@ const MentorsPage: React.FC = () => {
 
       {/* Mentor Profile */}
       <section className="instructor-container">
-        <div className="instructor-header">
-          <div>
-            <p className="instructor-label">INSTRUCTOR</p>
-            <h1 className="instructor-name">{mentor.name}</h1>
-            <p className="instructor-title">{mentor.role}</p>
-            <div className="instructor-stats">
-              <span>
-                <strong>{mentor.students.toLocaleString()}</strong> Students
-              </span>
-              <span>
-                <strong>{mentor.rating}</strong> Rating
-              </span>
+        {mentorsLoading ? (
+          <p>Loading mentor...</p>
+        ) : mentorsError ? (
+          <p>Error: {mentorsError}</p>
+        ) : mentor ? (
+          <div className="instructor-header">
+            <div>
+              <p className="instructor-label">INSTRUCTOR</p>
+              <h1 className="instructor-name">{mentor.name}</h1>
+              <p className="instructor-title">{mentor.role}</p>
+              <div className="instructor-stats">
+                <span>
+                  <strong>{mentor.students.toLocaleString()}</strong> Students
+                </span>
+                <span>
+                  <strong>{mentor.rating}</strong> Rating
+                </span>
+              </div>
+            </div>
+
+            <div className="instructor-profile">
+              <img
+                src={mentor.image}
+                alt={mentor.name}
+                className="instructor-img"
+              />
             </div>
           </div>
-
-          <div className="instructor-profile">
-            <img
-              src={mentor.image}
-              alt={mentor.name}
-              className="instructor-img"
-            />
-          </div>
-        </div>
+        ) : (
+          <p>No mentor found.</p>
+        )}
       </section>
 
       {/* Mentor’s Courses */}
       <section className="more-courses">
-        <h2>More Courses by {mentor.name}</h2>
-        <CourseCard mentorId={mentor.id} />
+        <h2>More Courses by {mentor?.name || "this mentor"}</h2>
+        {coursesLoading ? (
+          <p>Loading courses...</p>
+        ) : coursesError ? (
+          <p>Error: {coursesError}</p>
+        ) : mentor ? (
+          <CourseCard mentorId={mentor.id} />
+        ) : (
+          <p>No courses available.</p>
+        )}
       </section>
 
       {/* Rating Summary + Reviews */}
@@ -79,8 +92,8 @@ const MentorsPage: React.FC = () => {
         <div className="ratings-section">
           <Rating
             summary={{
-              average: mentor.rating,
-              totalReviews: 1000, // replace with real data when available
+              average: mentor?.rating || 0,
+              totalReviews: 1000,
               breakdown: [
                 { stars: 5, percentage: 80 },
                 { stars: 4, percentage: 10 },

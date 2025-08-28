@@ -1,4 +1,4 @@
-import React from 'react';
+
 import CourseCard from '../Components/cards/CourseCard';
 import MentorCard from '../Components/cards/MentorCard'; 
 import Filter from '../Components/Filters/Filter';

@@ -1,152 +1,113 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { getSummary, getReviews, postReview } from "../API/starIconAPI";
-import type { Review, ReviewList, ReviewSummary } from "../Types/rating";
-import { StarIcon } from "../assets/react-icon/StarIcon";
-import "./ComponentStyles/Rating.css";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../store/store";
+import type { Course } from "../Types/Course";
+import type {Review} from "../Types/rating"
+import { FaStar } from "react-icons/fa";
+import { addReview } from "../store/slices/reviewsSlice";
+import styles from "./ComponentStyles/Rating.module.css";
 
-type Props = { courseId: string; userId?: string };
-
-const ReviewSection: React.FC<Props> = ({ courseId, userId = "Guest" }) => {
-  const [summary, setSummary] = useState<ReviewSummary | null>(null);
-  const [list, setList] = useState<ReviewList | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
-
-  // form state
-  const [selected, setSelected] = useState<number | null>(null);
-  const [hovered, setHovered] = useState<number | null>(null);
+// This component now accepts a course and onReviewAdded callback as props
+const Reviews: React.FC<{
+  course: Course;
+  onReviewAdded: (courseId: string) => void;
+}> = ({ course, onReviewAdded }) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const pageSize = 10;
 
-  async function load() {
-    setLoading(true);
-    const [s, l] = await Promise.all([getSummary(courseId), getReviews(courseId, page, pageSize)]);
-    setSummary(s);
-    setList(l);
-    setLoading(false);
-  }
+  const reviews = course.reviews || [];
+  const averageRating = course.rating || 0;
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [courseId, page]);
-
-  const totalPages = useMemo(() => {
-    if (!summary) return 1;
-    return Math.max(1, Math.ceil(summary.total / pageSize));
-  }, [summary]);
-
-  async function submit() {
-    if (!selected || !comment.trim()) return;
+  const handleSubmit = async () => {
+    if (!rating) return;
     setSubmitting(true);
     try {
-      const s = await postReview(courseId, { user: userId, rating: selected, comment: comment.trim() });
-      setSummary(s);
+      // Hardcoded userId for example. You would get this from your auth state.
+      const userId = "john_doe";
+      await dispatch(
+        addReview({ courseId: course.id, userId, rating, comment })
+      ).unwrap();
+      setRating(0);
       setComment("");
-      // refresh first page to show newest at top
-      setPage(1);
-      const l = await getReviews(courseId, 1, pageSize);
-      setList(l);
-    } catch (e) {
-      alert((e as Error).message);
+      onReviewAdded(course.id);
     } finally {
       setSubmitting(false);
     }
-  }
-
-  if (loading || !summary || !list) return <div>Loading reviews…</div>;
+  };
 
   return (
-    <section className="review-section" aria-label="Product reviews">
-      {/* Summary */}
-      <h3>Customer Reviews</h3>
-      <div className="summary-row">
-        <div className="stars-inline" aria-label={`Average ${summary.average} out of 5`}>
-          {[1,2,3,4,5].map(i => (
-            <StarIcon key={i} filled={i <= Math.round(summary.average)} size={20} />
+    <div className={styles.reviewsSection}>
+      <h2>Student Reviews</h2>
+      {/* Average */}
+      <div className={styles.averageBox}>
+        <h3>{averageRating ? `${averageRating.toFixed(1)} / 5` : "No rating yet"}</h3>
+        <div className={styles.stars}>
+          {[1, 2, 3, 4, 5].map((s) => (
+            <FaStar
+              key={s}
+              color={s <= Math.round(averageRating) ? "#FFC107" : "#ccc"}
+            />
           ))}
         </div>
-        <strong className="avg">{summary.average.toFixed(1)}</strong>
-        <span className="total">({summary.total} {summary.total === 1 ? "review" : "reviews"})</span>
+        <p>{reviews.length} reviews</p>
       </div>
 
-      {/* Breakdown */}
-      <div className="rating-bars">
-        {[5,4,3,2,1].map(star => {
-          const count = summary.breakdown[star] ?? 0;
-          const pct = summary.total ? Math.round((count / summary.total) * 100) : 0;
-          return (
-            <div className="rating-bar" key={star}>
-              <span className="bar-label">{star}★</span>
-              <div className="bar-bg">
-                <div className="bar-fill" style={{ width: `${pct}%` }} />
-              </div>
-              <span className="bar-count">{count}</span>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Review form */}
-      <div className="review-form">
-        <label className="form-label">Your rating</label>
-        <div
-          className="stars-inline"
-          role="radiogroup"
-          aria-label="Set your star rating"
-          onMouseLeave={() => setHovered(null)}
-        >
-          {[1,2,3,4,5].map(star => {
-            const filled = hovered !== null ? star <= hovered : selected !== null && star <= selected;
-            return (
-              <StarIcon
-                key={star}
-                filled={filled}
-                size={28}
-                onClick={() => setSelected(star)}
-                onMouseEnter={() => setHovered(star)}
-                ariaLabel={`${star} star`}
-              />
-            );
-          })}
+      {/* Review Form */}
+      <div className={styles.reviewForm}>
+        <h4>Leave a Review</h4>
+        <div className={styles.stars}>
+          {[1, 2, 3, 4, 5].map((s) => (
+            <FaStar
+              key={s}
+              color={s <= rating ? "#FFC107" : "#ccc"}
+              style={{ cursor: "pointer" }}
+              onClick={() => !submitting && setRating(s)}
+            />
+          ))}
         </div>
-
-        <label className="form-label" htmlFor="comment">Your review</label>
         <textarea
-          id="comment"
-          className="comment-input"
-          placeholder="What did you like or dislike?"
           value={comment}
           onChange={(e) => setComment(e.target.value)}
-          rows={4}
+          placeholder="Share your thoughts..."
+          disabled={submitting}
         />
-
-        <button className="submit-btn" disabled={!selected || !comment.trim() || submitting} onClick={submit}>
-          {submitting ? "Submitting…" : (selected ? `Submit ${selected}★ review` : "Submit review")}
+        <button onClick={handleSubmit} disabled={submitting}>
+          {submitting ? "Submitting..." : "Submit Review"}
         </button>
       </div>
 
-      {/* Reviews list */}
-      <div className="review-list">
-        {list.items.map((r: Review) => (
-          <article key={r.id} className="review-item">
-            <header className="review-header">
-              <strong>{r.user}</strong>
-              <div className="stars-inline">
-                {[1,2,3,4,5].map(i => <StarIcon key={i} filled={i <= r.rating} size={16} />)}
+      {/* Reviews List */}
+      <div className={styles.reviewsList}>
+        {reviews.length === 0 ? (
+          <p>Be the first to leave a review!</p>
+        ) : (
+          reviews.map((r) => (
+            <div key={r.id} className={styles.reviewCard}>
+              <div className={styles.reviewHeader}>
+                <img
+                  src={r.avatar || "/default-avatar.png"}
+                  alt={`Avatar for ${r.userId}`}
+                  className={styles.avatar}
+                />
+                <div className={styles.reviewerInfo}>
+                  <strong>{r.userId}</strong>
+                  <div className={styles.stars}>
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <FaStar key={s} color={s <= r.rating ? "#FFC107" : "#ccc"} />
+                    ))}
+                  </div>
+                  <small>{r.date || "Just now"}</small>
+                </div>
               </div>
-            </header>
-            <p className="review-text">{r.comment}</p>
-            <small className="review-date">{new Date(r.created_at).toLocaleDateString()}</small>
-          </article>
-        ))}
+              <p>{r.comment}</p>
+            </div>
+          ))
+        )}
       </div>
-
-      {/* Pagination */}
-      <div className="pagination">
-        <button disabled={page<=1} onClick={() => setPage(p => p-1)}>Prev</button>
-        <span>Page {page} / {totalPages}</span>
-        <button disabled={page>=totalPages} onClick={() => setPage(p => p+1)}>Next</button>
-      </div>
-    </section>
+    </div>
   );
 };
-export default ReviewSection;
+
+export default Reviews;

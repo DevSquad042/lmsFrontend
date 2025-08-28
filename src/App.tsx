@@ -1,57 +1,22 @@
-// import { Routes, Route } from "react-router-dom";
-// import Home from "./Pages/Home";
-// import LoginForm from "./Components/Forms/LoginForm";
-// import Register from "./Components/Forms/RegisterForm";
-import CategoryPage from "./Pages/CategoryPage";
-// import CheckoutPage from "./Pages/Checkout";
+// src/App.tsx
+import CourseCard from "./Components/cards/CourseCard";
+import ReviewSection from "./Components/Rating";
 import CourseDetailPage from "./Pages/CourseDetailsPage";
-import MentorsPage from "./Pages/MentorPage";
-// import CoursesPages from "./Pages/CoursesPage";
-// // import MentorsPage from "./Pages/MentorPage";
-// import MessaagesPage from "./Pages/MessagesPage";
-// import MessagesPage2 from "./Pages/MessagesPage2";
-// import Orders1 from "./Pages/Orders1";
-// import ProfileSettings from "./Pages/ProfileSettings";
-// import ReviewPage from "./Pages/ReviewsPage";
-// import ShoppingCart from "./Pages/ShoppingCart";
-// import TeachersPage from "./Pages/TeachersPage";
-
-
-
-
 
 function App() {
+  // you can change this to any valid courseId from your backend
+  const testCourseId = "6895fda5ef5fc1bf0a804de3";
 
   return (
+    <div style={{ padding: "2rem", fontFamily: "Arial, sans-serif" }}>
+      <h1>Course Page</h1>
+      <p>Welcome to the course! Scroll down to see reviews:</p>
 
-      <>
-    <CourseDetailPage/>
-    <CategoryPage/>
-    <MentorsPage/>
-    </>
-  
-  // <Routes>
-  //     <Route path="/"element={<Home/>}/>
-  //     <Route path="/register" element={<Register />} />
-  //     <Route path="/login" element={<LoginForm />} />
-  //     <Route path="/categories" element={<CategoryPage />} />
-  //      <Route path="/course" element={< CourseDetailPage/>} />
-  //      <Route path="/cart" element={< ShoppingCart/>} />
-  //      <Route path="/checkout" element={<CheckoutPage/>} />
-  //      <Route path="/order1" element={< Orders1/>} />
-  //      {/* <Route path="/mentor " element={< MentorsPage/>} /> */}
-  //       <Route path="/profile1" element={< ProfileSettings/>} />
-  //        <Route path="/profile2" element={< CoursesPages/>} />
-  //        <Route path="/profile3" element={< ReviewPage/>} />
-  //         <Route path="/profile4" element={< TeachersPage/>} />
-  //          <Route path="/profile5" element={< MessaagesPage/>} />
-  //           <Route path="/profile6" element={< MessagesPage2/>} />
-  // </Routes>
-
-
-  )
+      {/* Mount the review system */}
+      <CourseDetailPage/>
+    </div>
+  );
 }
 
-export default App
-
+export default App;
 

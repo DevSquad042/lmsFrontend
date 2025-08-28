@@ -1,41 +1,27 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { Course } from "../../Types/Course";
+import axios from "axios";
 
-// Fetch all courses
-export const fetchCourses = createAsyncThunk<Course[]>(
-  "courses/fetchCourses",
-  async () => {
-    const res = await fetch("https://api.example.com/courses"); // replace with your backend endpoint
-    // Handle errors
-    if (!res.ok) throw new Error("Failed to fetch courses");
-    return await res.json();
+// Thunk to fetch a single course by ID
+export const fetchCourseById = createAsyncThunk<Course, string>(
+  "courses/fetchCourseById",
+  async (courseId) => {
+    const res = await axios.get(
+      `https://byway-hoce.onrender.com/api/courses/${courseId}`
+    );
+    return res.data;
   }
 );
 
-// PATCH course rating
-export const patchCourseRating = createAsyncThunk<
-  { id: string; rating: number },
-  { id: string; rating: number }
->("courses/patchCourseRating", async ({ id, rating }) => {
-  const res = await fetch(`${"https://api.example.com/course-rating"}/${id}`, {
-    method: "PATCH", // or PUT depending on your API
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ rating }),
-  });
-
-  if (!res.ok) throw new Error("Failed to update rating");
-  return { id, rating };
-});
-
 interface CourseState {
-  data: Course[];
+  selectedCourse: Course | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: CourseState = {
-  data: [],
+  selectedCourse: null,
   loading: false,
   error: null,
 };
@@ -43,44 +29,22 @@ const initialState: CourseState = {
 const courseSlice = createSlice({
   name: "courses",
   initialState,
-  reducers: {
-    // Local-only update (optional fallback)
-    updateCourseRating: (
-      state,
-      action: PayloadAction<{ id: string; rating: number }>
-    ) => {
-      const { id, rating } = action.payload;
-      const course = state.data.find((c) => c.id === id);
-      if (course) {
-        course.rating = rating;
-      }
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCourses.pending, (state) => {
+      .addCase(fetchCourseById.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchCourses.fulfilled, (state, action: PayloadAction<Course[]>) => {
-        state.data = action.payload;
+      .addCase(fetchCourseById.fulfilled, (state, action: PayloadAction<Course>) => {
+        state.selectedCourse = action.payload;
         state.loading = false;
       })
-      .addCase(fetchCourses.rejected, (state, action) => {
+      .addCase(fetchCourseById.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Something went wrong";
-      })
-
-      // Handle rating PATCH
-      .addCase(patchCourseRating.fulfilled, (state, action) => {
-        const { id, rating } = action.payload;
-        const course = state.data.find((c) => c.id === id);
-        if (course) {
-          course.rating = rating;
-        }
+        state.error = action.error.message || "Failed to fetch course";
       });
-    },
+  },
 });
 
-export const { updateCourseRating } = courseSlice.actions;
 export default courseSlice.reducer;

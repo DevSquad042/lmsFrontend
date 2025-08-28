@@ -5,50 +5,57 @@ import { fetchCourses, patchCourseRating } from "../../store/slices/courseSlice"
 import { FaStar } from "react-icons/fa";
 import styles from "./CardsStyle/CourseCard.module.css";
 
-// 👇 New prop for optional filtering
-interface CourseCardProps {
+interface CourseCard2Props {
   mentorId?: string;
 }
 
-const CourseCard2: React.FC<CourseCardProps> = ({ mentorId }) => {
+const CourseCard2: React.FC<CourseCard2Props> = ({ mentorId }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { data: courses, loading, error } = useSelector(
-    (state: RootState) => state.courses
+
+  // ✅ Defensive destructuring
+  const { data: courses = [], loading, error } = useSelector(
+    (state: RootState) => state.courses || {}
   );
 
   useEffect(() => {
-    if (courses.length === 0) {
-      dispatch(fetchCourses());
-    }
+    if (!courses.length) dispatch(fetchCourses());
   }, [dispatch, courses.length]);
 
   const handleRating = (id: string, rating: number) => {
     dispatch(patchCourseRating({ id, rating }));
   };
 
-  if (loading) return <p>Loading courses...</p>;
-  if (error) return <p>Error: {error}</p>;
-
-  // 👇 Filter by mentorId if provided
+  // ✅ Mentor filter (shorthand)
   const filteredCourses = mentorId
-    ? courses.filter((c) => c.mentorId === mentorId)
+    ? courses.filter((c: any) => c.mentorId === mentorId)
     : courses;
 
-  if (filteredCourses.length === 0) {
-    return <p>No courses available.</p>;
-  }
+  if (loading) return <p>Loading courses...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="course-grid">
       {filteredCourses.map((course) => {
-        const safeRating = Math.max(0, Math.min(5, course.rating || 0));
+        const {
+          id,
+          title,
+          description,
+          price = 0,
+          rating = 0,
+          instructor = "Unknown Instructor",
+          thumbnail = "/placeholder-course.jpg",
+          reviews = 0,
+        } = course;
+
+        const safeRating = Math.max(0, Math.min(5, rating));
+        const reviewCount = Array.isArray(reviews) ? reviews.length : reviews;
 
         return (
-          <article key={course.id} className={styles.card} role="article">
+          <article key={id} className={styles.card} role="article">
             <div className={styles.imageContainer}>
               <img
-                src={course.thumbnail}
-                alt={`Course thumbnail for ${course.title}`}
+                src={thumbnail}
+                alt={`Course thumbnail for ${title}`}
                 loading="lazy"
                 onError={(e) => {
                   e.currentTarget.src = "/placeholder-course.jpg";
@@ -56,8 +63,8 @@ const CourseCard2: React.FC<CourseCardProps> = ({ mentorId }) => {
               />
             </div>
             <div className={styles.content}>
-              <h3 className={styles.title}>{course.title}</h3>
-              <p className={styles.author}>By {course.instructor}</p>
+              <h3 className={styles.title}>{title}</h3>
+              <p className={styles.author}>By {instructor}</p>
 
               <div
                 className={styles.rating}
@@ -70,19 +77,19 @@ const CourseCard2: React.FC<CourseCardProps> = ({ mentorId }) => {
                       key={i}
                       color={i < safeRating ? "#FFC107" : "#ccc"}
                       style={{ cursor: "pointer" }}
-                      onClick={() => handleRating(course.id, i + 1)}
+                      onClick={() => handleRating(id, i + 1)}
                     />
                   ))}
                 </div>
                 <span className={styles.reviewCount}>
-                  ({course.reviews?.toLocaleString() || 0} Reviews)
+                  ({reviewCount} Reviews)
                 </span>
               </div>
 
-              <p className={styles.details}>{course.description}</p>
+              <p className={styles.details}>{description}</p>
               <div className={styles.priceContainer}>
                 <strong className={styles.price}>
-                  ${course.price?.toFixed(2) || "0.00"}
+                  ${price.toFixed(2)}
                 </strong>
               </div>
             </div>
