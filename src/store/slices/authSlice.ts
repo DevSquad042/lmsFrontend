@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import  type{PayloadAction}  from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 
 interface User {
   id: string;
@@ -15,8 +15,11 @@ interface AuthState {
   error: string | null;
 }
 
+// ✅ Initialize state from localStorage if available
+const savedUser = localStorage.getItem("user");
+
 const initialState: AuthState = {
-  user: null,
+  user: savedUser ? JSON.parse(savedUser) : null,
   loading: false,
   error: null,
 };
@@ -50,11 +53,10 @@ export const loginUser = createAsyncThunk<User, LoginData>(
     }
 
     const data = await response.json();
+    if (!data.paidCourses) data.paidCourses = [];
 
-    // Fallback if backend doesn't send paidCourses
-    if (!data.paidCourses) {
-      data.paidCourses = [];
-    }
+    // ✅ Save user in localStorage
+    localStorage.setItem("user", JSON.stringify(data));
 
     return data;
   }
@@ -75,14 +77,14 @@ export const registerUser = createAsyncThunk<
     });
 
     const data = await response.json();
-
     if (!response.ok) {
       return rejectWithValue(data.message || "Registration failed");
     }
 
-    if (!data.paidCourses) {
-      data.paidCourses = [];
-    }
+    if (!data.paidCourses) data.paidCourses = [];
+
+    // ✅ Save user in localStorage
+    localStorage.setItem("user", JSON.stringify(data));
 
     return data;
   }
@@ -101,10 +103,10 @@ export const googleLogin = createAsyncThunk<User, string>(
     if (!response.ok) throw new Error("Google login failed");
 
     const data = await response.json();
+    if (!data.paidCourses) data.paidCourses = [];
 
-    if (!data.paidCourses) {
-      data.paidCourses = [];
-    }
+    // ✅ Save user in localStorage
+    localStorage.setItem("user", JSON.stringify(data));
 
     return data;
   }
@@ -122,7 +124,7 @@ export const fetchPaidCourses = createAsyncThunk<
       const res = await fetch(`https://byway-hoce.onrender.com/api/users/${userId}/courses`);
       const data = await res.json();
       return data.paidCourses || [];
-    } catch  {
+    } catch {
       return rejectWithValue("Failed to fetch paid courses");
     }
   }
@@ -135,14 +137,18 @@ const authSlice = createSlice({
     logout(state) {
       state.user = null;
       state.error = null;
+      // ✅ Remove user from localStorage on logout
+      localStorage.removeItem("user");
     },
     login(state, action: PayloadAction<User>) {
       state.user = action.payload;
       state.error = null;
+      localStorage.setItem("user", JSON.stringify(action.payload));
     },
     setPaidCourses(state, action: PayloadAction<string[]>) {
       if (state.user) {
         state.user.paidCourses = action.payload;
+        localStorage.setItem("user", JSON.stringify(state.user));
       }
     },
   },
@@ -194,6 +200,7 @@ const authSlice = createSlice({
       .addCase(fetchPaidCourses.fulfilled, (state, action: PayloadAction<string[]>) => {
         if (state.user) {
           state.user.paidCourses = action.payload;
+          localStorage.setItem("user", JSON.stringify(state.user));
         }
       });
   },
