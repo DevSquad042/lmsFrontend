@@ -41,7 +41,7 @@ function App() {
     if (token && userData) {
       dispatch(login(JSON.parse(userData)));
     }
-  }, []);
+  }, [dispatch]); 
 
   return (
     <>
