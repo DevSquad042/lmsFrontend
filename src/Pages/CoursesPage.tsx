@@ -8,17 +8,18 @@ import Pagination from "../Components/Pagination";
 import CourseCard from "../Components/cards/CourseCard";
 import "../Styles/CoursesPage.css";
 import type { Course } from "../Types/Course";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CoursesPages = () => {
   const [courses, setCourses] = useState<Course[]>([]);
+  const [paidCourseIds, setPaidCourseIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const itemsPerPage = 6;
 
-  // Simulated list of course IDs the user has paid for
-  const paidCourseIds = ["1", "3", "5", "7", "9", "10", "12", "14"];
-
+  // Fetch all courses
   useEffect(() => {
     axios
       .get("https://byway-hoce.onrender.com/api/courses")
@@ -28,7 +29,21 @@ const CoursesPages = () => {
       })
       .catch((err) => {
         console.error("Error fetching courses:", err);
+        toast.error("Failed to load courses.");
         setLoading(false);
+      });
+  }, []);
+
+  // Fetch paid course IDs dynamically
+  useEffect(() => {
+    axios
+      .get("https://your-api-link.com/api/my-courses") // 🔁 Replace with your actual endpoint
+      .then((res) => {
+        setPaidCourseIds(res.data); // assuming it returns an array of course IDs
+      })
+      .catch((err) => {
+        console.error("Error fetching paid courses:", err);
+        toast.error("Failed to load your enrolled courses.");
       });
   }, []);
 
@@ -91,6 +106,7 @@ const CoursesPages = () => {
         </main>
       </section>
       <Footer />
+      <ToastContainer />
     </div>
   );
 };

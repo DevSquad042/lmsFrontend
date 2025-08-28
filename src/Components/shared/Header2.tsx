@@ -5,20 +5,21 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import Logo1 from '../../assets/logo/Logo.png';
 import { Link } from 'react-router-dom';
 import { useSelector } from "react-redux";
-import type { RootState } from "../../store/store"; // ✅ adjust path if needed
+import { useState } from 'react';
+import type { RootState } from "../../store/store";
 
 const Header2: React.FC = () => {
-  // ✅ Read cart items from Redux
   const cartItems = useSelector((state: RootState) => state.cart.items);
-
-  // ✅ Count total items
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
   return (
     <header className="header2">
       <div className="header-left2">
         <img src={Logo1} alt="Byway Logo" className="header-logo2" />
-        <Link to="/categories" className="header-link">Categories</Link>
+      
       </div>
 
       <div className="header-search4">
@@ -48,6 +49,17 @@ const Header2: React.FC = () => {
           <Link to="/notifications">
             <IoIosNotificationsOutline className="header-notification" />
           </Link>
+        </div>
+
+        <div className="user-avatar-wrapper" onClick={toggleDropdown}>
+          <div className="user-avatar">B</div>
+          {dropdownOpen && (
+            <div className="user-dropdown">
+              <Link to="/dashboard">Dashboard</Link>
+              <Link to="/settings">Settings</Link>
+              <Link to="/logout">Logout</Link>
+            </div>
+          )}
         </div>
       </div>
     </header>

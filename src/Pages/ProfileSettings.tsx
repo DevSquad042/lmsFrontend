@@ -1,10 +1,11 @@
-
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "../store/store";
 import { updateProfile, fetchProfile } from "../store/slices/ProfileSlice";
+import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 import Footer from "../Components/Layout/Footer";
 import Header2 from "../Components/shared/Header2";
 import ProfileSidebar from "../Components/shared/ProfileSidebar";
@@ -30,8 +31,10 @@ interface FormData {
 
 const ProfileSettings: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const profile = useSelector((state: RootState) => state.profile.data);
   const loading = useSelector((state: RootState) => state.profile.loading);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
@@ -50,6 +53,12 @@ const ProfileSettings: React.FC = () => {
   });
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
 
   useEffect(() => {
     dispatch(fetchProfile());
@@ -257,7 +266,6 @@ const ProfileSettings: React.FC = () => {
             ))}
           </div>
 
-          {/* Optional Loading Indicator */}
           {loading && <p className="loading-text">Saving profile...</p>}
         </form>
       </section>
