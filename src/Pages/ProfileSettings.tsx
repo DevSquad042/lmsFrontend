@@ -60,7 +60,7 @@ const ProfileSettings: React.FC = () => {
       profilePicture: null,
     });
 
-    setImagePreview(user.profilePictureUrl || null);
+    setImagePreview(user.profilePicture || null);
   }, [user]);
 
   const handleChange = (
@@ -102,7 +102,7 @@ const ProfileSettings: React.FC = () => {
       });
 
       const response = await fetch(
-        `https://byway-hoce.onrender.com/api/users/${user.id}/profile`,
+        `https://byway-hoce.onrender.com/api/profile/update`, // Updated endpoint
         {
           method: "PUT",
           headers: {
@@ -112,11 +112,19 @@ const ProfileSettings: React.FC = () => {
         }
       );
 
+      // Check if response is JSON
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        console.error("Non-JSON response from profile update:", text);
+        throw new Error(`Server returned non-JSON response: ${response.status} ${response.statusText}`);
+      }
+
       const result = await response.json();
       console.log("Profile update API response:", JSON.stringify(result, null, 2)); // Debug log
 
       if (!response.ok) {
-        setMessage(result.message || "Something went wrong ❌");
+        setMessage(result.message || `Error ${response.status}: ${response.statusText} ❌`);
         return;
       }
 
@@ -128,10 +136,10 @@ const ProfileSettings: React.FC = () => {
 
       setMessage("Profile updated successfully ✅");
       setFormData((prev) => ({ ...prev, profilePicture: null }));
-      setImagePreview(result.profilePictureUrl || null);
-    } catch (err) {
+      setImagePreview(result.profilePicture || null);
+    } catch (err: any) {
       console.error("Error updating profile:", err);
-      setMessage("Error updating profile ❌");
+      setMessage(`Error updating profile: ${err.message} ❌`);
     } finally {
       setLoading(false);
     }

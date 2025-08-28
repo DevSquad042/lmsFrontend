@@ -16,7 +16,7 @@ interface User {
   facebook?: string;
   website?: string;
   x?: string;
-  profilePictureUrl?: string;
+  profilePicture?: string;
 }
 
 interface AuthState {
@@ -40,29 +40,53 @@ const initialState: AuthState = {
 // Login
 export const loginUser = createAsyncThunk<
   { user: User; token: string },
-  { email: string; password: string }
+  { email: string; password: string },
+  { rejectValue: string }
 >(
   "auth/loginUser",
   async ({ email, password }, { rejectWithValue }) => {
     try {
+      const payload = { email, password };
+      console.log("Login request payload:", JSON.stringify(payload, null, 2)); // Debug log
       const res = await fetch("https://byway-hoce.onrender.com/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
-      console.log("Login API response:", data); // Debug log
+      const text = await res.text(); // Get raw response
+      console.log("Login API raw response:", text); // Debug log
 
-      if (!res.ok) return rejectWithValue(data.message || "Login failed");
-      if (!data.user) return rejectWithValue("No user data in response");
-      if (!data.token) return rejectWithValue("No token in response");
-      if (!data.user.paidCourses) data.user.paidCourses = [];
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (err) {
+        console.error("Failed to parse login response as JSON:", err);
+        return rejectWithValue(`Invalid JSON response: ${text}`);
+      }
+
+      console.log("Login API parsed response:", JSON.stringify(data, null, 2)); // Debug log
+
+      if (!res.ok) {
+        return rejectWithValue(data.message || `Login failed with status ${res.status}: ${text}`);
+      }
+      if (!data.user) {
+        return rejectWithValue("No user data in response");
+      }
+      if (!data.token && !data.accessToken) {
+        console.log("No token or accessToken in response:", data);
+        return rejectWithValue("No token or accessToken in response");
+      }
+
+      const token = data.token || data.accessToken;
+      if (!data.user.paidCourses) {
+        data.user.paidCourses = [];
+      }
 
       localStorage.setItem("user", JSON.stringify(data.user));
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", token);
 
-      return { user: data.user, token: data.token };
+      return { user: data.user, token };
     } catch (err: any) {
       console.error("Login error:", err);
       return rejectWithValue(err.message || "Login failed");
@@ -79,24 +103,47 @@ export const registerUser = createAsyncThunk<
   "auth/registerUser",
   async ({ firstName, lastName, userName, email, password }, { rejectWithValue }) => {
     try {
+      const payload = { firstName, lastName, userName, email, password };
+      console.log("Register request payload:", JSON.stringify(payload, null, 2)); // Debug log
       const res = await fetch("https://byway-hoce.onrender.com/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firstName, lastName, userName, email, password }),
+        body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
-      console.log("Register API response:", data); // Debug log
+      const text = await res.text();
+      console.log("Register API raw response:", text); // Debug log
 
-      if (!res.ok) return rejectWithValue(data.message || "Registration failed");
-      if (!data.user) return rejectWithValue("No user data in response");
-      if (!data.token) return rejectWithValue("No token in response");
-      if (!data.user.paidCourses) data.user.paidCourses = [];
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (err) {
+        console.error("Failed to parse register response as JSON:", err);
+        return rejectWithValue(`Invalid JSON response: ${text}`);
+      }
+
+      console.log("Register API parsed response:", JSON.stringify(data, null, 2)); // Debug log
+
+      if (!res.ok) {
+        return rejectWithValue(data.message || `Registration failed with status ${res.status}`);
+      }
+      if (!data.user) {
+        return rejectWithValue("No user data in response");
+      }
+      if (!data.token && !data.accessToken) {
+        console.log("No token or accessToken in response:", data);
+        return rejectWithValue("No token or accessToken in response");
+      }
+
+      const token = data.token || data.accessToken;
+      if (!data.user.paidCourses) {
+        data.user.paidCourses = [];
+      }
 
       localStorage.setItem("user", JSON.stringify(data.user));
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", token);
 
-      return { user: data.user, token: data.token };
+      return { user: data.user, token };
     } catch (err: any) {
       console.error("Register error:", err);
       return rejectWithValue(err.message || "Registration failed");
@@ -105,28 +152,55 @@ export const registerUser = createAsyncThunk<
 );
 
 // Google login
-export const googleLogin = createAsyncThunk<{ user: User; token: string }, string>(
+export const googleLogin = createAsyncThunk<
+  { user: User; token: string },
+  string,
+  { rejectValue: string }
+>(
   "auth/googleLogin",
   async (credential, { rejectWithValue }) => {
     try {
+      const payload = { token: credential };
+      console.log("Google login request payload:", JSON.stringify(payload, null, 2)); // Debug log
       const res = await fetch("https://byway-hoce.onrender.com/api/auth/google", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: credential }),
+        body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
-      console.log("Google login API response:", data); // Debug log
+      const text = await res.text();
+      console.log("Google login API raw response:", text); // Debug log
 
-      if (!res.ok) return rejectWithValue("Google login failed");
-      if (!data.user) return rejectWithValue("No user data in response");
-      if (!data.token) return rejectWithValue("No token in response");
-      if (!data.user.paidCourses) data.user.paidCourses = [];
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (err) {
+        console.error("Failed to parse Google login response as JSON:", err);
+        return rejectWithValue(`Invalid JSON response: ${text}`);
+      }
+
+      console.log("Google login API parsed response:", JSON.stringify(data, null, 2)); // Debug log
+
+      if (!res.ok) {
+        return rejectWithValue(data.message || `Google login failed with status ${res.status}`);
+      }
+      if (!data.user) {
+        return rejectWithValue("No user data in response");
+      }
+      if (!data.token && !data.accessToken) {
+        console.log("No token or accessToken in response:", data);
+        return rejectWithValue("No token or accessToken in response");
+      }
+
+      const token = data.token || data.accessToken;
+      if (!data.user.paidCourses) {
+        data.user.paidCourses = [];
+      }
 
       localStorage.setItem("user", JSON.stringify(data.user));
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", token);
 
-      return { user: data.user, token: data.token };
+      return { user: data.user, token };
     } catch (err: any) {
       console.error("Google login error:", err);
       return rejectWithValue(err.message || "Google login failed");
@@ -140,7 +214,17 @@ export const fetchPaidCourses = createAsyncThunk<string[], string, { rejectValue
   async (userId, { rejectWithValue }) => {
     try {
       const res = await fetch(`https://byway-hoce.onrender.com/api/users/${userId}/courses`);
-      const data = await res.json();
+      const text = await res.text();
+      console.log("Fetch paid courses API raw response:", text); // Debug log
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (err) {
+        console.error("Failed to parse paid courses response as JSON:", err);
+        return rejectWithValue(`Invalid JSON response: ${text}`);
+      }
+
       return data.paidCourses || [];
     } catch {
       return rejectWithValue("Failed to fetch paid courses");
@@ -184,6 +268,7 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string || "Login failed";
+        console.log("Login failed with error:", state.error); // Debug log
       })
 
       // register
@@ -200,6 +285,7 @@ const authSlice = createSlice({
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Registration failed";
+        console.log("Register failed with error:", state.error); // Debug log
       })
 
       // google login
@@ -216,6 +302,7 @@ const authSlice = createSlice({
       .addCase(googleLogin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string || "Google login failed";
+        console.log("Google login failed with error:", state.error); // Debug log
       })
 
       // fetch paid courses

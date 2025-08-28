@@ -24,7 +24,7 @@ const ProfileSidebar: React.FC = () => {
     <div className="sidebar">
       <div className="profile-section">
         <img
-          src={user?.profilePictureUrl || profileImage}
+          src={user?.profilePicture || profileImage}
           alt="Profile"
           className="profile-img"
         />
