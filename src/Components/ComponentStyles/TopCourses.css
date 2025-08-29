@@ -1,100 +1,43 @@
 .top-courses {
-<<<<<<< HEAD:src/Components/TopCourses.css
-  padding: 4rem 0;
-  background-color: #f3f1f1;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-=======
-  background-color: #ffffff;
-  font-family: 'Inter';
-  width: 100%;
->>>>>>> db53226f18023329edbfd694468b2e32acb95ea7:src/Components/ComponentStyles/TopCourses.css
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .top-courses-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2.5rem;
-  /* Remove fixed max-width */
-  width: 100%;
-  padding: 0 2rem;
+  margin-bottom: 2rem;
 }
 
 .top-courses-title {
-<<<<<<< HEAD:src/Components/TopCourses.css
-  font-size: 1.5rem;
-  font-weight: 100;
-=======
-  font-size: 25px;
+  font-size: 2.5rem;
   font-weight: 700;
->>>>>>> db53226f18023329edbfd694468b2e32acb95ea7:src/Components/ComponentStyles/TopCourses.css
+  color: #333;
   margin: 0;
-  color: #111827;
-  line-height: 1.0;
 }
 
 .top-courses-see-all {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #3b82f6;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #007bff;
   text-decoration: none;
-  cursor: pointer;
-  transition: color 0.2s ease;
+  transition: color 0.2s;
 }
 
 .top-courses-see-all:hover {
-  color: #1d4ed8;
-  text-decoration: underline;
+  color: #0056b3;
 }
 
-/* Grid Container */
 .top-courses-grid {
-  /* Remove max-width restriction */
-  width: 100%;
-  padding: 0 2rem;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
 }
 
-
-@media (min-width: 481px) and (max-width: 768px) {
-  .top-courses {
-    padding: 3rem 0;
-  }
-  
-  .top-courses-header {
-    padding: 0 1.5rem;
-  }
-  
+@media (max-width: 768px) {
   .top-courses-title {
-    font-size: 1.75rem;
-  }
-  
-  .top-courses-grid {
-    padding: 0 1.5rem;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.25rem;
-  }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-  .top-courses-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (min-width: 1281px) {
-  .top-courses {
-    padding: 5rem 0;
-  }
-  
-  .top-courses-header {
-    padding: 0 2.5rem;
-  }
-  
-  .top-courses-grid {
-    padding: 0 2.5rem;
-    gap: 2rem;
+    font-size: 2rem;
   }
 }

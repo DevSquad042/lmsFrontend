@@ -1,69 +1,38 @@
-import type { Course } from '../../Types/Course';
-import { FaStar } from 'react-icons/fa';
-import styles from './CardsStyle/CourseCard.module.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import { FaStar } from "react-icons/fa";
+import type { Course } from "../../Types/Course";
+import styles from "./CardsStyle/CourseCard.module.css";
 
-interface Props {
-  course: Course;
-}
-
-/**
- * ISSUES FIXED:
- * 1. Component name was inconsistent (CourseCards vs CourseCard)
- * 2. Missing accessibility features
- * 3. No error handling for missing data
- * EDUCATION: Always use consistent naming and include accessibility features
- */
-const CourseCard: React.FC<Props> = ({ course }) => {
-  // Handle missing or invalid rating gracefully
+const CourseCard: React.FC<{ course: Course }> = ({ course }) => {
   const safeRating = Math.max(0, Math.min(5, course.rating || 0));
-  
+
   return (
-    <article className={styles.card} role="article">
-      {/* Image container with proper alt text and loading optimization */}
-      <div className={styles.imageContainer}>
-        <img 
-          src={course.image} 
-          alt={`Course thumbnail for ${course.title}`}
-          loading="lazy"
-          onError={(e) => {
-            // Fallback image handling
-            e.currentTarget.src = '/placeholder-course.jpg';
-          }}
+    <Link to={`/courses/${course.id}`} className={styles.cardLink}>
+      <article className={styles.card} role="article">
+        <img
+          src={course.thumbnail}
+          alt={course.title}
+          className={styles.thumbnail}
         />
-      </div>
-      
-      {/* Content wrapper with semantic structure */}
-      <div className={styles.content}>
-        <h3 className={styles.title}>{course.title}</h3>
-        <p className={styles.author}>By {course.author}</p>
-        
-        {/* Rating section with accessibility */}
-        <div className={styles.rating} role="img" aria-label={`Rating: ${safeRating} out of 5 stars`}>
-          <div className={styles.stars}>
-            {[...Array(5)].map((_, i) => (
-              <FaStar 
-                key={i} 
-                color={i < safeRating ? '#FFC107' : '#ccc'}
-                aria-hidden="true"
-              />
-            ))}
+        <div className={styles.content}>
+          <h3 className={styles.title}>{course.title}</h3>
+          <p className={styles.instructor}>{course.instructor}</p>
+          <div className={styles.rating}>
+            <div className={styles.stars}>
+              {[...Array(5)].map((_, i) => (
+                <FaStar
+                  key={i}
+                  color={i < Math.round(safeRating) ? "#FFC107" : "#ccc"}
+                />
+              ))}
+            </div>
+            <span className={styles.ratingText}>{safeRating.toFixed(1)}</span>
           </div>
-          <span className={styles.reviewCount}>
-            ({course.reviews?.toLocaleString() || 0} Reviews)
-          </span>
+          <p className={styles.price}>${course.price}</p>
         </div>
-        
-        {/* Course details */}
-        <p className={styles.details}>{course.details}</p>
-        
-        {/* Price container with currency formatting */}
-        <div className={styles.priceContainer}>
-          <strong className={styles.price}>
-            ${course.price?.toFixed(2) || '0.00'}
-          </strong>
-        </div>
-      </div>
-    </article>
+      </article>
+    </Link>
   );
 };
 

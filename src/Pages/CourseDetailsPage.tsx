@@ -1,66 +1,61 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import "../Styles/CourseDetails.css"; // Import the general page CSS
-
-import CourseHero from "../Components/CourseHero";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import type { RootState, AppDispatch } from "../store/index";
+import { fetchCourseById } from "../store/slices/courseSlice";
+import CourseDetails from "../Components/CourseHero";
+import CourseSidebar from "../Components/CourseSidebar";
+import Reviews from "../Components/Rating";
 import CourseContent from "../Components/CourseContent";
 import RelatedCourses from "../Components/RelatedCourses";
 import TestimonialCard from "../Components/TestimonialsSection";
-import Footer from "../Components/Layout/Footer";
-import Header2 from "../Components/shared/Header2";
-import {
-  courseData,
-  instructorData,
-  reviewsData,
-  syllabusData,
-} from "../data/coursedata";
-import CourseSidebar from "../Components/CourseSidebar";
+import Breadcrumb from "../Components/Breadcrumb";
+import styles from "../Styles/CourseDetailsPage.module.css";
 
-const CourseDetailPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("description");
+const CoursePage: React.FC = () => {
+  const { courseId } = useParams<{ courseId: string }>();
+  const dispatch = useDispatch<AppDispatch>();
+  const { selectedCourse, loading, error } = useSelector(
+    (state: RootState) => state.courses
+  );
+
+  const fetchData = () => {
+    if (courseId) {
+      dispatch(fetchCourseById(courseId));
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [dispatch, courseId]);
+
+  if (loading) return <p>Loading course...</p>;
+  if (error) return <p>Error: {error}</p>;
+  if (!selectedCourse) return <p>No course found.</p>;
+
+  const breadcrumbLinks = [
+    { label: "Home", path: "/" },
+    { label: "Categories", path: "/categories" },
+    { label: selectedCourse.title, path: `/courses/${selectedCourse.id}` },
+  ];
 
   return (
-    <div className="course-detail-page">
-      <Header2 />
-
-      {/* ✅ Breadcrumb */}
-      <div className="breadcrumb">
-        <Link to="/" className="breadcrumb-link">
-          Home
-        </Link>{" "}
-        <span>›</span>
-        <Link to="/categories" className="breadcrumb-link">
-          Categories
-        </Link>{" "}
-        <span>›</span>
-        <span className="breadcrumb-current">{courseData.title}</span>
-      </div>
-
-      <div className="main-content">
-        <div>
-          <CourseHero course={courseData} />
-          <CourseContent
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            instructor={instructorData}
-            reviews={reviewsData}
-            syllabus={syllabusData}
-            course={courseData}
-          />
+    <>
+      <Breadcrumb links={breadcrumbLinks} />
+      <div className={styles.coursePage}>
+        <div className={styles.mainContent}>
+          <CourseDetails course={selectedCourse} />
+          <CourseContent course={selectedCourse} />
+          <Reviews course={selectedCourse} onReviewAdded={fetchData} />
+          <TestimonialCard />
+          <RelatedCourses />
         </div>
-
-        {/* Sidebar */}
-        <div className="lg:col-span-1 course-sidebar-wrapper">
-          <CourseSidebar course={courseData} />
+        <div className={styles.sidebar}>
+          <CourseSidebar course={selectedCourse} />
         </div>
       </div>
-
-      <TestimonialCard />
-      <RelatedCourses />
-      <Footer />
-    </div>
+    </>
   );
 };
 
-export default CourseDetailPage;
-
+export default CoursePage;

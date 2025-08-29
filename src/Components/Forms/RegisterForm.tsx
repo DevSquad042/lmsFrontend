@@ -116,6 +116,12 @@ const Register: React.FC = () => {
     }
   };
 
+      dispatch(registerUser(payload));
+      // setSubmitted(true);
+    }
+  };
+
+  // Social login stubs
   const handleGoogleLogin = () => console.log("Google register clicked");
   const handleFacebookLogin = () => console.log("Facebook register clicked");
   const handleMicrosoftLogin = () => console.log("Microsoft register clicked");

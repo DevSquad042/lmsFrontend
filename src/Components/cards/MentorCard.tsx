@@ -1,16 +1,18 @@
+// src/Components/cards/MentorCard.tsx
+
+import React from 'react';
 import { MdOutlineEmail } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import type { Mentor } from '../../../src/Types/Mentor';
-import styles from '../cards/CardsStyle/MentorCard.module.css';
+import type { Mentor } from '../../Types/Mentor'; // Adjust import path
+import styles from './CardsStyle/MentorCard.module.css';
 
 interface Props {
   mentor: Mentor;
-  showRating?: boolean;
 }
 
-const MentorCard: React.FC<Props> = ({ mentor, showRating = true }) => {
+const MentorCard: React.FC<Props> = ({ mentor }) => {
   return (
-    <Link to={`/teacher/${mentor.id}`} className={styles.cardLink}>
+    <Link to={`/mentor/${mentor.id}`} className={styles.cardLink}>
       <article className={styles.card} role="article">
         {/* Profile Image */}
         <div className={styles.imageContainer}>
@@ -32,22 +34,23 @@ const MentorCard: React.FC<Props> = ({ mentor, showRating = true }) => {
           <hr />
 
           {/* Conditional rendering */}
-          {showRating ? (
-            <div className={styles.stats}>
-              <span className={styles.rating} aria-label={`Rating: ${mentor.rating} stars`}>
-                ⭐ {mentor.rating}
-              </span>
-              <span className={styles.separator}>•</span>
-              <span className={styles.students}>
-                {mentor.students?.toLocaleString()} Students
-              </span>
-            </div>
-          ) : (
-            <button className={styles.buttonSendMessage}>
-              <span>Send Message</span>
-              <MdOutlineEmail size={20} />
-            </button>
-          )}
+          <div className={styles.stats}>
+            <span className={styles.rating} aria-label={`Rating: ${mentor.rating} stars`}>
+              ⭐ {mentor.rating}
+            </span>
+            <span className={styles.separator}>|</span>
+            <span className={styles.totalReviews}>
+              {mentor.reviews.length} reviews
+            </span>
+          </div>
+
+          <div className={styles.contact}>
+            <span className={styles.contactItem}>
+              <MdOutlineEmail className={styles.icon} />
+              {/* This could be a link to a contact page or modal */}
+              <span className={styles.contactText}>Contact</span>
+            </span>
+          </div>
         </div>
       </article>
     </Link>

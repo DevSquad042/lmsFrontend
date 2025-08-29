@@ -1,11 +1,26 @@
-import React from 'react';
-import MentorCard from '../Components/cards/MentorCard'; 
-import { mentors } from '../data/Mentor'; 
-import './ComponentStyles/TopInstructors.css';
+// src/Components/TopInstructors.tsx
+
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
+import type { RootState, AppDispatch } from '../store/index';
+import { fetchMentors, selectMentors, selectMentorsStatus } from '../store/slices/mentorSlice';
+import MentorCard from '../Components/cards/MentorCard';
+import './ComponentStyles/TopInstructors.css';
 
 const TopInstructors: React.FC = () => {
-  // Display only the first 4 mentors as "top instructors"
+  const dispatch = useDispatch<AppDispatch>();
+  const mentors = useSelector(selectMentors);
+  const loading = useSelector(selectMentorsStatus);
+
+  // fetch mentors if not already loaded
+  useEffect(() => {
+    if (loading ==! 'idle') {
+      dispatch(fetchMentors());
+    }
+  }, [loading, dispatch]);
+
+  // slice first 4 mentors
   const topInstructors = mentors.slice(0, 4);
 
   const handleScrollTop = () => {
@@ -17,7 +32,7 @@ const TopInstructors: React.FC = () => {
       <header className="top-instructors-header">
         <h2 className="top-instructors-title">Top Instructors</h2>
         <Link 
-          to="/categories" 
+          to="/mentors"
           className="top-instructors-see-all"
           onClick={handleScrollTop}
         >
@@ -27,11 +42,11 @@ const TopInstructors: React.FC = () => {
       
       <div className="top-instructors-grid">
         {topInstructors.map((mentor) => (
-          <MentorCard key={mentor.id} mentor={mentor} showRating={true} />
+          <MentorCard key={mentor.id} mentor={mentor} />
         ))}
       </div>
     </section>
   );
-}
+};
 
 export default TopInstructors;

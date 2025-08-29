@@ -1,25 +1,30 @@
-// ==========================================
-// BREADCRUMB COMPONENT
-// ==========================================
-// Navigation breadcrumb trail showing current page location
-// Handles: Page navigation hierarchy display
+import React from "react";
+import { Link } from "react-router-dom";
+import styles from "./ComponentStyles/Breadcrumb.module.css";
 
-import React from 'react';
-import '../Components/ComponentStyles/Breadcrumb.css';
+interface BreadcrumbLink {
+  label: string;
+  path: string;
+}
 
-const Breadcrumb: React.FC = () => {
+interface BreadcrumbProps {
+  links: BreadcrumbLink[];
+}
+
+const Breadcrumb: React.FC<BreadcrumbProps> = ({ links }) => {
   return (
-    <nav className="breadcrumb">
-      <div className="breadcrumb-container">
-        <div className="breadcrumb-list">
-          <span className="breadcrumb-item">Categories</span>
-          <span className="breadcrumb-separator">/</span>
-          <span className="breadcrumb-item">Details</span>
-          <span className="breadcrumb-separator">/</span>
-          <span className="breadcrumb-current">Shopping Cart</span>
-        </div>
-      </div>
-    </nav>
+    <div className={styles.breadcrumb}>
+      {links.map((link, index) => (
+        <React.Fragment key={index}>
+          <Link to={link.path} className={styles.link}>
+            {link.label}
+          </Link>
+          {index < links.length - 1 && (
+            <span className={styles.separator}>›</span>
+          )}
+        </React.Fragment>
+      ))}
+    </div>
   );
 };
 

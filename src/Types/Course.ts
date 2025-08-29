@@ -1,16 +1,18 @@
 // types/Course.ts
+import type { Review } from "./rating";
+
 export interface Course {
   id: string;
   title: string;
-  author: string;
-  rating: number;
-  reviews: number;
-  details: string;
+  description: string;
+  instructor: string;
   price: number;
-  image: string;
-  chapters?: number;
-  category?: string;
-  hours?: number;
-  lectures?: number;
-  level?: string;
+  originalPrice?: number;
+  discount?: number;
+  categories?: string[];
+  tags?: string[];
+  thumbnail: string;
+  sections: { title: string; videoUrl: string; isPreview: boolean }[];
+  rating: number;
+  reviews: Review[];
 }

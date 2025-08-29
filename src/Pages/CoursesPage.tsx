@@ -55,7 +55,7 @@ const CoursesPages = () => {
   // Filter by search query
   const searchedCourses = enrolledCourses.filter((course) =>
     course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    course.author.toLowerCase().includes(searchQuery.toLowerCase())
+    course.instructor.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Paginate the searched courses

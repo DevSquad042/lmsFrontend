@@ -1,92 +1,51 @@
-import CourseCard from './cards/CourseCard'; 
-import './ComponentStyles/TopCourses.css';
-import type { Course } from '../Types/Course';
-import courseImg from '../assets/Images/course.jpg';
+// src/Components/TopCourses.tsx
+
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
+import type { RootState, AppDispatch } from '../store/index';
+import { fetchCourses } from '../store/slices/courseSlice';
+import CourseCard from './cards/CourseCard';
+import './ComponentStyles/TopCourses.css';
 
 const TopCourses: React.FC = () => {
-  const courses: Course[] = [
-    {
-      id: 'top-course-1',
-      title: "Beginner's Guide to Design",
-      author: 'Ronald Richards',
-      rating: 5,
-      reviews: 1200, 
-      details: '22 Total Hours. 155 Lectures. Beginner',
-      price: 149.9,
-      image: courseImg,
-      chapters: 18,
-      category: 'Design',
-      hours: 22,
-      lectures: 155,
-      level: 'Beginner'
-    },
-    {
-      id: 'top-course-2',
-      title: 'React from Scratch',
-      author: 'Jane Doe',
-      rating: 5, 
-      reviews: 980,
-      details: '40 Total Hours. 200 Lectures. Intermediate',
-      price: 199.99,
-      image: courseImg,
-      chapters: 25,
-      category: 'Development',
-      hours: 40,
-      lectures: 200,
-      level: 'Intermediate'
-    },
-    {
-      id: 'top-course-3',
-      title: 'Advanced JavaScript Concepts',
-      author: 'John Smith',
-      rating: 4,
-      reviews: 850,
-      details: '30 Total Hours. 175 Lectures. Advanced',
-      price: 179.99,
-      image: courseImg,
-      chapters: 20,
-      category: 'Development',
-      hours: 30,
-      lectures: 175,
-      level: 'Advanced'
-    },
-    {
-      id: 'top-course-4',
-      title: 'Python for Data Science',
-      author: 'Maria Garcia',
-      rating: 5,
-      reviews: 1100,
-      details: '45 Total Hours. 250 Lectures. Intermediate',
-      price: 189.9,
-      image: courseImg,
-      chapters: 28,
-      category: 'Data Science',
-      hours: 45,
-      lectures: 250,
-      level: 'Intermediate'
+  const dispatch = useDispatch<AppDispatch>();
+  const { data: courses, loading, error } = useSelector(
+    (state: RootState) => state.courses
+  );
+
+  useEffect(() => {
+    // Only fetch courses if they haven't been loaded yet
+    if (courses.length === 0) {
+      dispatch(fetchCourses());
     }
-  ];
+  }, [dispatch, courses.length]);
+
+  // We are slicing the first 4 courses to display as "Top Courses"
+  const topCourses = courses.slice(0, 4);
 
   const handleScrollTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  if (loading) return <p>Loading top courses...</p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
     <section className="top-courses">
       <header className="top-courses-header">
-        <p className="top-courses-title">Top Courses</p>
+        <h2 className="top-courses-title">Top Courses</h2>
         <Link 
-          to="/categories" 
-          className="top-courses-see-all" 
+          to="/courses" 
+          className="top-courses-see-all"
           onClick={handleScrollTop}
         >
           See All
         </Link>
       </header>
-
+      
       <div className="top-courses-grid">
-        {courses.map((course) => (
+        {topCourses.map((course) => (
           <CourseCard key={course.id} course={course} />
         ))}
       </div>
@@ -95,4 +54,3 @@ const TopCourses: React.FC = () => {
 };
 
 export default TopCourses;
-
