@@ -18,9 +18,10 @@ const Header2: React.FC = () => {
   return (
     <header className="header2">
       <div className="header-left2">
-        <img src={Logo1} alt="Byway Logo" className="header-logo2" />
-        <a href="#" className="header-link">Categories</a>
-      
+        <Link to="/">
+          <img src={Logo1} alt="Byway Logo" className="header-logo2" />
+        </Link>
+        <Link to="/categories" className="header-link">Categories</Link>
       </div>
 
       <div className="header-search4">
@@ -33,7 +34,7 @@ const Header2: React.FC = () => {
       </div>
 
       <div className="right-header2">
-        <Link to="/teach" className="header-link2">Teach on Byway</Link>
+        <Link to="/" className="header-link2">Teach on Byway</Link>
 
         <div className="icons2">
           <Link to="/profile">
@@ -56,9 +57,9 @@ const Header2: React.FC = () => {
           <div className="user-avatar">B</div>
           {dropdownOpen && (
             <div className="user-dropdown">
-              <Link to="/dashboard">Dashboard</Link>
-              <Link to="/settings">Settings</Link>
-              <Link to="/logout">Logout</Link>
+              <Link to="/">Home</Link>
+              <Link to="/profile1">Settings</Link>
+              <Link to="/">Logout</Link>
             </div>
           )}
         </div>

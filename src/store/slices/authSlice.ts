@@ -1,128 +1,230 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
 
 interface User {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  token: string;
-  paidCourses: string[];
+  userName: string;
+  role: string;
+  paidCourses?: string[];
+  headline?: string;
+  description?: string;
+  linkedin?: string;
+  youtube?: string;
+  facebook?: string;
+  website?: string;
+  x?: string;
+  profilePicture?: string;
 }
 
 interface AuthState {
   user: User | null;
+  token: string | null;
   loading: boolean;
   error: string | null;
 }
 
-// ✅ Initialize state from localStorage if available
 const savedUser = localStorage.getItem("user");
-
+const savedToken = localStorage.getItem("token");
 const initialState: AuthState = {
   user: savedUser ? JSON.parse(savedUser) : null,
+  token: savedToken || null,
   loading: false,
   error: null,
 };
 
-interface LoginData {
-  email: string;
-  password: string;
-}
+// ------------------- Thunks -------------------
 
-interface RegisterData {
-  firstName: string;
-  lastName: string;
-  userName: string;
-  email: string;
-  password: string;
-}
-
-// 🔹 Login thunk
-export const loginUser = createAsyncThunk<User, LoginData>(
+// Login
+export const loginUser = createAsyncThunk<
+  { user: User; token: string },
+  { email: string; password: string },
+  { rejectValue: string }
+>(
   "auth/loginUser",
-  async ({ email, password }) => {
-    const response = await fetch("https://byway-hoce.onrender.com/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const payload = { email, password };
+      console.log("Login request payload:", JSON.stringify(payload, null, 2)); // Debug log
+      const res = await fetch("https://byway-hoce.onrender.com/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    if (!response.ok) {
-      if (response.status === 401) throw new Error("Invalid credentials");
-      throw new Error("Login failed");
+      const text = await res.text(); // Get raw response
+      console.log("Login API raw response:", text); // Debug log
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (err) {
+        console.error("Failed to parse login response as JSON:", err);
+        return rejectWithValue(`Invalid JSON response: ${text}`);
+      }
+
+      console.log("Login API parsed response:", JSON.stringify(data, null, 2)); // Debug log
+
+      if (!res.ok) {
+        return rejectWithValue(data.message || `Login failed with status ${res.status}: ${text}`);
+      }
+      if (!data.user) {
+        return rejectWithValue("No user data in response");
+      }
+      if (!data.token && !data.accessToken) {
+        console.log("No token or accessToken in response:", data);
+        return rejectWithValue("No token or accessToken in response");
+      }
+
+      const token = data.token || data.accessToken;
+      if (!data.user.paidCourses) {
+        data.user.paidCourses = [];
+      }
+
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("token", token);
+
+      return { user: data.user, token };
+    } catch (err: any) {
+      console.error("Login error:", err);
+      return rejectWithValue(err.message || "Login failed");
     }
-
-    const data = await response.json();
-    if (!data.paidCourses) data.paidCourses = [];
-
-    // ✅ Save user in localStorage
-    localStorage.setItem("user", JSON.stringify(data));
-
-    return data;
   }
 );
 
-// 🔹 Register thunk
+// Register
 export const registerUser = createAsyncThunk<
-  User,
-  RegisterData,
+  { user: User; token: string },
+  { firstName: string; lastName: string; userName: string; email: string; password: string },
   { rejectValue: string }
 >(
   "auth/registerUser",
   async ({ firstName, lastName, userName, email, password }, { rejectWithValue }) => {
-    const response = await fetch("https://byway-hoce.onrender.com/api/auth/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ firstName, lastName, userName, email, password }),
-    });
+    try {
+      const payload = { firstName, lastName, userName, email, password };
+      console.log("Register request payload:", JSON.stringify(payload, null, 2)); // Debug log
+      const res = await fetch("https://byway-hoce.onrender.com/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    const data = await response.json();
-    if (!response.ok) {
-      return rejectWithValue(data.message || "Registration failed");
+      const text = await res.text();
+      console.log("Register API raw response:", text); // Debug log
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (err) {
+        console.error("Failed to parse register response as JSON:", err);
+        return rejectWithValue(`Invalid JSON response: ${text}`);
+      }
+
+      console.log("Register API parsed response:", JSON.stringify(data, null, 2)); // Debug log
+
+      if (!res.ok) {
+        return rejectWithValue(data.message || `Registration failed with status ${res.status}`);
+      }
+      if (!data.user) {
+        return rejectWithValue("No user data in response");
+      }
+      if (!data.token && !data.accessToken) {
+        console.log("No token or accessToken in response:", data);
+        return rejectWithValue("No token or accessToken in response");
+      }
+
+      const token = data.token || data.accessToken;
+      if (!data.user.paidCourses) {
+        data.user.paidCourses = [];
+      }
+
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("token", token);
+
+      return { user: data.user, token };
+    } catch (err: any) {
+      console.error("Register error:", err);
+      return rejectWithValue(err.message || "Registration failed");
     }
-
-    if (!data.paidCourses) data.paidCourses = [];
-
-    // ✅ Save user in localStorage
-    localStorage.setItem("user", JSON.stringify(data));
-
-    return data;
   }
 );
 
-// 🔹 Google Login thunk
-export const googleLogin = createAsyncThunk<User, string>(
-  "auth/googleLogin",
-  async (credential) => {
-    const response = await fetch("https://byway-hoce.onrender.com/api/auth/google", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token: credential }),
-    });
-
-    if (!response.ok) throw new Error("Google login failed");
-
-    const data = await response.json();
-    if (!data.paidCourses) data.paidCourses = [];
-
-    // ✅ Save user in localStorage
-    localStorage.setItem("user", JSON.stringify(data));
-
-    return data;
-  }
-);
-
-// 🔹 Fetch paid courses separately
-export const fetchPaidCourses = createAsyncThunk<
-  string[],
+// Google login
+export const googleLogin = createAsyncThunk<
+  { user: User; token: string },
   string,
   { rejectValue: string }
 >(
+  "auth/googleLogin",
+  async (credential, { rejectWithValue }) => {
+    try {
+      const payload = { token: credential };
+      console.log("Google login request payload:", JSON.stringify(payload, null, 2)); // Debug log
+      const res = await fetch("https://byway-hoce.onrender.com/api/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const text = await res.text();
+      console.log("Google login API raw response:", text); // Debug log
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (err) {
+        console.error("Failed to parse Google login response as JSON:", err);
+        return rejectWithValue(`Invalid JSON response: ${text}`);
+      }
+
+      console.log("Google login API parsed response:", JSON.stringify(data, null, 2)); // Debug log
+
+      if (!res.ok) {
+        return rejectWithValue(data.message || `Google login failed with status ${res.status}`);
+      }
+      if (!data.user) {
+        return rejectWithValue("No user data in response");
+      }
+      if (!data.token && !data.accessToken) {
+        console.log("No token or accessToken in response:", data);
+        return rejectWithValue("No token or accessToken in response");
+      }
+
+      const token = data.token || data.accessToken;
+      if (!data.user.paidCourses) {
+        data.user.paidCourses = [];
+      }
+
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("token", token);
+
+      return { user: data.user, token };
+    } catch (err: any) {
+      console.error("Google login error:", err);
+      return rejectWithValue(err.message || "Google login failed");
+    }
+  }
+);
+
+// Fetch paid courses separately
+export const fetchPaidCourses = createAsyncThunk<string[], string, { rejectValue: string }>(
   "auth/fetchPaidCourses",
   async (userId, { rejectWithValue }) => {
     try {
       const res = await fetch(`https://byway-hoce.onrender.com/api/users/${userId}/courses`);
-      const data = await res.json();
+      const text = await res.text();
+      console.log("Fetch paid courses API raw response:", text); // Debug log
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (err) {
+        console.error("Failed to parse paid courses response as JSON:", err);
+        return rejectWithValue(`Invalid JSON response: ${text}`);
+      }
+
       return data.paidCourses || [];
     } catch {
       return rejectWithValue("Failed to fetch paid courses");
@@ -130,20 +232,18 @@ export const fetchPaidCourses = createAsyncThunk<
   }
 );
 
+// ------------------- Slice -------------------
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
     logout(state) {
       state.user = null;
+      state.token = null;
       state.error = null;
-      // ✅ Remove user from localStorage on logout
       localStorage.removeItem("user");
-    },
-    login(state, action: PayloadAction<User>) {
-      state.user = action.payload;
-      state.error = null;
-      localStorage.setItem("user", JSON.stringify(action.payload));
+      localStorage.removeItem("token");
     },
     setPaidCourses(state, action: PayloadAction<string[]>) {
       if (state.user) {
@@ -154,49 +254,58 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // login cases
+      // login
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(loginUser.fulfilled, (state, action: PayloadAction<User>) => {
+      .addCase(loginUser.fulfilled, (state, action: PayloadAction<{ user: User; token: string }>) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        console.log("Redux state after login:", { user: state.user, token: state.token }); // Debug log
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Login failed";
+        state.error = action.payload as string || "Login failed";
+        console.log("Login failed with error:", state.error); // Debug log
       })
 
-      // register cases
+      // register
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(registerUser.fulfilled, (state, action: PayloadAction<User>) => {
+      .addCase(registerUser.fulfilled, (state, action: PayloadAction<{ user: User; token: string }>) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        console.log("Redux state after register:", { user: state.user, token: state.token }); // Debug log
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Registration failed";
+        console.log("Register failed with error:", state.error); // Debug log
       })
 
-      // google login cases
+      // google login
       .addCase(googleLogin.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(googleLogin.fulfilled, (state, action: PayloadAction<User>) => {
+      .addCase(googleLogin.fulfilled, (state, action: PayloadAction<{ user: User; token: string }>) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        console.log("Redux state after google login:", { user: state.user, token: state.token }); // Debug log
       })
       .addCase(googleLogin.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Google login failed";
+        state.error = action.payload as string || "Google login failed";
+        console.log("Google login failed with error:", state.error); // Debug log
       })
 
-      // fetchPaidCourses case
+      // fetch paid courses
       .addCase(fetchPaidCourses.fulfilled, (state, action: PayloadAction<string[]>) => {
         if (state.user) {
           state.user.paidCourses = action.payload;
@@ -206,5 +315,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout, login, setPaidCourses } = authSlice.actions;
+export const { logout, setPaidCourses } = authSlice.actions;
 export default authSlice.reducer;

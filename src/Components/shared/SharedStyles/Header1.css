@@ -87,3 +87,52 @@
   font-size: 14px;
   cursor: pointer;
 }
+
+
+@media (max-width: 768px) {
+  .header{
+  
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0px;
+  }
+
+.header-search{
+  display: none;
+
+}
+.header-link{
+  display: none;
+}
+.header-link2{
+  display: none;
+}
+  
+
+  .header-left2 {
+    gap: 12px;
+  }
+
+  .header-logo2 {
+    width: 80px;
+    height: auto;
+  }
+
+  .header-link,
+  .header-link2 {
+    font-size: 16px;
+    white-space: nowrap;
+  }
+
+  .icons2 {
+    gap: 16px;
+    display: flex;
+    align-items: center;
+  }
+
+ 
+
+ 
+}
+
+
