@@ -1,84 +1,59 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState, AppDispatch } from "../../store/store";
-import { fetchMentors, patchMentorRating } from "../../store/slices/mentorSlice";
-import { FaStar } from "react-icons/fa";
-import styles from "./CardsStyle/MentorCard.module.css";
+// src/Components/cards/MentorCard.tsx
 
-const MentorCard: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+import React from 'react';
+import { MdOutlineEmail } from 'react-icons/md';
+import { Link } from 'react-router-dom';
+import type { Mentor } from '../../Types/Mentor'; // Adjust import path
+import styles from './CardsStyle/MentorCard.module.css';
 
-  // ✅ Defensive destructuring
-  const { data: mentors = [], loading, error } = useSelector(
-    (state: RootState) => state.mentors || {}
-  );
+interface Props {
+  mentor: Mentor;
+}
 
-  useEffect(() => {
-    if (!mentors.length) dispatch(fetchMentors());
-  }, [dispatch, mentors.length]);
-
-  const handleRating = (id: string, rating: number) => {
-    dispatch(patchMentorRating({ id, rating }));
-  };
-
-  if (loading) return <p>Loading mentors...</p>;
-  if (error) return <p>Error: {error}</p>;
-
+const MentorCard: React.FC<Props> = ({ mentor }) => {
   return (
-    <div className="mentor-grid">
-      {mentors.map(
-        ({
-          id,
-          name,
-          role,
-          image,
-          rating = 0,
-          students = 0,
-        }) => {
-          const safeRating = Math.max(0, Math.min(5, rating));
+    <Link to={`/mentor/${mentor.id}`} className={styles.cardLink}>
+      <article className={styles.card} role="article">
+        {/* Profile Image */}
+        <div className={styles.imageContainer}>
+          <img
+            src={mentor.image}
+            alt={`Profile picture of ${mentor.name}`}
+            loading="lazy"
+            onError={(e) => {
+              e.currentTarget.src = '/placeholder-avatar.jpg';
+            }}
+          />
+        </div>
 
-          return (
-            <article key={id} className={styles.card} role="article">
-              <div className={styles.imageContainer}>
-                <img
-                  src={image || "/placeholder-avatar.jpg"}
-                  alt={`Profile picture of ${name}`}
-                  loading="lazy"
-                  onError={(e) => {
-                    e.currentTarget.src = "/placeholder-avatar.jpg";
-                  }}
-                />
-              </div>
+        {/* Content */}
+        <div className={styles.content}>
+          <h4 className={styles.name}>{mentor.name}</h4>
+          <p className={styles.role}>{mentor.role}</p>
 
-              <div className={styles.content}>
-                <h3 className={styles.name}>{name}</h3>
-                <p className={styles.role}>{role}</p>
+          <hr />
 
-                <div
-                  className={styles.rating}
-                  role="img"
-                  aria-label={`Rating: ${safeRating} out of 5 stars`}
-                >
-                  <div className={styles.stars}>
-                    {[...Array(5)].map((_, i) => (
-                      <FaStar
-                        key={i}
-                        color={i < safeRating ? "#FFC107" : "#ccc"}
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleRating(id, i + 1)}
-                      />
-                    ))}
-                  </div>
-                  <span className={styles.students}>
-                    {students.toLocaleString()} Students
-                  </span>
-                </div>
-              </div>
-            </article>
-          );
-        }
-      )}
-    </div>
+          {/* Conditional rendering */}
+          <div className={styles.stats}>
+            <span className={styles.rating} aria-label={`Rating: ${mentor.rating} stars`}>
+              ⭐ {mentor.rating}
+            </span>
+            <span className={styles.separator}>|</span>
+            <span className={styles.totalReviews}>
+              {mentor.reviews.length} reviews
+            </span>
+          </div>
+
+          <div className={styles.contact}>
+            <span className={styles.contactItem}>
+              <MdOutlineEmail className={styles.icon} />
+              {/* This could be a link to a contact page or modal */}
+              <span className={styles.contactText}>Contact</span>
+            </span>
+          </div>
+        </div>
+      </article>
+    </Link>
   );
 };
 

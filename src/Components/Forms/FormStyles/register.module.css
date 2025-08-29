@@ -62,12 +62,15 @@
 }
 
 .passwordGroup {
-  display: flex;
-  gap: 12px; /* consistent spacing between fields */
+ display: flex;
+  justify-content: space-between;
+  /* consistent spacing between fields */
   width: 100%;
 }
 
 .passwordGroup input {
+  width: 250px;
+  
   flex: 1; /* make both fields equal width */
   padding: 12px;
   border: 1px solid #ccc;
@@ -166,6 +169,29 @@
   width: 100%;
   height: 100vh;
   object-fit: cover;
+}
+.loginRedirect {
+  margin-top: 20px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.loginLink {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.passwordField {
+  position: relative;
+}
+
+.eyeIcon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #555;
 }
 
 @media (max-width: 900px) {

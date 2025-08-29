@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { Course } from "../../Types/Course";
+import type{ Course } from "../../Types/Course";
 import axios from "axios";
 
 // Thunk to fetch a single course by ID

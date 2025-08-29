@@ -1,15 +1,40 @@
-.coursePage {
+.courses-wrapper {
   display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.courses-section {
+  display: flex;
+  flex: 1;
+  padding: 2rem;
   gap: 2rem;
-  padding: 2rem 5%;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.mainContent {
-  flex: 3;
+.sidebar-container {
+  width: 250px;
+  flex-shrink: 0;
 }
 
-.sidebar {
-  flex: 1;
+.main-content {
+  flex-grow: 1;
+}
+
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .courses-section {
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+  }
+  .sidebar-container {
+    width: 100%;
+  }
 }

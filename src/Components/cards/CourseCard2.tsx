@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import type { RootState, AppDispatch } from "../../store/store";
+import type { RootState, AppDispatch } from "../../store/";
 import { fetchCourses, patchCourseRating } from "../../store/slices/courseSlice";
 import { FaStar } from "react-icons/fa";
 import styles from "./CardsStyle/CourseCard.module.css";

@@ -129,6 +129,10 @@ hr{
   font-weight: 500;
   white-space: nowrap;
 }
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+}
 
 /* Responsive Design */
 @media (max-width: 480px) {

@@ -1,14 +1,19 @@
 
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice";
-import courseReducer from "./slices/courseSlice"; // Assuming you have a courseSlice
+import cartReducer from "./slices/cartSlice";
+import courseReducer from "./slices/courseSlice"
+import mentorReducer from "./slices/mentorSlice"
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    courses: courseReducer, // Assuming you have a courseSlice
+    cart: cartReducer, // ✅ add this
+    courses: courseReducer,
+    mentors: mentorReducer // ✅ add this
   },
 });
+
 
 // Types for dispatch & state
 export type RootState = ReturnType<typeof store.getState>;

@@ -1,9 +1,12 @@
+// src/Types/Mentor.ts
+
 export interface Mentor {
-  id?: string; // Optional ID for unique identification
+  id: string;
   name: string;
   role: string;
   rating: number;
-  students: number;
+  reviews: { id: string; text: string; rating: number }[];
+  bio: string;
+  portfolio: string;
   image: string;
 }
-

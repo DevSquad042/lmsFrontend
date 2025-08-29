@@ -1,144 +1,267 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import styles from "../Styles/Checkout.module.css";
 import paypal from "../assets/logo/paypal.png";
 import visa from "../assets/logo/visa.png";
-import percent from "../assets/logo/percent.png"
-// import { FaCcVisa, FaPaypal } from "react-icons/fa";
-
-import uxImage from "../assets/Images/checkout.svg";
+import percent from "../assets/logo/percent.png";
 import Header1 from "../Components/shared/Header1";
-import Footer from "../Components/Layout/Footer"
+import Footer from "../Components/Layout/Footer";
 
 const CheckoutPage: React.FC = () => {
+  const navigate = useNavigate();
+ const cartItems = useSelector((state: RootState) => state.cart.items);
+
+  const [formData, setFormData] = useState({
+    country: "",
+    state: "",
+    method: "card",
+    cardName: "",
+    cardNumber: "",
+    expiry: "",
+    cvc: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // ✅ Validation helpers
+  const isValidCardNumber = (num: string) => /^\d{16}$/.test(num);
+  const isValidExpiry = (exp: string) => {
+    const [monthStr, yearStr] = exp.split("/").map((s) => s.trim());
+    const month = parseInt(monthStr, 10);
+    const year = parseInt(yearStr, 10);
+    if (!month || !year || month < 1 || month > 12) return false;
+
+    const now = new Date();
+    const expiryDate = new Date(2000 + year, month);
+    return expiryDate > now;
+  };
+  const isValidCVC = (cvc: string) => /^\d{3,4}$/.test(cvc);
+  const isValidName = (name: string) => /^[A-Za-z\s]{2,}$/.test(name);
+
+  const handleCheckout = () => {
+    let paymentSuccess = false;
+
+    if (!formData.country || !formData.state) {
+      toast.warning("Please fill in your country and state.");
+      return;
+    }
+
+    if (formData.method === "card") {
+      if (
+        !isValidName(formData.cardName) ||
+        !isValidCardNumber(formData.cardNumber) ||
+        !isValidExpiry(formData.expiry) ||
+        !isValidCVC(formData.cvc)
+      ) {
+        toast.error("Invalid card details. Please check and try again.");
+        return;
+      }
+      paymentSuccess = true;
+    } else if (formData.method === "paypal") {
+      paymentSuccess = true;
+    }
+
+    if (paymentSuccess) {
+      toast.success("Payment submitted successfully!");
+      navigate("/order1");
+    } else {
+      toast.error("Payment failed. Try again.");
+      navigate("/order2");
+    }
+  };
+
+  // 🧮 Dynamic totals
+  const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const discount = subtotal > 100 ? -10 : 0;
+  const tax = (subtotal + discount) * 0.1;
+  const total = subtotal + discount + tax;
+
   return (
     <>
-    <Header1/>
-    <div className={styles.container}>
-      {/* Page header */}
-      < div className={styles.pageTitleRow}>
-        
+      <Header1 />
+      <div className={styles.container}>
+        <div className={styles.pageTitleRow}>
           <h1 className={styles.pageTitle}>Checkout Page</h1>
           <nav className={styles.breadcrumbs}>
-            <span>Details</span> › <span>Shopping Cart</span> ›{" "}
+            <Link to="/details">Details</Link> ›{" "}
+            <Link to="/cart">Shopping Cart</Link> ›{" "}
             <span className={styles.muted}>Checkout</span>
           </nav>
-        
-      </div>
-
-      {/* Main layout */}
-      <div className={styles.layout}>
-        {/* LEFT COL - FORM */}
-        <div className={styles.leftCol}>
-          <div className={styles.card}>
-            <div className={styles.formGrid}>
-              <div className={styles.field}>
-                <label>Country</label>
-                <input type="text" placeholder="Enter Country" />
-              </div>
-
-              <div className={styles.field}>
-                <label>State/Union Territory</label>
-                <input type="text" placeholder="Enter State" />
-              </div>
-            </div>
-
-            <h3 className={styles.sectionTitle}>Payment Method</h3>
-
-            <div className={styles.paymentCard}>
-              <div className={styles.radioRow}>
-                <label className={styles.radio}>
-                  <input type="radio" name="method" defaultChecked />
-                  <span className={styles.radioLabel}>Credit/Debit Card</span>
-                </label>
-                <div className={styles.cardIcons}>
-                  <img src={visa} alt="visa logo" />
-                </div>
-              </div>
-
-              <div className={styles.formField}>
-                <label>Name of Card</label>
-                <input placeholder="Name of card" />
-              </div>
-
-              <div className={styles.formField}>
-                <label>Card Number</label>
-                <input placeholder="Card Number" />
-              </div>
-
-              <div className={styles.rowTwo}>
-                <div className={styles.formField}>
-                  <label>Expiry Date</label>
-                  <input placeholder="MM / YY" />
-                </div>
-                <div className={styles.formField}>
-                  <label>CVC/CVV</label>
-                  <input placeholder="CVC" />
-                </div>
-              </div>
-
-              <div className={styles.divider} />
-
-              <label className={styles.radioBottom}>
-                <input type="radio" name="method" />
-                <span className={styles.radioLabel}>PayPal</span>
-                <span className={styles.paypalIcon}>
-                   <img src={paypal} alt="paypal logo" />
-                </span>
-              </label>
-            </div>
-          </div>
         </div>
 
-        {/* RIGHT COL - ORDER SUMMARY */}
-        <aside className={styles.rightCol}>
-          <h2 className={styles.sectionTitle}>Order Details</h2>
-          <div className={styles.card}>
-            <div className={styles.orderItem}>
-              <img src={uxImage} alt="course thumbnail" className={styles.thumb} />
-              <div className={styles.desc}>
-                <div className={styles.category}>Design</div>
-                <div className={styles.title}>Introduction to User Experience Design</div>
-                <div className={styles.meta}>155 Lectures · 22 Total Hours</div>
-                <div className={styles.price}>$45.00</div>
+        <div className={styles.layout}>
+          {/* LEFT COL - FORM */}
+          <div className={styles.leftCol}>
+            <div className={styles.card}>
+              <div className={styles.formGrid}>
+                <div className={styles.field}>
+                  <label>Country</label>
+                  <input
+                    type="text"
+                    name="country"
+                    value={formData.country}
+                    onChange={handleChange}
+                    placeholder="Enter Country"
+                  />
+                </div>
+
+                <div className={styles.field}>
+                  <label>State/Union Territory</label>
+                  <input
+                    type="text"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleChange}
+                    placeholder="Enter State"
+                  />
+                </div>
+              </div>
+
+              <h3 className={styles.sectionTitle}>Payment Method</h3>
+
+              <div className={styles.paymentCard}>
+                <div className={styles.radioRow}>
+                  <label className={styles.radio}>
+                    <input
+                      type="radio"
+                      name="method"
+                      value="card"
+                      checked={formData.method === "card"}
+                      onChange={handleChange}
+                    />
+                    <span className={styles.radioLabel}>Credit/Debit Card</span>
+                  </label>
+                  <div className={styles.cardIcons}>
+                    <img src={visa} alt="visa logo" />
+                  </div>
+                </div>
+
+                {formData.method === "card" && (
+                  <>
+                    <div className={styles.formField}>
+                      <label>Name of Card</label>
+                      <input
+                        name="cardName"
+                        value={formData.cardName}
+                        onChange={handleChange}
+                        placeholder="Name on card"
+                      />
+                    </div>
+
+                    <div className={styles.formField}>
+                      <label>Card Number</label>
+                      <input
+                        name="cardNumber"
+                        value={formData.cardNumber}
+                        onChange={handleChange}
+                        placeholder="1234 5678 9012 3456"
+                      />
+                    </div>
+
+                    <div className={styles.rowTwo}>
+                      <div className={styles.formField}>
+                        <label>Expiry Date</label>
+                        <input
+                          name="expiry"
+                          value={formData.expiry}
+                          onChange={handleChange}
+                          placeholder="MM / YY"
+                        />
+                      </div>
+                      <div className={styles.formField}>
+                        <label>CVC/CVV</label>
+                        <input
+                          name="cvc"
+                          value={formData.cvc}
+                          onChange={handleChange}
+                          placeholder="CVC"
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                <div className={styles.divider} />
+
+                <label className={styles.radioBottom}>
+                  <input
+                    type="radio"
+                    name="method"
+                    value="paypal"
+                    checked={formData.method === "paypal"}
+                    onChange={handleChange}
+                  />
+                  <span className={styles.radioLabel}>PayPal</span>
+                  <span className={styles.paypalIcon}>
+                    <img src={paypal} alt="paypal logo" />
+                  </span>
+                </label>
               </div>
             </div>
           </div>
 
+          {/* RIGHT COL - ORDER SUMMARY */}
+          <aside className={styles.rightCol}>
+            <h2 className={styles.sectionTitle}>Order Details</h2>
 
-           <div className="coupon">
-             <label className={styles.couponBtn}> 
-              <img src={percent} alt="" />
-              <span> APPLY COUPON CODE</span></label>
-           </div>
-        
-
-          <div className={styles.card}>
-            <div className={styles.line}>
-              <span>Price</span>
-              <span>$300.00</span>
-            </div>
-            <div className={styles.line}>
-              <span>Discount</span>
-              <span className={styles.neg}>- $10.00</span>
-            </div>
-            <div className={styles.line}>
-              <span>Tax</span>
-              <span>$20.00</span>
+            <div className={styles.card}>
+              {cartItems.map((item) => (
+                <div key={item.id} className={styles.orderItem}>
+                  <img src={item.image} alt={item.title} className={styles.thumb} />
+                  <div className={styles.desc}>
+                    <div className={styles.category}>Course</div>
+                    <div className={styles.title}>{item.title}</div>
+                    <div className={styles.meta}>Qty: {item.quantity}</div>
+                    <div className={styles.price}>${(item.price * item.quantity).toFixed(2)}</div>
+                  </div>
+                </div>
+              ))}
             </div>
 
-            <div className={styles.total}>
-              <span>Total</span>
-              <span>$290.00</span>
+            <div className="coupon">
+              <label className={styles.couponBtn}>
+                <img src={percent} alt="" />
+                <span> APPLY COUPON CODE</span>
+              </label>
             </div>
-          </div>
 
-          <button className={styles.proceedBtn}>Proceed to Checkout</button>
-        </aside>
+            <div className={styles.card}>
+              <div className={styles.line}>
+                <span>Subtotal</span>
+                <span>${subtotal.toFixed(2)}</span>
+              </div>
+              <div className={styles.line}>
+                <span>Discount</span>
+                <span className={styles.neg}>${discount.toFixed(2)}</span>
+              </div>
+              <div className={styles.line}>
+                <span>Tax</span>
+                <span>${tax.toFixed(2)}</span>
+              </div>
+              <div className={styles.total}>
+                <span>Total</span>
+                <span>${total.toFixed(2)}</span>
+              </div>
+            </div>
+
+            <button className={styles.proceedBtn} onClick={handleCheckout}>
+              Proceed to Checkout
+            </button>
+          </aside>
+        </div>
       </div>
-    </div>
-    <Footer/>
+      <Footer />
     </>
   );
 };
 
 export default CheckoutPage;
+
+

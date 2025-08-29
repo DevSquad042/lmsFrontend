@@ -1,97 +1,118 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-
-// Define Mentor type
-export interface Mentor {
-  id: string;
-  name: string;
-  role: string;
-  rating: number;
-  students: number;
-  image: string;
-}
-
-// Fetch all mentors
-export const fetchMentors = createAsyncThunk<Mentor[]>(
-  "mentors/fetchMentors",
-  async () => {
-    const res = await fetch("https://api.example.com/mentors"); // replace with your backend endpoint
-    if (!res.ok) throw new Error("Failed to fetch mentors");
-    return await res.json();
-  }
-);
-
-// PATCH mentor rating
-export const patchMentorRating = createAsyncThunk<
-  { id: string; rating: number },
-  { id: string; rating: number }
->("mentors/patchMentorRating", async ({ id, rating }) => {
-  const res = await fetch(`${"https://api.example.com/mentor-rating"}/${id}`, {
-    method: "PATCH", // or PUT depending on your API
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ rating }),
-  });
-
-  if (!res.ok) throw new Error("Failed to update mentor rating");
-  return { id, rating };
-});
+import axios from 'axios';
+import type { Mentor } from '../../Types/Mentor'; // Adjust import path
+import type { RootState } from '../index'; // Adjust import path
 
 interface MentorState {
   data: Mentor[];
+  selectedMentor: Mentor | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: MentorState = {
   data: [],
+  selectedMentor: null,
   loading: false,
   error: null,
 };
 
-const mentorSlice = createSlice({
-  name: "mentors",
-  initialState,
-  reducers: {
-    // Local-only update (optional fallback)
-    updateMentorRating: (
-      state,
-      action: PayloadAction<{ id: string; rating: number }>
-    ) => {
-      const { id, rating } = action.payload;
-      const mentor = state.data.find((m) => m.id === id);
-      if (mentor) {
-        mentor.rating = rating;
-      }
-    },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchMentors.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(
-        fetchMentors.fulfilled,
-        (state, action: PayloadAction<Mentor[]>) => {
-          state.data = action.payload;
-          state.loading = false;
-        }
-      )
-      .addCase(fetchMentors.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Something went wrong";
-      })
+// Async thunk to fetch all mentors
+export const fetchMentors = createAsyncThunk<Mentor[]>(
+  'mentors/fetchMentors',
+  async () => {
+    const response = await axios.get<Mentor[]>(
+      'https://your-api-link.com/api/mentors' // 🔁 Replace with your actual endpoint
+    );
+    return response.data;
+  }
+);
 
-      // Handle rating PATCH
-      .addCase(patchMentorRating.fulfilled, (state, action) => {
-        const { id, rating } = action.payload;
-        const mentor = state.data.find((m) => m.id === id);
-        if (mentor) {
-          mentor.rating = rating;
+// Async thunk to fetch a single mentor by ID
+export const fetchMentorById = createAsyncThunk<Mentor, string>(
+  'mentors/fetchMentorById',
+  async (id) => {
+    const response = await axios.get<Mentor>(
+      `https://your-api-link.com/api/mentors/${id}` // 🔁 Replace with your actual endpoint
+    );
+    return response.data;
+  }
+);
+
+// Async thunk to update a mentor's rating
+export const patchMentorRating = createAsyncThunk<
+  Mentor,
+  { mentorId: string; rating: number }
+>(
+  'mentors/patchMentorRating',
+  async ({ mentorId, rating }) => {
+    const response = await axios.patch<Mentor>(
+      `https://your-api-link.com/api/mentors/${mentorId}/rating`, // 🔁 Replace with your actual endpoint
+      { rating }
+    );
+    return response.data;
+  }
+);
+
+const mentorSlice = createSlice({
+  name: 'mentors',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    // Handle fetchMentors
+    builder.addCase(fetchMentors.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(
+      fetchMentors.fulfilled,
+      (state, action: PayloadAction<Mentor[]>) => {
+        state.data = action.payload;
+        state.loading = false;
+      }
+    );
+    builder.addCase(fetchMentors.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message || 'Failed to fetch mentors.';
+    });
+
+    // Handle fetchMentorById
+    builder.addCase(fetchMentorById.pending, (state) => {
+      state.loading = true;
+      state.selectedMentor = null;
+      state.error = null;
+    });
+    builder.addCase(
+      fetchMentorById.fulfilled,
+      (state, action: PayloadAction<Mentor>) => {
+        state.selectedMentor = action.payload;
+        state.loading = false;
+      }
+    );
+    builder.addCase(fetchMentorById.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message || 'Failed to fetch mentor details.';
+    });
+
+    // Handle patchMentorRating
+    builder.addCase(
+      patchMentorRating.fulfilled,
+      (state, action: PayloadAction<Mentor>) => {
+        const updatedMentor = action.payload;
+        state.data = state.data.map((mentor) =>
+          mentor.id === updatedMentor.id ? updatedMentor : mentor
+        );
+        if (state.selectedMentor && state.selectedMentor.id === updatedMentor.id) {
+          state.selectedMentor = updatedMentor;
         }
-      });
+      }
+    );
   },
 });
 
-export const { updateMentorRating } = mentorSlice.actions;
+export const selectMentors = (state: RootState) => state.mentors.data;
+export const selectMentorsStatus = (state: RootState) => state.mentors.loading;
+export const selectMentorsError = (state: RootState) => state.mentors.error;
+
 export default mentorSlice.reducer;

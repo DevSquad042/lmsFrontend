@@ -33,6 +33,7 @@
 }
 
 .formSection input {
+  width: 100%;
   padding: 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -117,6 +118,18 @@
   height: 100vh;
   object-fit: cover;
 }
+.loginRedirect {
+  margin-top: 20px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.loginLink {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 
 @media (max-width: 900px) {
   .container {

@@ -2,14 +2,16 @@ import React from "react";
 import { FaSearch } from "react-icons/fa";
 import { IoFilter } from "react-icons/io5";
 import { SlArrowDown } from "react-icons/sl";
-import "./FolderStyles/Filter2.css"; // Make sure this file exists
+import "./FolderStyles/Filter2.css";
 
 interface Filter2Props {
-  title: string; // Required now — so you must always pass it
-  count?: string | number; // Optional
+  title: string;
+  count?: string | number;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
 }
 
-const Filter2: React.FC<Filter2Props> = ({ title, count }) => {
+const Filter2: React.FC<Filter2Props> = ({ title, count, searchQuery, setSearchQuery }) => {
   return (
     <div className="filter-container">
       {/* Title */}
@@ -24,7 +26,12 @@ const Filter2: React.FC<Filter2Props> = ({ title, count }) => {
         {/* Search box */}
         <div className="filter-search">
           <FaSearch className="search-icon2" />
-          <input type="text" placeholder="Search User" />
+          <input
+            type="text"
+            placeholder="Search your courses..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
 
         {/* Sort & Filter buttons */}

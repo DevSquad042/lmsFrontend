@@ -1,66 +1,39 @@
-import React, { useState, useRef, useEffect } from "react";
-import styles from "./ComponentStyles/Pagination.module.css";
+import React from 'react';
+import styles from '../Styles/Pagination.module.css';
 
-const Pagination: React.FC = () => {
-  const [pages, setPages] = useState([1, 2, 3]);
-  const [activePage, setActivePage] = useState(1);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const activePageRef = useRef<HTMLButtonElement>(null);
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
 
-  const handlePageClick = (page: number) => {
-    setActivePage(page);
-  };
-
-  const handleNext = () => {
-    const nextPage = activePage + 1;
-    setActivePage(nextPage);
-
-    if (!pages.includes(nextPage)) {
-      setPages((prev) => [...prev, nextPage]);
-    }
-  };
-
-  const handlePrev = () => {
-    if (activePage > 1) {
-      setActivePage(activePage - 1);
-    }
-  };
-
-  // Auto-scroll so active page is always visible
-  useEffect(() => {
-    if (activePageRef.current) {
-      activePageRef.current.scrollIntoView({
-        behavior: "smooth",
-        inline: "center",
-      });
-    }
-  }, [activePage]);
+const Pagination: React.FC<Props> = ({ currentPage, totalPages, onPageChange }) => {
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <div className={styles.wrapper} ref={scrollContainerRef}>
+    <div className={styles.pagination}>
       <button
-        className={styles.arrow}
-        disabled={activePage === 1}
-        onClick={handlePrev}
+        className={styles.pageButton}
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
       >
-        ‹
+        Previous
       </button>
-
       {pages.map((page) => (
         <button
           key={page}
-          ref={page === activePage ? activePageRef : null}
-          className={`${styles.page} ${
-            page === activePage ? styles.active : ""
-          }`}
-          onClick={() => handlePageClick(page)}
+          className={`${styles.pageButton} ${page === currentPage ? styles.active : ''}`}
+          onClick={() => onPageChange(page)}
         >
           {page}
         </button>
       ))}
-
-      <button className={styles.arrow} onClick={handleNext}>
-        ›
+      <button
+        className={styles.pageButton}
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+      >
+        Next
       </button>
     </div>
   );

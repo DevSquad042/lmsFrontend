@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import type { AppDispatch } from "../../store/index";
 import { registerUser } from "../../store/slices/authSlice";
 
 import styles from "./FormStyles/register.module.css";
-import { FaFacebookF, FaMicrosoft } from "react-icons/fa";
+import { FaFacebookF, FaMicrosoft, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { toast } from "react-toastify";
 
 import Header1 from "../shared/Header1";
 import Button from "../shared/Buttons";
-import RegisterImage from "../../assets/Images/login-image.png"; // reuse same image for consistency
+import RegisterImage from "../../assets/Images/login-image.png";
 
 interface FormValues {
   firstName: string;
@@ -22,6 +24,7 @@ interface FormValues {
 
 const Register: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
   const [values, setValues] = useState<FormValues>({
     firstName: "",
@@ -34,6 +37,8 @@ const Register: React.FC = () => {
 
   const [errors, setErrors] = useState<Partial<FormValues>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange =
     (field: keyof FormValues) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,21 +73,48 @@ const Register: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      console.log(values);
-
-      // Prepare payload (exclude confirmPassword but still keep it in state for validation)
       const payload = {
-      
         firstName: values.firstName,
         lastName: values.lastName,
         userName: values.userName,
         email: values.email,
         password: values.password,
-        // Add other fields if needed
       };
+
+      try {
+        const res = await dispatch(registerUser(payload)).unwrap();
+
+        if (res && typeof res === "object" && "token" in res) {
+          localStorage.setItem("token", res.token);
+        }
+
+        setSubmitted(true);
+        toast.success("Registration successful! 🎉");
+        navigate("/login");
+      } catch (err: unknown) {
+        const maybeError = err as { response?: { status?: number } };
+        const status = maybeError?.response?.status;
+
+        if (status === 409) {
+          setErrors((prev) => ({
+            ...prev,
+            email: "This email or username is already registered.",
+          }));
+          toast.error("Email or username already exists ❌");
+        } else {
+          console.error("Registration failed:", err);
+          setErrors((prev) => ({
+            ...prev,
+            email: "Something went wrong. Please try again later.",
+          }));
+          toast.error("Registration failed. Please try again 💔");
+        }
+      }
+    }
+  };
 
       dispatch(registerUser(payload));
       // setSubmitted(true);
@@ -98,12 +130,10 @@ const Register: React.FC = () => {
     <>
       <Header1 />
       <div className={styles.container}>
-        {/* Left image */}
         <div className={styles.imageSection}>
           <img src={RegisterImage} alt="register background" />
         </div>
 
-        {/* Right form */}
         <div className={styles.formSection}>
           <h2>Create Your Account</h2>
           <form onSubmit={handleSubmit}>
@@ -113,6 +143,7 @@ const Register: React.FC = () => {
                 placeholder="First Name"
                 value={values.firstName}
                 onChange={handleChange("firstName")}
+              
               />
               <input
                 type="text"
@@ -121,12 +152,8 @@ const Register: React.FC = () => {
                 onChange={handleChange("lastName")}
               />
             </div>
-            {errors.firstName && (
-              <p className={styles.error}>{errors.firstName}</p>
-            )}
-            {errors.lastName && (
-              <p className={styles.error}>{errors.lastName}</p>
-            )}
+            {errors.firstName && <p className={styles.error}>{errors.firstName}</p>}
+            {errors.lastName && <p className={styles.error}>{errors.lastName}</p>}
 
             <input
               type="text"
@@ -134,9 +161,7 @@ const Register: React.FC = () => {
               value={values.userName}
               onChange={handleChange("userName")}
             />
-            {errors.userName && (
-              <p className={styles.error}>{errors.userName}</p>
-            )}
+            {errors.userName && <p className={styles.error}>{errors.userName}</p>}
 
             <input
               type="email"
@@ -147,26 +172,41 @@ const Register: React.FC = () => {
             {errors.email && <p className={styles.error}>{errors.email}</p>}
 
             <div className={styles.passwordGroup}>
-              <input
-                type="password"
-                placeholder="Password"
-                value={values.password}
-                onChange={handleChange("password")}
-              />
-              {errors.password && (
-                <p className={styles.error}>{errors.password}</p>
-              )}
+              <div className={styles.passwordField}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={values.password}
+                  onChange={handleChange("password")}
+                />
+                <span
+                  onClick={() => setShowPassword(!showPassword)}
+                  className={styles.eyeIcon}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
+              {errors.password && <p className={styles.error}>{errors.password}</p>}
 
-              <input
-                type="password"
-                placeholder="Confirm Password"
-                value={values.confirmPassword}
-                onChange={handleChange("confirmPassword")}
-              />
+              <div className={styles.passwordField}>
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm Password"
+                  value={values.confirmPassword}
+                  onChange={handleChange("confirmPassword")}
+                />
+                <span
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className={styles.eyeIcon}
+                >
+                  {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
               {errors.confirmPassword && (
                 <p className={styles.error}>{errors.confirmPassword}</p>
               )}
             </div>
+
             <div>
               <Button
                 label="Create Account →"
@@ -209,6 +249,23 @@ const Register: React.FC = () => {
           {submitted && (
             <p className={styles.success}>Registration submitted!</p>
           )}
+
+          <div className={styles.loginRedirect}>
+            <p>
+              Already have an account?{" "}
+              <span
+                className={styles.loginLink}
+                onClick={() => navigate("/login")}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") navigate("/login");
+                }}
+              >
+                Log in here
+              </span>
+            </p>
+          </div>
         </div>
       </div>
     </>
@@ -216,3 +273,4 @@ const Register: React.FC = () => {
 };
 
 export default Register;
+
