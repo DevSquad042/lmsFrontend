@@ -42,3 +42,123 @@
   display: flex;
   justify-content: center;
 }
+
+
+/* Layout */
+.page-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+}
+
+.page-body {
+  display: flex;
+  gap: 20px;
+  padding: 24px;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+/* Grid of teacher cards */
+.teachers-div {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+/* Loading and empty states */
+.main-content p {
+  font-size: 16px;
+  color: #555;
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* Pagination spacing */
+.pagination-wrapper {
+  margin-top: auto;
+  padding-top: 50px;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 1024px) {
+  .page-body {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .teachers-div {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+}
+
+@media (max-width: 1024px) {
+  .page-body {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .teachers-div {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    justify-content: center;   /* ✅ Center items */
+  }
+}
+
+/* Small screens (phones) */
+@media (max-width: 768px) {
+  .page-body {
+    flex-direction: column;   /* Sidebar stacks above main content */
+    padding: 16px;
+    align-items: center;      /* ✅ Center content */
+  }
+
+  .teachers-div {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    justify-content: center;   /* ✅ Center grid items */
+  }
+
+  .main-content {
+    width: 100%;
+    display: flex;
+    align-items: center;       /* ✅ Center align inner content */
+  }
+
+  .main-content p {
+    font-size: 14px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .page-body {
+    padding: 12px;
+    align-items: center;      /* ✅ Center all */
+  }
+
+  .teachers-div {
+    grid-template-columns: 1fr;  /* 1 card per row */
+    gap: 12px;
+    justify-items: center;       /* ✅ Center card in single column */
+  }
+
+  .main-content {
+    align-items: center;
+  }
+
+  .main-content p {
+    font-size: 13px;
+  }
+
+  .pagination-wrapper {
+    padding-top: 30px;
+  }
+}

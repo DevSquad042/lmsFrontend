@@ -2,7 +2,7 @@ import './SharedStyles/Header2.css';
 import { IoMdHeartEmpty } from "react-icons/io";
 import { FaShoppingCart, FaSearch } from 'react-icons/fa';
 import { IoIosNotificationsOutline } from "react-icons/io";
-import Logo1 from '../../assets/logo/Logo.png';
+import Logo1 from '../../assets/logo/Byway .png';
 import { Link } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { useState } from 'react';
@@ -19,6 +19,7 @@ const Header2: React.FC = () => {
     <header className="header2">
       <div className="header-left2">
         <img src={Logo1} alt="Byway Logo" className="header-logo2" />
+        <a href="#" className="header-link">Categories</a>
       
       </div>
 

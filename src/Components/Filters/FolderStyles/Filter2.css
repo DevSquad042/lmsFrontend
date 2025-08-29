@@ -112,13 +112,5 @@
 }
 
 /* Mobile Fix */
-@media (max-width: 600px) {
-  .filter-bottom {
-    flex-direction: column;
-    align-items: stretch;
-  }
 
-  .filter-left {
-    justify-content: space-between;
-  }
-}
+
