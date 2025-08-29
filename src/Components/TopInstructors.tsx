@@ -8,17 +8,18 @@ import { fetchMentors, selectMentors, selectMentorsStatus } from '../store/slice
 import MentorCard from '../Components/cards/MentorCard';
 import './ComponentStyles/TopInstructors.css';
 
-const TopInstructors: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const mentors = useSelector(selectMentors);
-  const loading = useSelector(selectMentorsStatus);
 
-  // fetch mentors if not already loaded
-  useEffect(() => {
-    if (loading ==! 'idle') {
-      dispatch(fetchMentors());
-    }
-  }, [loading, dispatch]);
+const TopInstructors: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const mentors = useSelector(selectMentors);
+  const loading = useSelector(selectMentorsStatus);
+
+  // This is the corrected useEffect hook
+  useEffect(() => {
+    if (loading === 'idle') {
+      dispatch(fetchMentors());
+    }
+  }, [loading, dispatch]);
 
   // slice first 4 mentors
   const topInstructors = mentors.slice(0, 4);

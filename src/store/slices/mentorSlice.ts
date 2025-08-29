@@ -1,20 +1,23 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
-import axios from 'axios';
-import type { Mentor } from '../../Types/Mentor'; // Adjust import path
-import type { RootState } from '../index'; // Adjust import path
+// src/store/slices/mentorSlice.ts
 
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import axios from 'axios';
+import type { Mentor } from '../../Types/Mentor';
+import type { RootState } from '../../store/index';
+
+// 🔁 Corrected MentorState interface with 'data' and a string 'loading'
 interface MentorState {
   data: Mentor[];
   selectedMentor: Mentor | null;
-  loading: boolean;
+  loading: 'idle' | 'pending' | 'succeeded' | 'failed';
   error: string | null;
 }
 
 const initialState: MentorState = {
   data: [],
   selectedMentor: null,
-  loading: false,
+  loading: 'idle',
   error: null,
 };
 
@@ -23,7 +26,7 @@ export const fetchMentors = createAsyncThunk<Mentor[]>(
   'mentors/fetchMentors',
   async () => {
     const response = await axios.get<Mentor[]>(
-      'https://your-api-link.com/api/mentors' // 🔁 Replace with your actual endpoint
+      'https://your-api-link.com/api/mentors'
     );
     return response.data;
   }
@@ -34,7 +37,7 @@ export const fetchMentorById = createAsyncThunk<Mentor, string>(
   'mentors/fetchMentorById',
   async (id) => {
     const response = await axios.get<Mentor>(
-      `https://your-api-link.com/api/mentors/${id}` // 🔁 Replace with your actual endpoint
+      `https://your-api-link.com/api/mentors/${id}`
     );
     return response.data;
   }
@@ -48,7 +51,7 @@ export const patchMentorRating = createAsyncThunk<
   'mentors/patchMentorRating',
   async ({ mentorId, rating }) => {
     const response = await axios.patch<Mentor>(
-      `https://your-api-link.com/api/mentors/${mentorId}/rating`, // 🔁 Replace with your actual endpoint
+      `https://your-api-link.com/api/mentors/${mentorId}/rating`,
       { rating }
     );
     return response.data;
@@ -62,24 +65,24 @@ const mentorSlice = createSlice({
   extraReducers: (builder) => {
     // Handle fetchMentors
     builder.addCase(fetchMentors.pending, (state) => {
-      state.loading = true;
+      state.loading = 'pending';
       state.error = null;
     });
     builder.addCase(
       fetchMentors.fulfilled,
       (state, action: PayloadAction<Mentor[]>) => {
         state.data = action.payload;
-        state.loading = false;
+        state.loading = 'succeeded';
       }
     );
     builder.addCase(fetchMentors.rejected, (state, action) => {
-      state.loading = false;
+      state.loading = 'failed';
       state.error = action.error.message || 'Failed to fetch mentors.';
     });
 
     // Handle fetchMentorById
     builder.addCase(fetchMentorById.pending, (state) => {
-      state.loading = true;
+      state.loading = 'pending';
       state.selectedMentor = null;
       state.error = null;
     });
@@ -87,11 +90,11 @@ const mentorSlice = createSlice({
       fetchMentorById.fulfilled,
       (state, action: PayloadAction<Mentor>) => {
         state.selectedMentor = action.payload;
-        state.loading = false;
+        state.loading = 'succeeded';
       }
     );
     builder.addCase(fetchMentorById.rejected, (state, action) => {
-      state.loading = false;
+      state.loading = 'failed';
       state.error = action.error.message || 'Failed to fetch mentor details.';
     });
 
@@ -111,6 +114,7 @@ const mentorSlice = createSlice({
   },
 });
 
+// Add selectors at the bottom of the file for consistent access
 export const selectMentors = (state: RootState) => state.mentors.data;
 export const selectMentorsStatus = (state: RootState) => state.mentors.loading;
 export const selectMentorsError = (state: RootState) => state.mentors.error;
