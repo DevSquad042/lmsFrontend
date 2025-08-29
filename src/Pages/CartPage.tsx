@@ -1,18 +1,18 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState } from "../store"; 
+import type { RootState } from "../store";
 import {
   removeFromCart,
   moveToSaveForLater,
   moveToCart,
   removeFromSaveForLater,
 } from "../store/slices/cartSlice";
-
 import Header from "../Components/shared/Header2";
 import Footer from "../Components/Layout/Footer";
 import OrderSummaryCard from "../Components/cards/OrderSummaryCard";
 import "../styles/CartPage.css";
-import { Link, useNavigate } from "react-router-dom"; // ✅ import useNavigate
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 type CartItem = {
   id: string;
@@ -34,7 +34,7 @@ interface ExtendedRootState extends RootState {
 
 const CartPage: React.FC = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // ✅ initialize navigate
+  const navigate = useNavigate();
 
   const cartItems = useSelector((state: ExtendedRootState) => state.cart.items);
   const savedForLater = useSelector(
@@ -49,17 +49,49 @@ const CartPage: React.FC = () => {
   const tax = (price + discount) * 0.1;
   const total = price + discount + tax;
 
+  // Function to handle adding item to cart via API
+  const handleAddToCart = async (courseId: string) => {
+    try {
+      const response = await axios.post(
+        "https://byway-hoce.onrender.com/api/cart/add-to-cart",
+        { courseId },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            // Add authorization header if required (e.g., JWT token)
+            // Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+          },
+        }
+      );
+
+      if (response.status === 200 || response.status === 201) {
+        // ✅ Fixed syntax: Properly dispatch the moveToCart action
+        dispatch(moveToCart(courseId));
+        console.log("Course added to cart successfully:", response.data);
+      }
+    } catch (error) {
+      console.error("Error adding course to cart:", error);
+      // Show user-friendly error message
+      alert("Failed to add course to cart. Please try again.");
+    }
+  };
+
   return (
     <div className="shopping-cart-page">
       <Header />
 
-      {/* ✅ Breadcrumb and Title */}
+      {/* Breadcrumb and Title */}
       <div className="breadcrumb-container">
         <h1 className="cart-title">Shopping Cart</h1>
         <nav className="breadcrumb-nav">
-          <Link to="/categories" className="breadcrumb-link">Categories</Link> ›{" "}
-          <Link to="/details" className="breadcrumb-link">Details</Link> ›{" "}
-          <span className="breadcrumb-current">Shopping Cart</span>
+          <Link to="/categories" className="breadcrumb-link">
+            Categories
+          </Link>{" "}
+          ›{" "}
+          <Link to="/details" className="breadcrumb-link">
+            Details
+          </Link>{" "}
+          › <span className="breadcrumb-current">Shopping Cart</span>
         </nav>
       </div>
 
@@ -124,7 +156,7 @@ const CartPage: React.FC = () => {
               </div>
             </div>
 
-            {/* ✅ Saved for Later Section */}
+            {/* Saved for Later Section */}
             {savedForLater.length > 0 && (
               <div className="saved-later-section">
                 <h2 className="saved-title">Saved for later</h2>
@@ -143,7 +175,7 @@ const CartPage: React.FC = () => {
                       <div className="course-actions">
                         <button
                           className="move-btn"
-                          onClick={() => dispatch(moveToCart(course.id))}
+                          onClick={() => handleAddToCart(course.id)}
                         >
                           Move to cart
                         </button>
@@ -165,7 +197,7 @@ const CartPage: React.FC = () => {
           <div className="summary-section">
             <OrderSummaryCard
               summary={{ price, discount, tax, total }}
-              onCheckout={() => navigate("/checkout")} // ✅ redirect to checkout page
+              onCheckout={() => navigate("/checkout")}
             />
           </div>
         </div>
@@ -177,8 +209,3 @@ const CartPage: React.FC = () => {
 };
 
 export default CartPage;
-
-
-
-
-
