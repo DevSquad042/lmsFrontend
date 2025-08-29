@@ -1,142 +1,147 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState, AppDispatch } from "../store/store";
-import { updateProfile, fetchProfile } from "../store/slices/ProfileSlice";
-import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
 import Footer from "../Components/Layout/Footer";
 import Header2 from "../Components/shared/Header2";
 import ProfileSidebar from "../Components/shared/ProfileSidebar";
 import "../Styles/ProfileSettings.css";
 
-interface Likes {
-  interest: string;
-  hobbies: string;
-  profession: string;
-  education: string;
-  favoriteFood: string;
-}
-
-interface FormData {
+interface FormDataType {
   firstName: string;
   lastName: string;
   headline: string;
   description: string;
-  language: string;
-  likes: Likes;
-  image: File | null;
+  linkedin: string;
+  youtube: string;
+  facebook: string;
+  website: string;
+  x: string;
+  profilePicture: File | null;
 }
 
 const ProfileSettings: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
-  const profile = useSelector((state: RootState) => state.profile.data);
-  const loading = useSelector((state: RootState) => state.profile.loading);
-  const user = useSelector((state: RootState) => state.auth.user);
-
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<FormDataType>({
     firstName: "",
     lastName: "",
     headline: "",
     description: "",
-    language: "",
-    likes: {
-      interest: "",
-      hobbies: "",
-      profession: "",
-      education: "",
-      favoriteFood: "",
-    },
-    image: null,
+    linkedin: "",
+    youtube: "",
+    facebook: "",
+    website: "",
+    x: "",
+    profilePicture: null,
   });
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
+  // Prefill profile data on mount
   useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    }
-  }, [user, navigate]);
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
 
-  useEffect(() => {
-    dispatch(fetchProfile());
-  }, [dispatch]);
+      try {
+        const res = await fetch("https://byway-hoce.onrender.com/api/profile/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-  useEffect(() => {
-    if (profile) {
-      setFormData({
-        ...profile,
-        image: null,
-      });
-    }
-  }, [profile]);
+        if (!res.ok) return;
+
+        const data = await res.json();
+        setFormData({
+          firstName: data.firstName || "",
+          lastName: data.lastName || "",
+          headline: data.headline || "",
+          description: data.description || "",
+          linkedin: data.linkedin || "",
+          youtube: data.youtube || "",
+          facebook: data.facebook || "",
+          website: data.website || "",
+          x: data.x || "",
+          profilePicture: null,
+        });
+        setImagePreview(data.profilePictureUrl || null);
+      } catch (err) {
+        console.error("Failed to fetch profile:", err);
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-
-    if (name in formData.likes) {
-      setFormData((prev) => ({
-        ...prev,
-        likes: {
-          ...prev.likes,
-          [name]: value,
-        },
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setFormData((prev) => ({ ...prev, image: file }));
+      setFormData((prev) => ({ ...prev, profilePicture: file }));
       setImagePreview(URL.createObjectURL(file));
     }
   };
 
-  const handleImageUpload = () => {
-    if (!formData.image) {
-      toast.warning("No image selected.");
+  const handleSubmit = async () => {
+    setLoading(true);
+    setMessage("");
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setMessage("No token found. Please log in again ❌");
+      setLoading(false);
       return;
     }
 
-    const data = new FormData();
-    data.append("image", formData.image);
+    try {
+      const data = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value !== null) data.append(key, value as any);
+      });
 
-    console.log("Prepared image for upload:", data);
-    toast.success("Image ready to upload!");
-  };
+      const response = await fetch(
+        "https://byway-hoce.onrender.com/api/profile/update",
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: data,
+        }
+      );
 
-  const handleSubmit = () => {
-    const { firstName, lastName, headline, description, language, likes, image } = formData;
-    const requiredFields = [firstName, lastName, headline, description, language];
-    const likesFilled = Object.values(likes).every((val) => val.trim() !== "");
+      const result = await response.json();
 
-    if (requiredFields.some((field) => field.trim() === "")) {
-      toast.error("Please fill out all required fields.");
-      return;
+      if (!response.ok) {
+        setMessage(result.message || "Something went wrong ❌");
+        return;
+      }
+
+      // Update formData and imagePreview with returned data
+      setFormData({
+        firstName: result.firstName || "",
+        lastName: result.lastName || "",
+        headline: result.headline || "",
+        description: result.description || "",
+        linkedin: result.linkedin || "",
+        youtube: result.youtube || "",
+        facebook: result.facebook || "",
+        website: result.website || "",
+        x: result.x || "",
+        profilePicture: null,
+      });
+      setImagePreview(result.profilePictureUrl || null);
+      setMessage("Profile updated successfully ✅");
+    } catch (err) {
+      console.error("Error updating profile:", err);
+      setMessage("Error updating profile ❌");
+    } finally {
+      setLoading(false);
     }
-
-    if (!likesFilled) {
-      toast.error("Please complete all 'Likes' fields.");
-      return;
-    }
-
-    if (!image) {
-      toast.warning("Please upload a profile image before submitting.");
-      return;
-    }
-
-    dispatch(updateProfile(formData));
-    toast.success("Profile updated successfully!");
   };
 
   return (
@@ -144,14 +149,8 @@ const ProfileSettings: React.FC = () => {
       <Header2 />
       <section className="profile-settings-container">
         <ProfileSidebar />
-        <form
-          className="profile-settings-content"
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSubmit();
-          }}
-        >
-          {/* Profile Info */}
+
+        <div className="profile-settings-content">
           <div className="profile-info-card">
             <div className="form-group-row">
               <div className="form-group half-width">
@@ -176,14 +175,14 @@ const ProfileSettings: React.FC = () => {
               </div>
             </div>
 
-            <div className="form-group-half-width">
+            <div className="form-group">
               <label>Headline</label>
               <input
                 type="text"
                 name="headline"
                 value={formData.headline}
                 onChange={handleChange}
-                placeholder="Enter your headline"
+                placeholder="Enter headline"
               />
             </div>
 
@@ -197,95 +196,93 @@ const ProfileSettings: React.FC = () => {
               ></textarea>
             </div>
 
-            <div className="form-group-half-width">
-              <label>Language</label>
-              <select
-                name="language"
-                value={formData.language}
+            <div className="form-group">
+              <label>LinkedIn</label>
+              <input
+                type="text"
+                name="linkedin"
+                value={formData.linkedin}
                 onChange={handleChange}
-              >
-                <option value="">Select language</option>
-                <option value="English">English</option>
-                <option value="French">French</option>
-                <option value="Spanish">Spanish</option>
-              </select>
+                placeholder="Enter LinkedIn URL"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>YouTube</label>
+              <input
+                type="text"
+                name="youtube"
+                value={formData.youtube}
+                onChange={handleChange}
+                placeholder="Enter YouTube URL"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Facebook</label>
+              <input
+                type="text"
+                name="facebook"
+                value={formData.facebook}
+                onChange={handleChange}
+                placeholder="Enter Facebook URL"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Website</label>
+              <input
+                type="text"
+                name="website"
+                value={formData.website}
+                onChange={handleChange}
+                placeholder="Enter website"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>X (Twitter)</label>
+              <input
+                type="text"
+                name="x"
+                value={formData.x}
+                onChange={handleChange}
+                placeholder="Enter X username"
+              />
             </div>
           </div>
 
-          {/* Image Upload */}
           <div className="profile-image-card">
-            <h2>Image Preview</h2>
+            <h2>Profile Picture</h2>
             <div className="image-preview">
-              {imagePreview ? (
-                <img src={imagePreview} alt="Preview" />
-              ) : (
-                <p>No image selected</p>
-              )}
+              {imagePreview ? <img src={imagePreview} alt="Preview" /> : <p>No image selected</p>}
             </div>
-            <div className="form-group-row">
-              <div className="form-group-half-width2">
-                <label htmlFor="imageInput">Add/Change Image</label>
-                <input
-                  id="imageInput"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                />
-              </div>
-              <button
-                type="button"
-                className="upload-btn"
-                onClick={() => document.getElementById("imageInput")?.click()}
-              >
-                Upload Image
-              </button>
+            <div className="form-group">
+              <label htmlFor="imageInput">Upload Profile Picture</label>
+              <input
+                id="imageInput"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
             </div>
-            <button
-              type="button"
-              className="save-image-btn"
-              onClick={handleImageUpload}
-            >
-              Save Image
-            </button>
           </div>
 
-          {/* Likes */}
-          <div className="profile-likes-card">
-            <h2>Likes</h2>
-            {Object.entries(formData.likes).map(([key, value]) => (
-              <div className="form-group" key={key}>
-                <label>{key}</label>
-                <input
-                  type="text"
-                  name={key}
-                  value={value}
-                  onChange={handleChange}
-                  placeholder={`Enter ${key}`}
-                />
-              </div>
-            ))}
-          </div>
+          <button
+            type="button"
+            className="save-btn"
+            disabled={loading}
+            onClick={handleSubmit}
+          >
+            {loading ? "Saving..." : "Save Profile"}
+          </button>
 
-          {loading && <p className="loading-text">Saving profile...</p>}
-        </form>
+          {message && <p className="status-message">{message}</p>}
+        </div>
       </section>
       <Footer />
-      <ToastContainer />
     </div>
   );
 };
 
 export default ProfileSettings;
-
-
-
-
-
-
-
-
-
-
-
-
-

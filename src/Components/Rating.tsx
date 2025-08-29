@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import type { AppDispatch } from "../store/store";
+import type { AppDispatch } from "../store/index";
 import type { Course } from "../Types/Course";
-import type {Review} from "../Types/rating"
+// import type {Review} from "../Types/rating";
 import { FaStar } from "react-icons/fa";
 import { addReview } from "../store/slices/reviewsSlice";
 import styles from "./ComponentStyles/Rating.module.css";
