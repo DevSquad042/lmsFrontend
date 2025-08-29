@@ -1,15 +1,13 @@
-// src/components/Forms/LoginForm.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../store";
 import { loginUser } from "../../store/slices/authSlice";
 import { useNavigate, Link } from "react-router-dom";
-
 import styles from "./FormStyles/LoginForm.module.css";
 import styles2 from "./FormStyles/register.module.css";
 import { FaFacebookF, FaMicrosoft, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-
 import Header1 from "../shared/Header1";
 import LoginImage from "../../assets/Images/login-image.png";
 import { useGoogleLogin } from "@react-oauth/google";
@@ -19,7 +17,7 @@ import { toast } from "react-toastify";
 const LoginForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { user, loading } = useSelector((state: RootState) => state.auth);
+  const { user, token, loading } = useSelector((state: RootState) => state.auth);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,28 +25,24 @@ const LoginForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    if (user) {
+    if (user && token) {
+      console.log("User and token after login:", { user, token }); // Debug log
       toast.success("Login successful!");
       navigate("/profile1");
     }
-  }, [user, navigate]);
+  }, [user, token, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError(null);
 
     try {
-      await dispatch(loginUser({ email, password })).unwrap();
-    } catch (err: unknown) {
-      if (err instanceof Error && err.message) {
-        setLoginError(err.message);
-        toast.error(err.message);
-      } else {
-        const fallback =
-          "Account not found. Please register first or check your credentials.";
-        setLoginError(fallback);
-        toast.error(fallback);
-      }
+      const result = await dispatch(loginUser({ email, password })).unwrap();
+      console.log("Login result:", result); // Debug log
+    } catch (err: any) {
+      const errorMessage = err || "Account not found. Please register first or check your credentials.";
+      setLoginError(errorMessage);
+      toast.error(errorMessage);
     }
   };
 
@@ -62,6 +56,8 @@ const LoginForm: React.FC = () => {
           headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
         });
         console.log("Google User:", res.data);
+        const result = await dispatch(googleLogin(res.data.sub)).unwrap();
+        console.log("Google login result:", result);
         toast.success("Google login successful!");
       } catch (error) {
         console.error("Google login failed", error);
@@ -196,5 +192,3 @@ const LoginForm: React.FC = () => {
 };
 
 export default LoginForm;
-
-

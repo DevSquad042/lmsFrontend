@@ -1,8 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Footer from "../Components/Layout/Footer";
 import Header2 from "../Components/shared/Header2";
 import ProfileSidebar from "../Components/shared/ProfileSidebar";
+import { type RootState, type AppDispatch } from "../store/store";
+import { setPaidCourses } from "../store/slices/authSlice";
 import "../Styles/ProfileSettings.css";
 
 interface FormDataType {
@@ -19,6 +23,9 @@ interface FormDataType {
 }
 
 const ProfileSettings: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { user, token } = useSelector((state: RootState) => state.auth);
+
   const [formData, setFormData] = useState<FormDataType>({
     firstName: "",
     lastName: "",
@@ -36,40 +43,26 @@ const ProfileSettings: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // Prefill profile data on mount
+  // Prefill profile data safely
   useEffect(() => {
-    const fetchProfile = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) return;
+    console.log("User and token in ProfileSettings:", { user, token }); // Debug log
+    if (!user) return;
 
-      try {
-        const res = await fetch("https://byway-hoce.onrender.com/api/profile/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+    setFormData({
+      firstName: user.firstName || "",
+      lastName: user.lastName || "",
+      headline: user.headline || "",
+      description: user.description || "",
+      linkedin: user.linkedin || "",
+      youtube: user.youtube || "",
+      facebook: user.facebook || "",
+      website: user.website || "",
+      x: user.x || "",
+      profilePicture: null,
+    });
 
-        if (!res.ok) return;
-
-        const data = await res.json();
-        setFormData({
-          firstName: data.firstName || "",
-          lastName: data.lastName || "",
-          headline: data.headline || "",
-          description: data.description || "",
-          linkedin: data.linkedin || "",
-          youtube: data.youtube || "",
-          facebook: data.facebook || "",
-          website: data.website || "",
-          x: data.x || "",
-          profilePicture: null,
-        });
-        setImagePreview(data.profilePictureUrl || null);
-      } catch (err) {
-        console.error("Failed to fetch profile:", err);
-      }
-    };
-
-    fetchProfile();
-  }, []);
+    setImagePreview(user.profilePicture || null);
+  }, [user]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -87,15 +80,21 @@ const ProfileSettings: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    setLoading(true);
-    setMessage("");
-
-    const token = localStorage.getItem("token");
+    console.log("handleSubmit called with:", { user, token }); // Debug log
     if (!token) {
       setMessage("No token found. Please log in again ❌");
-      setLoading(false);
+      console.log("Token missing in handleSubmit"); // Debug log
       return;
     }
+
+    if (!user?.id) {
+      setMessage("User ID not found. Please log in again ❌");
+      console.log("User ID missing in handleSubmit"); // Debug log
+      return;
+    }
+
+    setLoading(true);
+    setMessage("");
 
     try {
       const data = new FormData();
@@ -104,7 +103,7 @@ const ProfileSettings: React.FC = () => {
       });
 
       const response = await fetch(
-        "https://byway-hoce.onrender.com/api/profile/update",
+        `https://byway-hoce.onrender.com/api/profile/update`, // Updated endpoint
         {
           method: "PUT",
           headers: {
@@ -114,31 +113,34 @@ const ProfileSettings: React.FC = () => {
         }
       );
 
+      // Check if response is JSON
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        console.error("Non-JSON response from profile update:", text);
+        throw new Error(`Server returned non-JSON response: ${response.status} ${response.statusText}`);
+      }
+
       const result = await response.json();
+      console.log("Profile update API response:", JSON.stringify(result, null, 2)); // Debug log
 
       if (!response.ok) {
-        setMessage(result.message || "Something went wrong ❌");
+        setMessage(result.message || `Error ${response.status}: ${response.statusText} ❌`);
         return;
       }
 
-      // Update formData and imagePreview with returned data
-      setFormData({
-        firstName: result.firstName || "",
-        lastName: result.lastName || "",
-        headline: result.headline || "",
-        description: result.description || "",
-        linkedin: result.linkedin || "",
-        youtube: result.youtube || "",
-        facebook: result.facebook || "",
-        website: result.website || "",
-        x: result.x || "",
-        profilePicture: null,
-      });
-      setImagePreview(result.profilePictureUrl || null);
+      // Update Redux user and localStorage
+      const updatedUser = { ...user, ...result };
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      if (result.paidCourses) dispatch(setPaidCourses(result.paidCourses));
+
       setMessage("Profile updated successfully ✅");
-    } catch (err) {
+      setFormData((prev) => ({ ...prev, profilePicture: null }));
+      setImagePreview(result.profilePicture || null);
+    } catch (err: any) {
       console.error("Error updating profile:", err);
-      setMessage("Error updating profile ❌");
+      setMessage(`Error updating profile: ${err.message} ❌`);
     } finally {
       setLoading(false);
     }
@@ -158,7 +160,7 @@ const ProfileSettings: React.FC = () => {
                 <input
                   type="text"
                   name="firstName"
-                  value={formData.firstName}
+                  value={formData.firstName || ""}
                   onChange={handleChange}
                   placeholder="Enter first name"
                 />
@@ -168,7 +170,7 @@ const ProfileSettings: React.FC = () => {
                 <input
                   type="text"
                   name="lastName"
-                  value={formData.lastName}
+                  value={formData.lastName || ""}
                   onChange={handleChange}
                   placeholder="Enter last name"
                 />
@@ -180,7 +182,7 @@ const ProfileSettings: React.FC = () => {
               <input
                 type="text"
                 name="headline"
-                value={formData.headline}
+                value={formData.headline || ""}
                 onChange={handleChange}
                 placeholder="Enter headline"
               />
@@ -190,10 +192,10 @@ const ProfileSettings: React.FC = () => {
               <label>Description</label>
               <textarea
                 name="description"
-                value={formData.description}
+                value={formData.description || ""}
                 onChange={handleChange}
                 placeholder="Write a short description"
-              ></textarea>
+              />
             </div>
 
             <div className="form-group">
@@ -201,7 +203,7 @@ const ProfileSettings: React.FC = () => {
               <input
                 type="text"
                 name="linkedin"
-                value={formData.linkedin}
+                value={formData.linkedin || ""}
                 onChange={handleChange}
                 placeholder="Enter LinkedIn URL"
               />
@@ -212,7 +214,7 @@ const ProfileSettings: React.FC = () => {
               <input
                 type="text"
                 name="youtube"
-                value={formData.youtube}
+                value={formData.youtube || ""}
                 onChange={handleChange}
                 placeholder="Enter YouTube URL"
               />
@@ -223,7 +225,7 @@ const ProfileSettings: React.FC = () => {
               <input
                 type="text"
                 name="facebook"
-                value={formData.facebook}
+                value={formData.facebook || ""}
                 onChange={handleChange}
                 placeholder="Enter Facebook URL"
               />
@@ -234,7 +236,7 @@ const ProfileSettings: React.FC = () => {
               <input
                 type="text"
                 name="website"
-                value={formData.website}
+                value={formData.website || ""}
                 onChange={handleChange}
                 placeholder="Enter website"
               />
@@ -245,7 +247,7 @@ const ProfileSettings: React.FC = () => {
               <input
                 type="text"
                 name="x"
-                value={formData.x}
+                value={formData.x || ""}
                 onChange={handleChange}
                 placeholder="Enter X username"
               />
