@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../store";
@@ -56,7 +57,7 @@ const LoginForm: React.FC = () => {
         });
         console.log("Google User:", res.data);
         const result = await dispatch(googleLogin(res.data.sub)).unwrap();
-        console.log("Google login result:", result); // Debug log
+        console.log("Google login result:", result);
         toast.success("Google login successful!");
       } catch (error) {
         console.error("Google login failed", error);

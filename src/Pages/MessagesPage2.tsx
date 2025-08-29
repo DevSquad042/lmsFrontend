@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { FC, ChangeEvent, FormEvent } from "react";
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -6,31 +7,6 @@ import Header2 from "../Components/shared/Header2";
 import ProfileSidebar from "../Components/shared/ProfileSidebar";
 import Footer from "../Components/Layout/Footer";
 import "../Styles/MessagesPage2.css";
-
-// ✅ Mocked API function
-const getMessages = (userId: number): Promise<Message[]> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([
-        {
-          id: 1,
-          text: `Hey Grace! 👋 (user ${userId})`, // using userId to silence warning
-          type: "received",
-        },
-        {
-          id: 2,
-          text: "Hi! How’s the project going?",
-          type: "sent",
-        },
-        {
-          id: 3,
-          text: "Smooth so far. Just waiting on the backend team 😅",
-          type: "received",
-        },
-      ]);
-    }, 1000);
-  });
-};
 
 // Sample user data
 const sampleUsers = [
@@ -45,6 +21,9 @@ interface Message {
   type: "sent" | "received";
 }
 
+// API base URL
+const API_URL = "https://byway-hoce.onrender.com/api/chats";
+
 const MessagesPage2: FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -54,13 +33,49 @@ const MessagesPage2: FC = () => {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
   const chatEndRef = useRef<HTMLDivElement | null>(null);
 
-  // Load messages from mock API
+  // Fetch messages from API
   useEffect(() => {
     const loadMessages = async () => {
-      const data = await getMessages(userId);
-      setMessages(data);
+      try {
+        setError(null);
+        const response = await fetch(`${API_URL}?sender=${userId}&receiver=${userId === 1 ? 2 : 1}`);
+        
+        // Check if response is OK
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        // Verify content type is JSON
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new Error("Response is not JSON");
+        }
+
+        const data = await response.json();
+        
+        // Transform API data to match Message interface
+        const transformedMessages: Message[] = data.map((msg: any) => ({
+          id: msg._id || Date.now(),
+          text: msg.message,
+          type: msg.sender === userId ? "sent" : "received",
+        }));
+        
+        setMessages(transformedMessages);
+      } catch (error: any) {
+        console.error("Error fetching messages:", error);
+        setError("Failed to load messages. Please try again later.");
+        // Fallback to mock data if API fails
+        setMessages([
+          {
+            id: 1,
+            text: `Hey! Unable to load messages due to server error.`,
+            type: "received",
+          },
+        ]);
+      }
     };
     loadMessages();
   }, [userId]);
@@ -76,7 +91,7 @@ const MessagesPage2: FC = () => {
     setNewMessage(e.target.value);
   };
 
-  const handleSend = (e: FormEvent) => {
+  const handleSend = async (e: FormEvent) => {
     e.preventDefault();
     if (newMessage.trim() === "") return;
 
@@ -86,18 +101,36 @@ const MessagesPage2: FC = () => {
       type: "sent",
     };
 
-    setMessages((prev) => [...prev, newMsg]);
-    setNewMessage("");
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          sender: userId,
+          receiver: userId === 1 ? 2 : 1,
+          message: newMessage,
+        }),
+      });
 
-    // Simulate reply
-    setTimeout(() => {
-      const reply: Message = {
-        id: Date.now() + 1,
-        text: "Got it! I’ll ping the backend team again 😅",
-        type: "received",
-      };
-      setMessages((prev) => [...prev, reply]);
-    }, 1000);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      // Verify content type for POST response
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("Response is not JSON");
+      }
+
+      setMessages((prev) => [...prev, newMsg]);
+      setNewMessage("");
+      setError(null);
+    } catch (error: any) {
+      console.error("Error sending message:", error);
+      setError("Failed to send message. Please try again.");
+    }
   };
 
   return (
@@ -109,6 +142,11 @@ const MessagesPage2: FC = () => {
 
         <div className="chat-section">
           <h2>Messages</h2>
+
+          {/* Error Message */}
+          {error && (
+            <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>
+          )}
 
           {/* Chat Header */}
           <div className="chat-header">
@@ -154,15 +192,3 @@ const MessagesPage2: FC = () => {
 };
 
 export default MessagesPage2;
-
-
-
-
-
-
-
-
-
-
-
-

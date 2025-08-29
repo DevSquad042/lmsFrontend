@@ -1,5 +1,8 @@
+import type { Key } from "react";
+
 // types/Course.ts
 export interface Course {
+  [x: string]: Key | null | undefined;
   id: string;
   title: string;
   author: string;

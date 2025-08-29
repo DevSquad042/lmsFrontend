@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Filter2 from "../Components/Filters/Filter2";
 import Footer from "../Components/Layout/Footer";
 import Header2 from "../Components/shared/Header2";
 import ProfileSidebar from "../Components/shared/ProfileSidebar";
@@ -13,54 +13,50 @@ import "react-toastify/dist/ReactToastify.css";
 
 const CoursesPages = () => {
   const [courses, setCourses] = useState<Course[]>([]);
-  const [paidCourseIds, setPaidCourseIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
   const itemsPerPage = 6;
 
   // Fetch all courses
   useEffect(() => {
-    axios
-      .get("https://byway-hoce.onrender.com/api/courses")
-      .then((res) => {
-        setCourses(res.data);
+    const fetchCourses = async () => {
+      try {
+        // Retrieve token from localStorage (or your preferred storage)
+        const token = localStorage.getItem("authToken"); // Adjust key based on your app
+
+        if (!token) {
+          toast.error("You are not authenticated. Please log in.");
+          setLoading(false);
+          return;
+        }
+
+        // Make API request with Authorization header
+        const response = await axios.get(
+          "https://byway-hoce.onrender.com/api/enrollments",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Include token in header
+            },
+          }
+        );
+
+        setCourses(response.data);
         setLoading(false);
-      })
-      .catch((err) => {
+      } catch (err: any) {
         console.error("Error fetching courses:", err);
-        toast.error("Failed to load courses.");
+        toast.error(
+          err.response?.data?.message || "Failed to load courses."
+        );
         setLoading(false);
-      });
+      }
+    };
+
+    fetchCourses();
   }, []);
 
-  // Fetch paid course IDs dynamically
-  useEffect(() => {
-    axios
-      .get("https://your-api-link.com/api/my-courses") // 🔁 Replace with your actual endpoint
-      .then((res) => {
-        setPaidCourseIds(res.data); // assuming it returns an array of course IDs
-      })
-      .catch((err) => {
-        console.error("Error fetching paid courses:", err);
-        toast.error("Failed to load your enrolled courses.");
-      });
-  }, []);
-
-  // Filter only the courses the user has paid for
-  const enrolledCourses = courses.filter((course) =>
-    paidCourseIds.includes(course.id)
-  );
-
-  // Filter by search query
-  const searchedCourses = enrolledCourses.filter((course) =>
-    course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    course.author.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // Paginate the searched courses
-  const totalPages = Math.ceil(searchedCourses.length / itemsPerPage);
-  const paginatedCourses = searchedCourses.slice(
+  // Pagination logic
+  const totalPages = Math.ceil(courses.length / itemsPerPage);
+  const paginatedCourses = courses.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -74,20 +70,12 @@ const CoursesPages = () => {
         </aside>
 
         <main className="main-content">
-          <Filter2
-            title="My Courses"
-            count={`(${searchedCourses.length})`}
-            searchQuery={searchQuery}
-            setSearchQuery={(query: string) => {
-              setSearchQuery(query);
-              setCurrentPage(1); // Reset pagination on search
-            }}
-          />
+          <h2 className="courses-title">All Courses ({courses.length})</h2>
 
           {loading ? (
             <p>Loading courses...</p>
-          ) : searchedCourses.length === 0 ? (
-            <p>No courses match your search. Try a different keyword.</p>
+          ) : courses.length === 0 ? (
+            <p>No courses available at the moment.</p>
           ) : (
             <>
               <div className="courses-grid">

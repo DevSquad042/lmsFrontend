@@ -10,7 +10,9 @@ const ProfileSidebar: React.FC = () => {
   const location = useLocation();
   const { user } = useSelector((state: RootState) => state.auth);
 
-  console.log('User from Redux in ProfileSidebar:', user); // Debug log
+  console.log(user);
+
+  console.log('User from Redux in ProfileSidebar:', user); 
 
   const menuItems = [
     { label: 'Profile', path: '/profile1' },
