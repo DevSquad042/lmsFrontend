@@ -1,7 +1,10 @@
+import type { Key } from "react";
+
 // types/Course.ts
 import type { Review } from "./rating";
 
 export interface Course {
+  [x: string]: Key | null | undefined;
   id: string;
   title: string;
   description: string;
