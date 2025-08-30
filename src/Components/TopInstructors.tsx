@@ -3,22 +3,23 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
-import type { RootState, AppDispatch } from '../store/index';
+import type {  AppDispatch } from '../store/index';
 import { fetchMentors, selectMentors, selectMentorsStatus } from '../store/slices/mentorSlice';
 import MentorCard from '../Components/cards/MentorCard';
 import './ComponentStyles/TopInstructors.css';
 
-const TopInstructors: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const mentors = useSelector(selectMentors);
-  const loading = useSelector(selectMentorsStatus);
 
-  // fetch mentors if not already loaded
-  useEffect(() => {
-    if (loading ==! 'idle') {
-      dispatch(fetchMentors());
-    }
-  }, [loading, dispatch]);
+const TopInstructors: React.FC = () => {
+const dispatch = useDispatch<AppDispatch>();
+const mentors = useSelector(selectMentors);
+const loading = useSelector(selectMentorsStatus);
+
+// This is the corrected useEffect hook
+useEffect(() => {
+ if (loading === 'idle') {
+  dispatch(fetchMentors());
+ }
+ }, [loading, dispatch]);
 
   // slice first 4 mentors
   const topInstructors = mentors.slice(0, 4);

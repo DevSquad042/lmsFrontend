@@ -30,7 +30,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "./Components/ProtectedRoute";
 
 // ✅ Redux Slice
-import { loginUser } from "./store/slices/authSlice";
+import {  setUser } from "./store/slices/authSlice";
 
 function App() {
   const dispatch = useDispatch();
@@ -40,7 +40,7 @@ function App() {
     const userData = localStorage.getItem("user");
 
     if (token && userData) {
-      dispatch(loginUser(JSON.parse(userData)));
+      dispatch(setUser(JSON.parse(userData)));
     }
   }, [dispatch]); 
 

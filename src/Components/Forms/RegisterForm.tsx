@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import type { AppDispatch } from "../../store/index";
@@ -116,12 +116,6 @@ const Register: React.FC = () => {
     }
   };
 
-      dispatch(registerUser(payload));
-      // setSubmitted(true);
-    }
-  };
-
-  // Social login stubs
   const handleGoogleLogin = () => console.log("Google register clicked");
   const handleFacebookLogin = () => console.log("Facebook register clicked");
   const handleMicrosoftLogin = () => console.log("Microsoft register clicked");
@@ -143,7 +137,6 @@ const Register: React.FC = () => {
                 placeholder="First Name"
                 value={values.firstName}
                 onChange={handleChange("firstName")}
-              
               />
               <input
                 type="text"

@@ -42,7 +42,7 @@ export const loginUser = createAsyncThunk<
   { user: User; token: string },
   { email: string; password: string },
   { rejectValue: string }
->(
+  >(
   "auth/loginUser",
   async ({ email, password }, { rejectWithValue }) => {
     try {
@@ -151,38 +151,9 @@ export const registerUser = createAsyncThunk<
   }
 );
 
-<<<<<<< HEAD
 // Google login
 export const googleLogin = createAsyncThunk<
   { user: User; token: string },
-=======
-
-// 🔹 Google Login thunk
-export const googleLogin = createAsyncThunk<User, string>(
-  "auth/googleLogin",
-  async (credential) => {
-    const response = await fetch("https://byway-hoce.onrender.com/api/auth/google", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token: credential }),
-    });
-
-    if (!response.ok) throw new Error("Google login failed");
-
-    const data = await response.json();
-    if (!data.paidCourses) data.paidCourses = [];
-
-    // ✅ Save user in localStorage
-    localStorage.setItem("user", JSON.stringify(data));
-
-    return data;
-  }
-);
-
-// 🔹 Fetch paid courses separately
-export const fetchPaidCourses = createAsyncThunk<
-  string[],
->>>>>>> 07d7c14c4887de795ac60432c915475f0db27def
   string,
   { rejectValue: string }
 >(
@@ -280,6 +251,9 @@ const authSlice = createSlice({
         localStorage.setItem("user", JSON.stringify(state.user));
       }
     },
+    setUser(state, action: PayloadAction<User>) {
+      state.user = action.payload;
+    },  
   },
   extraReducers: (builder) => {
     builder
@@ -344,5 +318,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout, setPaidCourses } = authSlice.actions;
+export const { logout, setPaidCourses, setUser } = authSlice.actions;
 export default authSlice.reducer;

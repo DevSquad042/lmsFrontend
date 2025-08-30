@@ -10,19 +10,17 @@ import './ComponentStyles/TopCourses.css';
 
 const TopCourses: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { data: courses, loading, error } = useSelector(
+  const { data:courses, loading, error } = useSelector(
     (state: RootState) => state.courses
   );
 
   useEffect(() => {
-    // Only fetch courses if they haven't been loaded yet
-    if (courses.length === 0) {
+    if (!courses || courses.length === 0) {
       dispatch(fetchCourses());
     }
-  }, [dispatch, courses.length]);
+  }, [dispatch, courses]);
 
-  // We are slicing the first 4 courses to display as "Top Courses"
-  const topCourses = courses.slice(0, 4);
+  const topCourses = courses ? courses.slice(0, 4) : [];
 
   const handleScrollTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -45,9 +43,13 @@ const TopCourses: React.FC = () => {
       </header>
       
       <div className="top-courses-grid">
-        {topCourses.map((course) => (
-          <CourseCard key={course.id} course={course} />
-        ))}
+        {topCourses.length === 0 ? (
+          <p>No top courses available.</p>
+        ) : (
+          topCourses.map((course) => (
+            <CourseCard key={course.id} course={course} />
+          ))
+        )}
       </div>
     </section>
   );

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import type { Course } from '../Types/Course';
@@ -18,7 +19,7 @@ const CoursesByMentor: React.FC<Props> = ({ mentorId }) => {
       try {
         setLoading(true);
         const response = await axios.get<Course[]>(
-          `https://your-api-link.com/api/courses?mentorId=${mentorId}`
+          `https://byway-hoce.onrender.com/api/courses?mentorId=${mentorId}`
         );
         setCourses(response.data);
       } catch (err) {

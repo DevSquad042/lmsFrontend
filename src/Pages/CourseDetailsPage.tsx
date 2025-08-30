@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import type { RootState, AppDispatch } from "../store/index";
-import { fetchCourseById } from "../store/slices/courseSlice";
+import { fetchCourseById } from '../store/slices/coursesSlice';
 import CourseDetails from "../Components/CourseHero";
 import CourseSidebar from "../Components/CourseSidebar";
 import Reviews from "../Components/Rating";
@@ -15,28 +15,29 @@ import styles from "../Styles/CourseDetailsPage.module.css";
 const CoursePage: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const { selectedCourse, loading, error } = useSelector(
+  const { data :selectedCourse, loading, error } = useSelector(
     (state: RootState) => state.courses
   );
+  const currentCourse = selectedCourse.find(course => course.id === courseId);
 
-  const fetchData = () => {
+  const fetchData = useCallback(() => {
     if (courseId) {
       dispatch(fetchCourseById(courseId));
     }
-  };
+  }, [dispatch, courseId]);
 
   useEffect(() => {
     fetchData();
-  }, [dispatch, courseId]);
+  }, [fetchData,courseId]);
 
   if (loading) return <p>Loading course...</p>;
   if (error) return <p>Error: {error}</p>;
-  if (!selectedCourse) return <p>No course found.</p>;
+  if (!currentCourse) return <p>No course found.</p>;
 
   const breadcrumbLinks = [
     { label: "Home", path: "/" },
     { label: "Categories", path: "/categories" },
-    { label: selectedCourse.title, path: `/courses/${selectedCourse.id}` },
+    { label: currentCourse.title, path: `/courses/${currentCourse.id}` },
   ];
 
   return (
@@ -44,14 +45,14 @@ const CoursePage: React.FC = () => {
       <Breadcrumb links={breadcrumbLinks} />
       <div className={styles.coursePage}>
         <div className={styles.mainContent}>
-          <CourseDetails course={selectedCourse} />
-          <CourseContent course={selectedCourse} />
-          <Reviews course={selectedCourse} onReviewAdded={fetchData} />
+          <CourseDetails course={currentCourse} />
+          <CourseContent course={currentCourse} />
+          <Reviews course={currentCourse} onReviewAdded={fetchData} />
           <TestimonialCard />
           <RelatedCourses />
         </div>
         <div className={styles.sidebar}>
-          <CourseSidebar course={selectedCourse} />
+          <CourseSidebar course={currentCourse} />
         </div>
       </div>
     </>

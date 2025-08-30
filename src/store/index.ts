@@ -1,20 +1,21 @@
+// src/store/index.ts
 
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice";
 import cartReducer from "./slices/cartSlice";
-import courseReducer from "./slices/courseSlice"
-import mentorReducer from "./slices/mentorSlice"
+import courseReducer from "./slices/courseSlice";       // ✅ Top courses & selected course
+import mentorReducer from "./slices/mentorSlice";
+import coursesReducer from "./slices/coursesSlice";     // ✅ Full course list or paginated view
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    cart: cartReducer, // ✅ add this
-    courses: courseReducer,
-    mentors: mentorReducer // ✅ add this
+    cart: cartReducer,
+    courses: courseReducer,      // Used in TopCourses.tsx
+    mentors: mentorReducer,
+    course: coursesReducer       // Used elsewhere
   },
 });
 
-
-// Types for dispatch & state
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
