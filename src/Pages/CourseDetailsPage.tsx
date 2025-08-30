@@ -37,7 +37,7 @@ const CoursePage: React.FC = () => {
   const breadcrumbLinks = [
     { label: "Home", path: "/" },
     { label: "Categories", path: "/categories" },
-    { label: currentCourse.title, path: `/courses/${currentCourse.id}` },
+    { label: currentCourse.title, path: `/courses/${currentCourse._id}` },
   ];
 
   return (

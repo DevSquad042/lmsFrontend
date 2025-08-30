@@ -75,7 +75,7 @@ const CategoryPage: React.FC = () => {
               <section className={styles.courseSection}>
                 <div className={styles.grid}>
                   {currentCourses.map((course) => (
-                    <CourseCard key={course.id} course={course} />
+                    <CourseCard key={course._id} course={course} />
                   ))}
                 </div>
                 <Pagination
@@ -98,7 +98,7 @@ const CategoryPage: React.FC = () => {
             <h2>Featured Courses</h2>
             <div className={styles.featuredGrid}>
               {featuredCourses.map((course) => (
-                <CourseCard key={course.id} course={course} />
+                <CourseCard key={course._id} course={course} />
               ))}
             </div>
           </section>

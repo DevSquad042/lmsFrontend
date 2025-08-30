@@ -47,7 +47,7 @@ const TopCourses: React.FC = () => {
           <p>No top courses available.</p>
         ) : (
           topCourses.map((course) => (
-            <CourseCard key={course.id} course={course} />
+            <CourseCard key={course._id} course={course} />
           ))
         )}
       </div>

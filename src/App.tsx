@@ -21,6 +21,7 @@ import CartPage from "./Pages/CartPage";
 import TeachersPage from "./Pages/TeachersPage";
 import OrderFailed from "./Pages/OrderFailed";
 import NotFoundPage from "./Pages/404page";
+import OrderCompletePage from "./Pages/OrderCompletePage";
 
 // ✅ Toastify
 import { ToastContainer } from "react-toastify";
@@ -96,6 +97,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+      
         <Route
           path="/profile2"
           element={
@@ -104,6 +106,16 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+          <Route
+          path="/profile2/:id"
+          element={
+            <ProtectedRoute>
+              <OrderCompletePage />
+            </ProtectedRoute>
+          }
+        />
+        
         <Route
           path="/profile3"
           element={
