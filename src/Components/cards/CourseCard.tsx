@@ -6,9 +6,10 @@ import styles from "./CardsStyle/CourseCard.module.css";
 
 const CourseCard: React.FC<{ course: Course }> = ({ course }) => {
   const safeRating = Math.max(0, Math.min(5, course.rating || 0));
+  console.log(course);
 
   return (
-    <Link to={`/courses/${course.id}`} className={styles.cardLink}>
+    <Link to={`/courses/${course._id}`} className={styles.cardLink}>
       <article className={styles.card} role="article">
         <img
           src={course.thumbnail}

@@ -26,7 +26,7 @@ const TopCourses: React.FC = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (loading) return <p>Loading top courses...</p>;
+  if (loading === "pending") return <p>Loading top courses...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (

@@ -13,24 +13,24 @@ import Breadcrumb from "../Components/Breadcrumb";
 import styles from "../Styles/CourseDetailsPage.module.css";
 
 const CoursePage: React.FC = () => {
-  const { courseId } = useParams<{ courseId: string }>();
+  const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const { data :selectedCourse, loading, error } = useSelector(
     (state: RootState) => state.courses
   );
-  const currentCourse = selectedCourse.find(course => course.id === courseId);
+  const currentCourse = selectedCourse.find(course => course._id === id);
 
   const fetchData = useCallback(() => {
-    if (courseId) {
-      dispatch(fetchCourseById(courseId));
+    if (id) {
+      dispatch(fetchCourseById(id));
     }
-  }, [dispatch, courseId]);
+  }, [dispatch, id]);
 
   useEffect(() => {
     fetchData();
-  }, [fetchData,courseId]);
+  }, [fetchData, id]);
 
-  if (loading) return <p>Loading course...</p>;
+  if (loading === "pending") return <p>Loading course...</p>;
   if (error) return <p>Error: {error}</p>;
   if (!currentCourse) return <p>No course found.</p>;
 

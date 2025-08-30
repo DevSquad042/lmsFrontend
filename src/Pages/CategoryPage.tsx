@@ -42,7 +42,7 @@ const CategoryPage: React.FC = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (coursesLoading || mentorsLoading) {
+  if (coursesLoading === "pending" || mentorsLoading === "pending") {
     return <p>Loading categories...</p>;
   }
 
