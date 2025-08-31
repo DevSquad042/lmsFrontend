@@ -4,32 +4,40 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
 import type { RootState, AppDispatch } from '../store/index';
-import { fetchCourses } from '../store/slices/courseSlice';
+import { fetchCourses, selectCourses, selectCoursesStatus } from '../store/slices/courseSlice';
 import CourseCard from './cards/CourseCard';
 import './ComponentStyles/TopCourses.css';
+import type { Course } from '../Types/Course';
 
 const TopCourses: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { data: courses, loading, error } = useSelector(
-    (state: RootState) => state.courses
-  );
+  const courses: Course[] = useSelector(selectCourses);
+  const loading: boolean = useSelector(selectCoursesStatus);
+  const error: string | null = useSelector((state: RootState) => state.courses.error);
 
   useEffect(() => {
-    // Only fetch courses if they haven't been loaded yet
     if (courses.length === 0) {
       dispatch(fetchCourses());
     }
   }, [dispatch, courses.length]);
 
-  // We are slicing the first 4 courses to display as "Top Courses"
-  const topCourses = courses.slice(0, 4);
+  const topCourses: Course[] = courses.slice(0, 4);
 
-  const handleScrollTop = () => {
+  const handleScrollTop = (): void => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (loading) return <p>Loading top courses...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) {
+    return <p>Loading top courses...</p>;
+  }
+
+  if (error) {
+    return <p>Error: Failed to load courses. Please try again.</p>;
+  }
+
+  if (topCourses.length === 0) {
+    return <p>No top courses available.</p>;
+  }
 
   return (
     <section className="top-courses">
@@ -45,7 +53,7 @@ const TopCourses: React.FC = () => {
       </header>
       
       <div className="top-courses-grid">
-        {topCourses.map((course) => (
+        {topCourses.map((course: Course) => (
           <CourseCard key={course.id} course={course} />
         ))}
       </div>

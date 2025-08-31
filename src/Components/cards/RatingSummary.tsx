@@ -1,54 +1,32 @@
-import React from "react";
-import "./RatingSummary.css";
+import React from 'react';
+import type { Review } from '../../Types/rating';
+import styles from './RatingSummary.module.css';
 
-export interface RatingBreakdown {
-  stars: number;
-  percentage: number;
+interface Props {
+  reviews: Review[];
 }
 
-export interface RatingsSummaryType {
-  average: number;
-  totalReviews: number;
-  breakdown: RatingBreakdown[];
-}
+const RatingSummary: React.FC<Props> = ({ reviews }) => {
+  if (reviews.length === 0) {
+    return <p>No reviews available for this course.</p>;
+  }
 
-interface RatingsSummaryProps {
-  summary: RatingsSummaryType;
-}
-
-export const RatingsSummary: React.FC<RatingsSummaryProps> = ({ summary }) => {
   return (
-    <div className="ratings-summary">
-      <h3 className="ratings-title">Learner Reviews</h3>
-
-      {/* Average rating */}
-      <div className="average-rating">
-        <span className="star">⭐</span>
-        <strong>{summary.average.toFixed(1)}</strong>
-        <span className="reviews-count">
-          {summary.totalReviews.toLocaleString()} reviews
-        </span>
-      </div>
-
-      {/* Breakdown */}
-      <div className="breakdown">
-        {summary.breakdown.map((item) => (
-          <div className="breakdown-row" key={item.stars}>
-            <span className="stars-label">
-              {Array(item.stars).fill("⭐").join("")}
-            </span>
-            <div className="progress-bar">
-              <div
-                className="progress-fill"
-                style={{ width: `${item.percentage}%` }}
-              ></div>
-            </div>
-            <span className="percentage">{item.percentage}%</span>
+    <div className={styles.reviewListContainer}>
+      {reviews.map((review) => (
+        <div key={review.id} className={styles.reviewItem}>
+          <div className={styles.reviewHeader}>
+            <span className={styles.user}>User: {review.userId}</span>
+            <span className={styles.rating}>Rating: {review.rating} / 5</span>
           </div>
-        ))}
-      </div>
+          <p className={styles.comment}>{review.comment}</p>
+          <span className={styles.date}>
+            {new Date(review.createdAt).toLocaleDateString()}
+          </span>
+        </div>
+      ))}
     </div>
   );
 };
 
-export default RatingsSummary;
+export default RatingSummary;

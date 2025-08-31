@@ -10,7 +10,7 @@ import { FcGoogle } from "react-icons/fc";
 import { toast } from "react-toastify";
 
 import Header1 from "../shared/Header1";
-import Button from "../shared/Buttons";
+import Buttons from "../shared/Buttons";
 import RegisterImage from "../../assets/Images/login-image.png";
 
 interface FormValues {
@@ -116,11 +116,6 @@ const Register: React.FC = () => {
     }
   };
 
-      dispatch(registerUser(payload));
-      // setSubmitted(true);
-    }
-  };
-
   // Social login stubs
   const handleGoogleLogin = () => console.log("Google register clicked");
   const handleFacebookLogin = () => console.log("Facebook register clicked");
@@ -143,7 +138,6 @@ const Register: React.FC = () => {
                 placeholder="First Name"
                 value={values.firstName}
                 onChange={handleChange("firstName")}
-              
               />
               <input
                 type="text"
@@ -208,13 +202,14 @@ const Register: React.FC = () => {
             </div>
 
             <div>
-              <Button
+               <Buttons
                 label="Create Account →"
                 className={styles.signUpBtn}
-                onClick={() =>
-                  handleSubmit(new Event("submit") as unknown as React.FormEvent)
+                 onClick={() =>
+                handleSubmit(new Event("submit") as unknown as React.FormEvent)
                 }
-              />
+                />
+
             </div>
           </form>
 
@@ -273,4 +268,3 @@ const Register: React.FC = () => {
 };
 
 export default Register;
-

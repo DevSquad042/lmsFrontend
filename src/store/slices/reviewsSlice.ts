@@ -1,86 +1,82 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
+// src/store/slices/reviewSlice.ts
 
-interface Review {
-  id: string;
-  courseId: string;
-  userId: string;
-  rating: number;
-  comment: string;
-}
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+import type { Review, AverageRating } from '../../Types/rating';
+import type { RootState } from '../index';
 
-interface ReviewsState {
-  data: Review[];
-  average: number | null;
+interface ReviewState {
+  averageRatings: { [key: string]: AverageRating };
+  reviewsByTargetId: { [key: string]: Review[] };
   loading: boolean;
   error: string | null;
 }
 
-const initialState: ReviewsState = {
-  data: [],
-  average: null,
+const initialState: ReviewState = {
+  averageRatings: {},
+  reviewsByTargetId: {},
   loading: false,
   error: null,
 };
 
-// 👉 GET all reviews for a course (courseId passed as param)
-export const fetchReviews = createAsyncThunk(
-  "reviews/fetchReviews",
-  async (courseId: string) => {
-    const res = await axios.get("https://byway-hoce.onrender.com/api/review/getReviews", { params: { courseId } });
-    return res.data as Review[];
+// Thunk to get average rating for a single target (for the card)
+export const getAverageRating = createAsyncThunk<AverageRating, string>(
+  'reviews/getAverageRating',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await axios.get<AverageRating>(
+        `https://byway-hoce.onrender.com/api/review/average/${id}/${id}?type=Course`
+      );
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data?.message || 'Failed to fetch average rating.');
+    }
   }
 );
 
-//  POST a new review
-export const addReview = createAsyncThunk(
-  "reviews/addReview",
-  async (review: Omit<Review, "id">) => {
-    const res = await axios.post("https://byway-hoce.onrender.com/api/review/addReview", review);
-    return res.data as Review;
+// Thunk to get all reviews for a single target (for the course page)
+export const getReviews = createAsyncThunk<Review[], string>(
+  'reviews/getReviews',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await axios.get<Review[]>(
+        `https://byway-hoce.onrender.com/api/review/getReviews/${id}/${id}?type=Course`
+      );
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data?.message || 'Failed to fetch reviews.');
+    }
   }
 );
 
-//  GET average rating (courseId is part of the URL)
-export const fetchAverage = createAsyncThunk(
-  "reviews/fetchAverage",
-  async (courseId: string) => {
-    const res = await axios.get(`https://byway-hoce.onrender.com/api/review/${courseId}/average`);
-    return res.data.average as number;
-  }
-);
-
-const reviewsSlice = createSlice({
-  name: "reviews",
+const reviewSlice = createSlice({
+  name: 'reviews',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // fetchReviews
-      .addCase(fetchReviews.pending, (state) => {
+      .addCase(getAverageRating.fulfilled, (state, action) => {
+        const courseId = action.meta.arg;
+        state.averageRatings[courseId] = action.payload;
+      })
+      .addCase(getReviews.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchReviews.fulfilled, (state, action: PayloadAction<Review[]>) => {
+      .addCase(getReviews.fulfilled, (state, action) => {
+        const courseId = action.meta.arg;
+        state.reviewsByTargetId[courseId] = action.payload;
         state.loading = false;
-        state.data = action.payload;
       })
-      .addCase(fetchReviews.rejected, (state, action) => {
+      .addCase(getReviews.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Failed to fetch reviews";
-      })
-
-      // addReview
-      .addCase(addReview.fulfilled, (state, action: PayloadAction<Review>) => {
-        state.data.push(action.payload);
-      })
-
-      // fetchAverage
-      .addCase(fetchAverage.fulfilled, (state, action: PayloadAction<number>) => {
-        state.average = action.payload;
+        state.error = action.payload as string;
       });
   },
 });
 
-export default reviewsSlice.reducer;
+export const selectAverageRatings = (state: RootState) => state.reviews.averageRatings;
+export const selectReviewsByTargetId = (state: RootState) => state.reviews.reviewsByTargetId;
+export const selectReviewsLoading = (state: RootState) => state.reviews.loading;
+
+export default reviewSlice.reducer;

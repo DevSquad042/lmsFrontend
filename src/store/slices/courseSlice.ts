@@ -1,41 +1,40 @@
-// src/store/slices/courseSlice.ts
-
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
+import type {PayloadAction} from '@reduxjs/toolkit';
 import axios from 'axios';
 import type { Course } from '../../Types/Course';
 import type { RootState } from '../../store/index';
 
-// 🔁 Corrected CourseState interface with 'data'
 interface CourseState {
   data: Course[];
-  loading: 'idle' | 'pending' | 'succeeded' | 'failed';
+  selectedCourse: Course | null;
+  loading: boolean;
   error: string | null;
 }
 
 const initialState: CourseState = {
   data: [],
-  loading: 'idle',
+  selectedCourse: null,
+  loading: false,
   error: null,
 };
 
-// Async thunk to fetch all courses
+// Async thunk to fetch all courses from the API
 export const fetchCourses = createAsyncThunk<Course[]>(
   'courses/fetchCourses',
   async () => {
     const response = await axios.get<Course[]>(
-      'https://your-api-link.com/api/courses' // 🔁 Replace with your actual endpoint
+      'https://byway-hoce.onrender.com/api/courses'
     );
     return response.data;
   }
 );
 
-// Async thunk to fetch courses by category
-export const fetchCoursesByCategory = createAsyncThunk<Course[], string>(
-  'courses/fetchByCategory',
-  async (category) => {
-    const response = await axios.get<Course[]>(
-      `https://your-api-link.com/api/courses?category=${category}`
+// Async thunk to fetch a single course by ID
+export const fetchCourseById = createAsyncThunk<Course, string>(
+  'courses/fetchCourseById',
+  async (id) => {
+    const response = await axios.get<Course>(
+      `https://your-api-link.com/api/courses/${id}`
     );
     return response.data;
   }
@@ -46,44 +45,37 @@ const courseSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    // Handle fetchCourses
-    builder.addCase(fetchCourses.pending, (state) => {
-      state.loading = 'pending';
-      state.error = null;
-    });
-    builder.addCase(
-      fetchCourses.fulfilled,
-      (state, action: PayloadAction<Course[]>) => {
+    builder
+      .addCase(fetchCourses.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCourses.fulfilled, (state, action: PayloadAction<Course[]>) => {
         state.data = action.payload;
-        state.loading = 'succeeded';
-      }
-    );
-    builder.addCase(fetchCourses.rejected, (state, action) => {
-      state.loading = 'failed';
-      state.error = action.error.message || 'Failed to fetch courses.';
-    });
-
-    // Handle fetchCoursesByCategory
-    builder.addCase(fetchCoursesByCategory.pending, (state) => {
-      state.loading = 'pending';
-      state.error = null;
-    });
-    builder.addCase(
-      fetchCoursesByCategory.fulfilled,
-      (state, action: PayloadAction<Course[]>) => {
-        state.data = action.payload;
-        state.loading = 'succeeded';
-      }
-    );
-    builder.addCase(fetchCoursesByCategory.rejected, (state, action) => {
-      state.loading = 'failed';
-      state.error = action.error.message || 'Failed to fetch courses by category.';
-    });
+        state.loading = false;
+      })
+      .addCase(fetchCourses.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to fetch courses.';
+      })
+      .addCase(fetchCourseById.pending, (state) => {
+        state.loading = true;
+        state.selectedCourse = null;
+        state.error = null;
+      })
+      .addCase(fetchCourseById.fulfilled, (state, action: PayloadAction<Course>) => {
+        state.selectedCourse = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchCourseById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to fetch course details.';
+      });
   },
 });
 
-// Add selectors for consistent data access
 export const selectCourses = (state: RootState) => state.courses.data;
 export const selectCoursesStatus = (state: RootState) => state.courses.loading;
+export const selectSelectedCourse = (state: RootState) => state.courses.selectedCourse;
 
 export default courseSlice.reducer;

@@ -1,54 +1,86 @@
-/* CourseCard.module.css
- * Styles for the CourseCard component
- */
-.detailsContainer {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-  margin-bottom: 2rem;
+.cardLink {
+  text-decoration: none;
+  color: inherit;
 }
 
-.thumbnail {
+.card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+  height: 100%; /* Ensures all cards have the same height */
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.imageContainer {
   width: 100%;
-  height: auto;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
+  height: 180px; /* Consistent image height */
+  overflow: hidden;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.content {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Pushes content down to fill space */
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: #333;
-  margin-bottom: 0.5rem;
+  margin: 0 0 0.5rem;
 }
 
-.description {
-  font-size: 1rem;
-  color: #555;
-  line-height: 1.6;
-  margin-bottom: 1rem;
+.author {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
 }
 
-.instructor {
-  font-size: 1rem;
-  color: #888;
-  margin-bottom: 1rem;
+.stats {
+  display: flex;
+  align-items: center;
+  margin: 0.5rem 0;
 }
 
 .rating {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.stars {
-  display: flex;
-  color: #ffc107;
-}
-
-.reviewCount {
   font-size: 0.9rem;
+  font-weight: 600;
+  color: #f7b20a;
+}
+
+.reviews {
+  font-size: 0.8rem;
   color: #888;
+  margin-left: 0.25rem;
+}
+
+.details {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0.5rem 0;
+}
+
+.price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #333;
+  margin-top: auto; /* Pushes price to the bottom */
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
 }

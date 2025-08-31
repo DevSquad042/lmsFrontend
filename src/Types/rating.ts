@@ -1,20 +1,15 @@
+// src/Types/Review.ts
+
 export interface Review {
-  courseId: number;
-  userId: string;
-  rating: number; // 1..5
+  id: string;
+  rating: number;
   comment: string;
-  created_at: string;
+  userId: string;
+  targetId: string; // The ID of the course or instructor being reviewed
+  createdAt: string;
 }
 
-export interface ReviewList {
-  page: number;
-  pageSize: number;
-  items: Review[];
-}
-
-export interface ReviewSummary {
-  courseId: string;
-  average: number; // 0..5
-  total: number;
-  breakdown: { [k: number]: number }; // {1..5}
+export interface AverageRating {
+  averageRating: number;
+  numberOfRatings: number;
 }

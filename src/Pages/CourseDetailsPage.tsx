@@ -1,36 +1,58 @@
-import React, { useEffect } from "react";
+
+// src/Components/CoursePage.tsx
+
+import React, { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import type { RootState, AppDispatch } from "../store/index";
-import { fetchCourseById } from "../store/slices/courseSlice";
+import { fetchCourseById, selectSelectedCourse } from "../store/slices/courseSlice";
+import { getAverageRating, getReviews, selectAverageRatings, selectReviewsByTargetId, selectReviewsLoading } from "../store/slices/reviewsSlice";
+import type { AverageRating, Review } from "../Types/rating";
 import CourseDetails from "../Components/CourseHero";
 import CourseSidebar from "../Components/CourseSidebar";
-import Reviews from "../Components/Rating";
 import CourseContent from "../Components/CourseContent";
 import RelatedCourses from "../Components/RelatedCourses";
 import TestimonialCard from "../Components/TestimonialsSection";
 import Breadcrumb from "../Components/Breadcrumb";
+import ReviewCard from "../Components/cards/ReviewCard"; // Correct component name from your code
+import RatingSummary from "../Components/cards/RatingSummary"; // Correct component name from your code
+import AddReviewForm from "../Components/cards/AddReviewForm";
 import styles from "../Styles/CourseDetailsPage.module.css";
 
 const CoursePage: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const { selectedCourse, loading, error } = useSelector(
-    (state: RootState) => state.courses
-  );
 
-  const fetchData = () => {
+  const selectedCourse = useSelector(selectSelectedCourse);
+  const loadingCourse = useSelector((state: RootState) => state.courses.loading);
+  const courseError = useSelector((state: RootState) => state.courses.error);
+  
+  const allAverageRatings = useSelector(selectAverageRatings);
+  const allReviews = useSelector(selectReviewsByTargetId);
+  const loadingReviews = useSelector(selectReviewsLoading);
+  const reviewError = useSelector((state: RootState) => state.reviews.error);
+
+  // The definitive fix for the type error.
+  // We explicitly check for existence before assigning to ensure the type is correct.
+  const averageRating: AverageRating | null = courseId && allAverageRatings[courseId] ? allAverageRatings[courseId] : null;
+  const reviews: Review[] = courseId && allReviews[courseId] ? allReviews[courseId] : [];
+
+  const fetchReviewsData = useCallback(() => {
     if (courseId) {
-      dispatch(fetchCourseById(courseId));
+      dispatch(getAverageRating(courseId));
+      dispatch(getReviews(courseId));
     }
-  };
-
-  useEffect(() => {
-    fetchData();
   }, [dispatch, courseId]);
 
-  if (loading) return <p>Loading course...</p>;
-  if (error) return <p>Error: {error}</p>;
+  useEffect(() => {
+    if (courseId) {
+      dispatch(fetchCourseById(courseId));
+      fetchReviewsData();
+    }
+  }, [dispatch, courseId, fetchReviewsData]);
+
+  if (loadingCourse) return <p>Loading course...</p>;
+  if (courseError) return <p>Error: {courseError}</p>;
   if (!selectedCourse) return <p>No course found.</p>;
 
   const breadcrumbLinks = [
@@ -46,7 +68,19 @@ const CoursePage: React.FC = () => {
         <div className={styles.mainContent}>
           <CourseDetails course={selectedCourse} />
           <CourseContent course={selectedCourse} />
-          <Reviews course={selectedCourse} onReviewAdded={fetchData} />
+          
+          <div className={styles.reviewsSection}>
+            <ReviewCard averageRating={averageRating} />
+            <AddReviewForm courseId={courseId as string} onReviewAdded={fetchReviewsData} />
+            {loadingReviews ? (
+              <p>Loading reviews...</p>
+            ) : reviewError ? (
+                <p>Error: {reviewError}</p>
+            ) : (
+              <RatingSummary reviews={reviews} />
+            )}
+          </div>
+
           <TestimonialCard />
           <RelatedCourses />
         </div>

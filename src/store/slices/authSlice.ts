@@ -90,7 +90,6 @@ export const registerUser = createAsyncThunk<
   }
 );
 
-
 // 🔹 Google Login thunk
 export const googleLogin = createAsyncThunk<User, string>(
   "auth/googleLogin",

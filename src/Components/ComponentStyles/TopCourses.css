@@ -1,5 +1,7 @@
+/* src/Components/ComponentStyles/TopCourses.css */
+
 .top-courses {
-  padding: 4rem 2rem;
+  padding: 2rem 0;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -9,35 +11,37 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  padding: 0 1rem;
 }
 
 .top-courses-title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
   color: #333;
-  margin: 0;
 }
 
 .top-courses-see-all {
   font-size: 1rem;
-  font-weight: 600;
   color: #007bff;
   text-decoration: none;
-  transition: color 0.2s;
+  font-weight: 600;
+  transition: color 0.2s ease-in-out;
 }
 
 .top-courses-see-all:hover {
   color: #0056b3;
+  text-decoration: underline;
 }
 
 .top-courses-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
+  gap: 20px;
+  padding: 0 1rem;
 }
 
 @media (max-width: 768px) {
-  .top-courses-title {
-    font-size: 2rem;
+  .top-courses-grid {
+    grid-template-columns: 1fr;
   }
 }
