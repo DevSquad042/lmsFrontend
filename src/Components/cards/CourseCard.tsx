@@ -1,3 +1,4 @@
+// src/Components/cards/CourseCard.tsx
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
@@ -6,15 +7,23 @@ import styles from "./CardsStyle/CourseCard.module.css";
 
 const CourseCard: React.FC<{ course: Course }> = ({ course }) => {
   const safeRating = Math.max(0, Math.min(5, course.rating || 0));
-  console.log(course);
+  const defaultThumbnail = "https://placehold.co/150x150/png"; // PNG fallback
+
+  // Log thumbnail details for debugging
+  console.log(`Course: ${course.title}, Thumbnail: ${course.thumbnail || 'undefined'}`);
 
   return (
     <Link to={`/courses/${course._id}`} className={styles.cardLink}>
       <article className={styles.card} role="article">
         <img
-          src={course.thumbnail}
+          src={course.thumbnail || defaultThumbnail}
           alt={course.title}
           className={styles.thumbnail}
+          loading="lazy"
+          onError={(e) => {
+            console.error(`Failed to load thumbnail for ${course.title}: ${course.thumbnail}`);
+            e.currentTarget.src = defaultThumbnail;
+          }}
         />
         <div className={styles.content}>
           <h3 className={styles.title}>{course.title}</h3>
@@ -24,7 +33,7 @@ const CourseCard: React.FC<{ course: Course }> = ({ course }) => {
               {[...Array(5)].map((_, i) => (
                 <FaStar
                   key={i}
-                  color={i < Math.round(safeRating) ? "#FFC107" : "#ccc"}
+                  color={i < Math.round(safeRating) ? "#ffc107" : "#ccc"}
                 />
               ))}
             </div>

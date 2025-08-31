@@ -11,7 +11,7 @@ import Rating from "../Components/cards/RatingSummary";
 import ReviewCard from "../Components/cards/ReviewCard";
 
 import Image from "../assets/Images/Ellipse 19.jpg";
-import "../Styles/Order-complete.css";
+import "../Styles/OrderCompletePage.css";
 
 import type { Course } from "../Types/Course";
 

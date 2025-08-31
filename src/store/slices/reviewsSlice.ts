@@ -24,30 +24,71 @@ const initialState: ReviewsState = {
   error: null,
 };
 
-// 👉 GET all reviews for a course (courseId passed as param)
+// 👉 Helper to attach token to headers
+const getAuthHeader = () => {
+  const token = localStorage.getItem("token");
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+};
+
+// 👉 GET all reviews (requires targetId + type)
 export const fetchReviews = createAsyncThunk(
   "reviews/fetchReviews",
-  async (courseId: string) => {
-    const res = await axios.get("https://byway-hoce.onrender.com/api/review/getReviews", { params: { courseId } });
+  async ({ targetId, type }: { targetId: string; type: "Course" | "instructor" }) => {
+    const res = await axios.get(
+      "https://byway-hoce.onrender.com/api/review/getReviews",
+      {
+        params: { targetId, type },
+        ...getAuthHeader(),
+      }
+    );
     return res.data as Review[];
   }
 );
 
-//  POST a new review
+// 👉 POST a new review (requires type + targetId + userId)
 export const addReview = createAsyncThunk(
   "reviews/addReview",
-  async (review: Omit<Review, "id">) => {
-    const res = await axios.post("https://byway-hoce.onrender.com/api/review/addReview", review);
+  async ({
+    userId,
+    targetId,
+    type,
+    rating,
+    comment,
+  }: {
+    userId: string;
+    targetId: string;
+    type: "Course" | "instructor";
+    rating: number;
+    comment: string;
+  }) => {
+    const res = await axios.post(
+      `https://byway-hoce.onrender.com/api/review/addReview/${userId}/${targetId}`,
+      { rating, comment }, // body only
+      {
+        params: { type },   // ✅ send type as query parameter
+        ...getAuthHeader(),
+      }
+    );
     return res.data as Review;
   }
 );
 
-//  GET average rating (courseId is part of the URL)
+// 👉 GET average rating (requires targetId + type)
 export const fetchAverage = createAsyncThunk(
   "reviews/fetchAverage",
-  async (courseId: string) => {
-    const res = await axios.get(`https://byway-hoce.onrender.com/api/review/${courseId}/average`);
-    return res.data.average as number;
+  async ({ targetId, type }: { targetId: string; type: "Course" | "instructor" }) => {
+    const res = await axios.get(
+      `https://byway-hoce.onrender.com/api/review/${targetId}/average`,
+      {
+        params: { type },
+        ...getAuthHeader(),
+      }
+    );
+    return res.data.average as number | null;
   }
 );
 
@@ -77,7 +118,7 @@ const reviewsSlice = createSlice({
       })
 
       // fetchAverage
-      .addCase(fetchAverage.fulfilled, (state, action: PayloadAction<number>) => {
+      .addCase(fetchAverage.fulfilled, (state, action: PayloadAction<number | null>) => {
         state.average = action.payload;
       });
   },

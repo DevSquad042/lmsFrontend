@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import type { AppDispatch } from "../store/index";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../store/index";
 import type { Course } from "../Types/Course";
-// import type {Review} from "../Types/rating";
 import { FaStar } from "react-icons/fa";
 import { addReview } from "../store/slices/reviewsSlice";
 import styles from "./ComponentStyles/Rating.module.css";
 
-// This component now accepts a course and onReviewAdded callback as props
 const Reviews: React.FC<{
   course: Course;
   onReviewAdded: (courseId: string) => void;
@@ -17,18 +15,32 @@ const Reviews: React.FC<{
   const [comment, setComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  // ✅ get logged-in userId from Redux (or localStorage fallback)
+  const userId =
+    useSelector((state: RootState) => state.auth.user?.id) ||
+    localStorage.getItem("userId");
+
   const reviews = course.reviews || [];
   const averageRating = course.rating || 0;
 
   const handleSubmit = async () => {
-    if (!rating) return;
+    if (!rating || !userId) {
+      alert("You must be logged in and select a rating to submit.");
+      return;
+    }
+
     setSubmitting(true);
     try {
-      // Hardcoded userId for example. You would get this from your auth state.
-      const userId = "john_doe";
       await dispatch(
-        addReview({ courseId: course.id, userId, rating, comment })
+        addReview({
+          userId,
+          targetId: course._id || course.id,
+          type: "Course", // ✅ must be lowercase
+          rating,
+          comment,
+        })
       ).unwrap();
+
       setRating(0);
       setComment("");
       onReviewAdded(course.id);
@@ -40,9 +52,12 @@ const Reviews: React.FC<{
   return (
     <div className={styles.reviewsSection}>
       <h2>Student Reviews</h2>
+
       {/* Average */}
       <div className={styles.averageBox}>
-        <h3>{averageRating ? `${averageRating.toFixed(1)} / 5` : "No rating yet"}</h3>
+        <h3>
+          {averageRating ? `${averageRating.toFixed(1)} / 5` : "No rating yet"}
+        </h3>
         <div className={styles.stars}>
           {[1, 2, 3, 4, 5].map((s) => (
             <FaStar
@@ -95,7 +110,10 @@ const Reviews: React.FC<{
                   <strong>{r.userId}</strong>
                   <div className={styles.stars}>
                     {[1, 2, 3, 4, 5].map((s) => (
-                      <FaStar key={s} color={s <= r.rating ? "#FFC107" : "#ccc"} />
+                      <FaStar
+                        key={s}
+                        color={s <= r.rating ? "#FFC107" : "#ccc"}
+                      />
                     ))}
                   </div>
                   <small>{r.date || "Just now"}</small>

@@ -1,37 +1,25 @@
-// import type { Key } from "react";
-
-// types/Course.ts
-
-// export interface Course {
-//   [x: string]: Key | null | undefined;
-//   id: string;
-//   title: string;
-//   description: string;
-//   instructor: string;
-//   price: number;
-//   originalPrice?: number;
-//   discount?: number;
-//   categories?: undefined;
-//   tags?: undefined;
-//   thumbnail: string;
-//   sections: { title: string; videoUrl: string; isPreview: boolean }[];
-//   rating: number;
-//   reviews: number;
-// }
-
-// types/Course.ts
+// src/Types/Course.ts
 export interface Course {
-  _id: string; 
-  title: string;
-  instructor: string;
   rating: number;
-  reviews: number;
-  details: string;
+  _id: string;
+  title: string;
+  description: string;
+  instructor: string;
   price: number;
+  discountPercentage?: number;
+  discountExpiry?: string | null;
+  categories: string[];
+  tags: string[];
   thumbnail: string;
-  originalPrice?: number;
-  discount?: number;
-  categories?: string[];
-  tags?: string[];
+  sections: {
+    title: string;
+    videoFile: string;
+    videoUrl: string;
+    pdf: string;
+    _id: string;
+  }[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  discountedPrice?: number;
 }
-
