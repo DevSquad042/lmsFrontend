@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store/index";
-import type { Course } from "../Types/Course";
+import type { Course, Review } from "../Types/Course";
 import { FaStar } from "react-icons/fa";
 import { addReview } from "../store/slices/reviewsSlice";
 import styles from "./ComponentStyles/Rating.module.css";
@@ -20,8 +20,13 @@ const Reviews: React.FC<{
     useSelector((state: RootState) => state.auth.user?.id) ||
     localStorage.getItem("userId");
 
-  const reviews = course.reviews || [];
-  const averageRating = course.rating || 0;
+  const reviews: Review[] = course.reviews || [];
+
+  // ✅ Calculate average rating from reviews
+  const averageRating =
+    reviews.length > 0
+      ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
+      : 0;
 
   const handleSubmit = async () => {
     if (!rating || !userId) {
@@ -34,8 +39,8 @@ const Reviews: React.FC<{
       await dispatch(
         addReview({
           userId,
-          targetId: course._id || course.id,
-          type: "Course", // ✅ must be lowercase
+          targetId: course._id,
+          type: "Course",
           rating,
           comment,
         })
@@ -43,7 +48,7 @@ const Reviews: React.FC<{
 
       setRating(0);
       setComment("");
-      onReviewAdded(course.id);
+      onReviewAdded(course._id);
     } finally {
       setSubmitting(false);
     }
