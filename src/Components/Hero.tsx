@@ -1,10 +1,8 @@
 import './ComponentStyles/Hero.css';
-import heroimg from '../assets/Images/heroimg.png';
+
 import Button from './shared/Buttons';
-import Students from '../assets/Images/Students.png';
-import Dots from '../assets/Images/Dots.png';
-import CourseRate from '../assets/Images/CourseRate.png';
-import CouserNumber from '../assets/Images/CoursesNumber.png';
+
+import Main from '../assets/Images/Group 469323.png';
 
 function Hero() {
   return (
@@ -17,17 +15,9 @@ function Hero() {
         <Button className="hero-button" label="Start your Instructor Journey" />
       </div>
 
-      <div className="hero-visuals">
-       
-        <img src={heroimg} alt="Instructor" className="main-hero-img" />
-       
+       <img src={Main} alt="Hero" className="hero-img" />
 
-        <img src={CourseRate} alt="Course completion rate" className="stat-img rate" />
-        <img src={CouserNumber} alt="Courses sold" className="stat-img number" />
-        <img src={Students} alt="Students" className="students-img" />
-         <img src={Dots} alt="Decorative dots" className="dots-bg" />
       
-      </div>
     </section>
   );
 }
