@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// src/store/slices/courseSlice.ts
+
+
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import type { Course } from '../../Types/Course';
 import type { RootState } from '../../store/index';
@@ -18,8 +17,8 @@ const initialState: CourseState = {
   error: null,
 };
 
-const baseUrl = 'https://byway-hoce.onrender.com'; // API base URL
-const defaultThumbnail = 'https://placehold.co/150x150/png'; // Fallback PNG
+const baseUrl = 'https://byway-hoce.onrender.com'; 
+const defaultThumbnail = 'https://placehold.co/150x150/png'; 
 
 export const fetchCourses = createAsyncThunk<Course[]>(
   'courses/fetchCourses',
@@ -30,7 +29,7 @@ export const fetchCourses = createAsyncThunk<Course[]>(
       thumbnail: course.thumbnail
         ? course.thumbnail.startsWith('http')
           ? course.thumbnail
-          : `${baseUrl}/images/${course.thumbnail}` // Prepend base URL for images
+          : `${baseUrl}/images/${course.thumbnail}` 
         : defaultThumbnail,
     }));
   }

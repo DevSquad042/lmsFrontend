@@ -13,36 +13,23 @@ import OrderSummaryCard from "../Components/cards/OrderSummaryCard";
 import "../styles/CartPage.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { courseData } from "../data/coursedata";
 
-type CartItem = {
-  id: string;
-  title: string;
-  instructor: string;
-  rating: number;
-  lectures: number;
-  level: string;
-  image: string;
-  price: number;
-};
 
-interface ExtendedRootState extends RootState {
-  cart: {
-    items: CartItem[];
-    savedForLater: CartItem[];
-  };
-}
 
 const CartPage: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const cartItems = useSelector((state: ExtendedRootState) => state.cart.items);
+  const cartItems = useSelector((state: RootState) => state.cart.items);
   const savedForLater = useSelector(
-    (state: ExtendedRootState) => state.cart.savedForLater
+    (state: RootState) => state.cart.savedForLater
   );
 
+
+
   const price = cartItems.reduce(
-    (acc: number, item: CartItem) => acc + item.price,
+    (acc, item) => acc + item.price,
     0
   );
   const discount = price > 100 ? -10 : 0;
@@ -88,7 +75,7 @@ const CartPage: React.FC = () => {
             Categories
           </Link>{" "}
           ›{" "}
-          <Link to="/details" className="breadcrumb-link">
+          <Link to={`/courses/${courseData.id}`} className="breadcrumb-link">
             Details
           </Link>{" "}
           › <span className="breadcrumb-current">Shopping Cart</span>
@@ -113,8 +100,8 @@ const CartPage: React.FC = () => {
                 </div>
 
                 {cartItems.length > 0 ? (
-                  cartItems.map((course) => (
-                    <div key={course.id} className="table-row">
+                  cartItems.map((course, index) => (
+                    <div key={index} className="table-row" >
                       <div className="course-image">
                         <img src={course.image} alt={course.title} />
                       </div>
@@ -126,7 +113,7 @@ const CartPage: React.FC = () => {
                         </div>
                         <p className="course-instructor">By {course.instructor}</p>
                         <div className="course-rating">
-                          <span className="rating">{course.rating.toFixed(1)}</span>
+                          {/* <span className="rating">{course.rating.toFixed(1)}</span> */}
                           <span className="lectures">
                             {course.lectures} Lectures, {course.level}
                           </span>

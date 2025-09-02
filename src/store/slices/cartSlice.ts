@@ -9,6 +9,10 @@ export interface CartItem {
   price: number;
   image: string;
   quantity: number;
+  instructor: string;
+  rating: number;
+  lectures: number;
+  level: string;
 }
 
 interface CartState {
