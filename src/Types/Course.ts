@@ -1,5 +1,5 @@
-// src/Types/Course.ts
 export interface Course {
+  id: string;
   rating: number;
   _id: string;
   title: string;

@@ -30,7 +30,7 @@ export const fetchCourses = createAsyncThunk<Course[]>(
       thumbnail: course.thumbnail
         ? course.thumbnail.startsWith('http')
           ? course.thumbnail
-          : `${baseUrl}/images/${course.thumbnail}` // Prepend base URL for images
+          : `${baseUrl}/images/${course.thumbnail}` 
         : defaultThumbnail,
     }));
   }
