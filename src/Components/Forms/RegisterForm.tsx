@@ -108,9 +108,9 @@ const Register: React.FC = () => {
           console.error("Registration failed:", err);
           setErrors((prev) => ({
             ...prev,
-            email: "Something went wrong. Please try again later.",
+            email: "Email already in use.",
           }));
-          toast.error("Registration failed. Please try again 💔");
+          toast.error("Email already in use 💔");
         }
       }
     }
