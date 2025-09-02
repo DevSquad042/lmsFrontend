@@ -11,6 +11,8 @@ import RelatedCourses from "../Components/RelatedCourses";
 import TestimonialCard from "../Components/TestimonialsSection";
 import Breadcrumb from "../Components/Breadcrumb";
 import styles from "../Styles/CourseDetailsPage.module.css";
+import Header2 from "../Components/shared/Header2";
+import Footer from "../Components/Layout/Footer";
 
 const CoursePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -42,19 +44,30 @@ const CoursePage: React.FC = () => {
 
   return (
     <>
+    <Header2/>
+
+    <main className={styles.main}>
       <Breadcrumb links={breadcrumbLinks} />
       <div className={styles.coursePage}>
         <div className={styles.mainContent}>
           <CourseDetails course={currentCourse} />
           <CourseContent course={currentCourse} />
-          <Reviews course={currentCourse} onReviewAdded={fetchData} />
-          <TestimonialCard />
-          <RelatedCourses />
+          
         </div>
         <div className={styles.sidebar}>
           <CourseSidebar course={currentCourse} />
         </div>
+
+        <div className={styles.review}>
+          <Reviews course={currentCourse} onReviewAdded={fetchData} />
+          <TestimonialCard />
+          <RelatedCourses />
+        </div>
       </div>
+    
+    </main>
+
+      <Footer/>
     </>
   );
 };

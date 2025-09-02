@@ -1,60 +1,25 @@
-// src/Components/cards/MentorCard.tsx
-
+// components/InstructorCard.tsx
 import React from 'react';
-import { MdOutlineEmail } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import type { Mentor } from '../../Types/Mentor'; // Adjust import path
+import type { Instructor } from '../../Types/Mentor';
 import styles from './CardsStyle/MentorCard.module.css';
+import { Link } from 'react-router-dom';
 
-interface Props {
-  mentor: Mentor;
+interface InstructorCardProps {
+  instructor: Instructor;
 }
 
-const MentorCard: React.FC<Props> = ({ mentor }) => {
+const InstructorCard: React.FC<InstructorCardProps> = ({ instructor }) => {
   return (
-    <Link to={`/mentor/${mentor.id}`} className={styles.cardLink}>
-      <article className={styles.card} role="article">
-        {/* Profile Image */}
-        <div className={styles.imageContainer}>
-          <img
-            src={mentor.image}
-            alt={`Profile picture of ${mentor.name}`}
-            loading="lazy"
-            onError={(e) => {
-              e.currentTarget.src = '/placeholder-avatar.jpg';
-            }}
-          />
-        </div>
-
-        {/* Content */}
-        <div className={styles.content}>
-          <h4 className={styles.name}>{mentor.name}</h4>
-          <p className={styles.role}>{mentor.role}</p>
-
-          <hr />
-
-          {/* Conditional rendering */}
-          <div className={styles.stats}>
-            <span className={styles.rating} aria-label={`Rating: ${mentor.rating} stars`}>
-              ⭐ {mentor.rating}
-            </span>
-            <span className={styles.separator}>|</span>
-            <span className={styles.totalReviews}>
-              {mentor.reviews.length} reviews
-            </span>
-          </div>
-
-          <div className={styles.contact}>
-            <span className={styles.contactItem}>
-              <MdOutlineEmail className={styles.icon} />
-              {/* This could be a link to a contact page or modal */}
-              <span className={styles.contactText}>Contact</span>
-            </span>
-          </div>
-        </div>
-      </article>
+    <Link to={`/teacher/:id`} className={styles.cardLink}>
+    <div className={styles.instructorcard}>
+      <img src="/path/to/instructor-image.jpg" alt={`${instructor.firstName} ${instructor.lastName}`} />
+      <div className= {styles.instructordetails}>
+        <h3>{`${instructor.firstName} ${instructor.lastName}`}</h3>
+        <p>UI/UX Designer</p>
+      </div>
+    </div>
     </Link>
   );
 };
 
-export default MentorCard;
+export default InstructorCard;
