@@ -1,22 +1,40 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../store/slices/authSlice"; 
-import type { AppDispatch } from "../store";
+import { logoutUser } from "../store/slices/authSlice";
+import type { AppDispatch, RootState } from "../store";
 
-const LogoutButton: React.FC = () => {
+// Define props interface to include optional onLogoutSuccess callback
+interface LogoutButtonProps {
+  onLogoutSuccess?: () => void;
+}
+
+const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogoutSuccess }) => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const { error } = useSelector((state: RootState) => state.auth);
 
-  const handleLogout = () => {
-    dispatch(logout());       
-    navigate("/");       
+  const handleLogout = async () => {
+    console.log("Logout button clicked");
+    const result = await dispatch(logoutUser());
+    console.log("Navigating to /");
+    if (logoutUser.rejected.match(result)) {
+      console.error("Logout error:", result.payload);
+    } else {
+      if (onLogoutSuccess) {
+        onLogoutSuccess(); // Call the success callback (e.g., to close dropdown)
+      }
+      navigate("/", { replace: true });
+    }
   };
 
   return (
-    <button onClick={handleLogout} className="logout-btn">
-      Logout
-    </button>
+    <div>
+      <button onClick={handleLogout} className="dropdown-logout-button">
+        Logout
+      </button>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+    </div>
   );
 };
 

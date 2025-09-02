@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { useState } from 'react';
 import type { RootState } from "../../store/store";
+import LogoutButton from '../../Components/Logout';
 
 const Header2: React.FC = () => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
@@ -14,6 +15,11 @@ const Header2: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
+
+  // Close dropdown after logout to improve UX
+  const handleLogoutSuccess = () => {
+    setDropdownOpen(false); // Close dropdown after logout
+  };
 
   return (
     <header className="header2">
@@ -59,7 +65,7 @@ const Header2: React.FC = () => {
             <div className="user-dropdown">
               <Link to="/">Home</Link>
               <Link to="/profile1">Settings</Link>
-              <Link to="/">Logout</Link>
+              <LogoutButton onLogoutSuccess={handleLogoutSuccess} /> {/* Replace Link with LogoutButton */}
             </div>
           )}
         </div>
