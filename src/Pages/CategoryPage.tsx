@@ -4,9 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../store/index';
 import { fetchCourses } from '../store/slices/courseSlice';
-import { fetchMentors } from '../store/slices/mentorSlice';
+import { fetchInstructors } from '../store/slices/mentorSlice';
 import CourseCard from '../Components/cards/CourseCard';
-import MentorCard from '../Components/cards/MentorCard';
+import InstructorCard from '../Components/cards/MentorCard';
 import Filter from '../Components/Filters/Filter';
 import Pagination from '../Components/Pagination';
 import styles from '../Styles/CategoryPage.module.css';
@@ -20,15 +20,15 @@ const CategoryPage: React.FC = () => {
   const { data: courses, loading: coursesLoading } = useSelector(
     (state: RootState) => state.courses
   );
-  const { data: mentors, loading: mentorsLoading } = useSelector(
-    (state: RootState) => state.mentors
+  const { instructors, loading: instructorsLoading } = useSelector(
+    (state: RootState) => state.instructors
   );
 
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     dispatch(fetchCourses());
-    dispatch(fetchMentors());
+    dispatch(fetchInstructors());
   }, [dispatch]);
 
   // Pagination Logic
@@ -42,11 +42,11 @@ const CategoryPage: React.FC = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (coursesLoading === "pending" || mentorsLoading === "pending") {
+  if (coursesLoading === "pending" || instructorsLoading === "pending") {
     return <p>Loading categories...</p>;
   }
 
-  const popularMentors = mentors.slice(0, 4);
+  const popularInstructors = instructors.slice(0, 4);
   const featuredCourses = courses.slice(0, 3);
 
   return (
@@ -87,10 +87,10 @@ const CategoryPage: React.FC = () => {
             </main>
           </div>
           <section className={styles.mentorsSection}>
-            <h2>Popular Mentors</h2>
+            <h2>Popular Instructors</h2>
             <div className={styles.mentorGrid}>
-              {popularMentors.map((mentor) => (
-                <MentorCard key={mentor.id} mentor={mentor} />
+              {popularInstructors.map((instructor) => (
+                <InstructorCard key={instructor._id} instructor={instructor} />
               ))}
             </div>
           </section>

@@ -1,52 +1,49 @@
-// src/Components/TopInstructors.tsx
-
+// components/TopInstructors.tsx
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from "react-router-dom";
-import type {  AppDispatch } from '../store/index';
-import { fetchMentors, selectMentors, selectMentorsStatus } from '../store/slices/mentorSlice';
-import MentorCard from '../Components/cards/MentorCard';
-import './ComponentStyles/TopInstructors.css';
-
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState, AppDispatch } from '../store/index'; // Assuming you have a Redux store setup
+import { fetchInstructors } from '../store/slices/mentorSlice';
+import InstructorCard from './cards/MentorCard';
+import styles from './ComponentStyles/TopInstructors.module.css';
+import { Link } from 'react-router-dom';
 
 const TopInstructors: React.FC = () => {
-const dispatch = useDispatch<AppDispatch>();
-const mentors = useSelector(selectMentors);
-const loading = useSelector(selectMentorsStatus);
+  const dispatch = useDispatch<AppDispatch>();
+  const { instructors, loading, error } = useSelector((state: RootState) => state.instructors);
 
-// This is the corrected useEffect hook
-useEffect(() => {
- if (loading === 'idle') {
-  dispatch(fetchMentors());
- }
- }, [loading, dispatch]);
+  useEffect(() => {
+    dispatch(fetchInstructors());
+  }, [dispatch]);
 
-  // slice first 4 mentors
-  const topInstructors = mentors.slice(0, 4);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
-  const handleScrollTop = () => {
+    const handleScrollTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <section className="top-instructors">
-      <header className="top-instructors-header">
-        <h2 className="top-instructors-title">Top Instructors</h2>
-        <Link 
-          to="/mentors"
-          className="top-instructors-see-all"
+    <div className={styles.topinstructors}>
+        <header className={styles.topcoursesheader}>
+        <h2 className= {styles.topcoursestitle}>Top Instructors</h2>
+        <Link
+          to="/categories" 
+          className={styles.topcoursesseeall}
           onClick={handleScrollTop}
         >
           See All
         </Link>
       </header>
-      
-      <div className="top-instructors-grid">
-        {topInstructors.map((mentor) => (
-          <MentorCard key={mentor.id} mentor={mentor} />
+      <div className={styles.instructorslist}>
+        {instructors.slice(0, 4).map((instructor) => (
+          <InstructorCard key={instructor._id} instructor={instructor} />
         ))}
       </div>
-    </section>
+    </div>
   );
 };
 

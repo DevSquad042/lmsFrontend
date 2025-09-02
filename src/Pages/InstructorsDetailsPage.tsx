@@ -1,124 +1,52 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
-import "../Styles/MentorPage.css";
-import Header1 from "../Components/shared/Header1";
-import Footer from "../Components/Layout/Footer";
-import TopCourses from "../Components/TopCourses";
-import Rating from "../Components/cards/RatingSummary";
-import Review from "../Components/cards/ReviewCard";
-import Button from "../Components/shared/Buttons";
-import Image from "../assets/Images/Ellipse 19.jpg";
+// pages/MentorPage.tsx
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import type { Instructor } from '../Types/Mentor';
 
-interface Mentor {
-  id: string;
-  name: string;
-  title: string;
-  students: number;
-  review: number;
-  about: string;
-  expertise: string[];
-  experience: string;
-  image: string;
-}
-
-const InstructorDetailPage: React.FC = () => {
-  const { id } = useParams();
-  const [mentor, setMentor] = useState<Mentor | null>(null);
-  const [loading, setLoading] = useState(true);
+const MentorPage: React.FC = () => {
+  const { id } = useParams<{ id: string }>(); // Assuming the route is /mentors/:id
+  const [instructor, setInstructor] = useState<Instructor | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    axios.get(`/api/mentors/${id}`)
-      .then((res) => {
-        setMentor(res.data);
+    const fetchInstructor = async () => {
+      try {
+        const response = await axios.get<Instructor>(`YOUR_INSTRUCTOR_API_ENDPOINT/${id}`);
+        setInstructor(response.data);
+      } catch (err) {
+        setError('Failed to fetch instructor details.');
+      } finally {
         setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching mentor:", err);
-        setLoading(false);
-      });
+      }
+    };
+
+    if (id) {
+      fetchInstructor();
+    }
   }, [id]);
 
-  if (loading) return <p>Loading instructor...</p>;
-  if (!mentor) return <p>Instructor not found.</p>;
+  if (loading) {
+    return <div>Loading instructor profile...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!instructor) {
+    return <div>Instructor not found.</div>;
+  }
 
   return (
-    <>
-      <Header1 />
-      <section className="instructor-container">
-        <div className="instructor-header">
-          <div>
-            <p className="instructor-label">INSTRUCTOR</p>
-            <h1 className="instructor-name">{mentor.name}</h1>
-            <p className="instructor-title">{mentor.title}</p>
-            <div className="instructor-stats">
-              <span><strong>{mentor.students.toLocaleString()}</strong> Students</span>
-              <span><strong>{mentor.review}</strong> Review</span>
-            </div>
-
-            <div>
-              <h3>About {mentor.name}</h3>
-              <p>{mentor.about}</p>
-
-              <h3>Areas of Expertise</h3>
-              <ul>
-                {mentor.expertise.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-              </ul>
-
-              <h3>Professional Experience</h3>
-              <p>{mentor.experience}</p>
-            </div>
-          </div>
-
-          <div className="instructor-profile">
-            <img src={mentor.image} alt={mentor.name} className="instructor-img" />
-            <div className="instructor-actions">
-              <Button label={"Website"} />
-              <Button label={"Twitter"} />
-              <Button label={"Youtube"} />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <TopCourses />
-      <div className="rating-container-section">
-        <div className="ratings-section">
-          <Rating
-            summary={{
-              average: mentor.review,
-              totalReviews: 1000,
-              breakdown: [
-                { stars: 5, percentage: 80 },
-                { stars: 4, percentage: 10 },
-                { stars: 3, percentage: 5 },
-                { stars: 2, percentage: 3 },
-                { stars: 1, percentage: 2 },
-              ],
-            }}
-          />
-        </div>
-        <aside className="reviews-section">
-          <h2>Learner Reviews</h2>
-          {/* Static reviews for now */}
-          <Review
-            review={{
-              id: "1",
-              userAvatar: Image,
-              userName: "John Doe",
-              rating: 5,
-              date: new Date().toISOString(),
-              reviewText: "Amazing instructor, very clear and engaging!",
-            }}
-            className="review-card"
-          />
-        </aside>
+    <div className="mentor-page-container">
+      <div className="mentor-header">
+        <h1>{`${instructor.firstName} ${instructor.lastName}`}</h1>
+        {/* Render other details like bio, expertise, and courses */}
       </div>
-      <Footer />
-    </>
+    </div>
   );
 };
 
-export default InstructorDetailPage;
+export default MentorPage;

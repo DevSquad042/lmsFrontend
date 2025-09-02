@@ -12,7 +12,7 @@ export const store = configureStore({
     auth: authReducer,
     cart: cartReducer,
     courses: courseReducer,      // Used in TopCourses.tsx
-    mentors: mentorReducer,
+    instructors: mentorReducer,
     course: coursesReducer       // Used elsewhere
   },
 });
