@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-//import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import Header2 from "../Components/shared/Header2";
 import ProfileSidebar from "../Components/shared/ProfileSidebar";
 import Footer from "../Components/Layout/Footer";
@@ -9,8 +9,9 @@ import Pagination from "../Components/Pagination";
 import Filter2 from "../Components/Filters/Filter2";
 import MentorCard from "../Components/cards/MentorCard";
 import "../Styles/TeachersPage.css";
-//import type { RootState } from "../store/store";
+// import type { RootState } from "../store/store";
 
+// ---------- Types ----------
 export interface Mentor {
   id: string;
   name: string;
@@ -18,20 +19,21 @@ export interface Mentor {
   rating: number;
   students: number;
   image: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-  userName: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  __v?: number;
+  userName?: string;
 }
 
+// ---------- Component ----------
 const TeachersPage: React.FC = () => {
   const [mentors, setMentors] = useState<Mentor[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 6;
 
   // const paidCourses = useSelector(
@@ -43,20 +45,32 @@ const TeachersPage: React.FC = () => {
       try {
         setLoading(true);
         const res = await axios.get("https://byway-hoce.onrender.com/api/instructors");
-        console.log("API Response:", res.data); // Debug raw data
+
+        console.log("API Response:", res.data);
+
+        // handle if response is wrapped inside "data"
         const data = Array.isArray(res.data) ? res.data : res.data.data || [];
-        const transformedMentors = data.map((instructor: any) => {
-          console.log("Processing instructor:", instructor); // Debug each instructor
+
+        const transformedMentors: Mentor[] = data.map((instructor: any) => {
+          console.log("Processing instructor:", instructor);
+
           return {
             id: instructor._id,
             name: `${instructor.firstName || ""} ${instructor.lastName || ""}`.trim(),
             role: instructor.role || "Instructor",
-            rating: 0,
-            students: 0,
-            image: "",
-          } as Mentor;
+            rating: instructor.rating ?? 0,
+            students: instructor.studentsCount ?? 0,
+            image: instructor.image || "",
+            firstName: instructor.firstName,
+            lastName: instructor.lastName,
+            email: instructor.email,
+            createdAt: instructor.createdAt,
+            updatedAt: instructor.updatedAt,
+            __v: instructor.__v,
+            userName: instructor.userName,
+          };
         });
-        console.log("Transformed Mentors:", transformedMentors); // Debug transformed data
+
         setMentors(transformedMentors);
       } catch (error) {
         console.error("Error fetching mentors:", error);
@@ -69,12 +83,14 @@ const TeachersPage: React.FC = () => {
     fetchMentors();
   }, []);
 
-  const searchedMentors = mentors.filter((mentor) =>
-    mentor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    mentor.role.toLowerCase().includes(searchQuery.toLowerCase())
+  const searchedMentors = mentors.filter(
+    (mentor) =>
+      mentor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      mentor.role.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(searchedMentors.length / itemsPerPage);
+
   const paginatedMentors = searchedMentors.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -94,7 +110,7 @@ const TeachersPage: React.FC = () => {
             searchQuery={searchQuery}
             setSearchQuery={(query: string) => {
               setSearchQuery(query);
-              setCurrentPage(1);
+              setCurrentPage(1); // reset pagination on new search
             }}
           />
 
@@ -105,11 +121,7 @@ const TeachersPage: React.FC = () => {
           ) : (
             <div className="teachers-div">
               {paginatedMentors.map((mentor) => (
-                <MentorCard
-                  key={mentor.id}
-                  mentor={mentor}
-                  //showRating={mentor }
-                />
+                <MentorCard key={mentor.id} mentor={mentor} />
               ))}
             </div>
           )}

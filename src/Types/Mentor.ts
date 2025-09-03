@@ -1,17 +1,26 @@
+export interface Review {
+  id: string;
+  text: string;
+  rating: number;
+}
+
 export interface Mentor {
-  //[x: string]: React.ReactNode;
-  id: string; 
-  firstName: string; 
-  lastName: string; 
-  email: string; 
-  userName: string; 
-  createdAt: string; 
-  updatedAt: string; 
-  __v: number; 
-  name?: string; 
-  rating?: number; 
-  reviews?: { id: string; text: string; rating: number }[]; 
-  bio?: string; 
-  portfolio?: string; 
-  image?: string; 
+  profession: string;
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  userName: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+
+  // Optional fields
+  name?: string;
+  rating?: number;
+  reviews?: Review[];
+  bio?: string;
+  portfolio?: string;
+  image?: string;
+  studentsCount?: number; // ✅ added for MentorCard use
 }
