@@ -1,6 +1,6 @@
 
 import './SharedStyles/Header3.css';
-import Logo from '../../assets/logo/Logo.png'
+import Logo from '../../assets/logo/logo copy.png'
 import { AiOutlineStar } from "react-icons/ai";
 
 const Header3: React.FC = () => {
