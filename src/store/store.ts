@@ -12,6 +12,7 @@ import cartReducer, {
   removeFromSaveForLater,
 } from "./slices/cartSlice";
 import profileReducer from "./slices/ProfileSlice"; // ✅ NEW
+import mentorReducer from "./slices/mentorSlice";
 
 // ✅ Custom middleware with action matching
 type ReduxAction = { type: string; [key: string]: unknown };
@@ -56,6 +57,7 @@ const store = configureStore({
     auth: authReducer,
     cart: cartReducer,
     profile: profileReducer, // ✅ NEW
+    instructors: mentorReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(toastMiddleware),

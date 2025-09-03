@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../store/index';
 import { fetchCourses } from '../store/slices/courseSlice';
-import { fetchInstructors } from '../store/slices/mentorSlice';
+import { fetchMentors } from '../store/slices/mentorSlice';
 import CourseCard from '../Components/cards/CourseCard';
 import InstructorCard from '../Components/cards/MentorCard';
 import Filter from '../Components/Filters/Filter';
@@ -20,7 +20,7 @@ const CategoryPage: React.FC = () => {
   const { data: courses, loading: coursesLoading } = useSelector(
     (state: RootState) => state.courses
   );
-  const { instructors, loading: instructorsLoading } = useSelector(
+  const { data: instructors, loading: instructorsLoading } = useSelector(
     (state: RootState) => state.instructors
   );
 
@@ -28,7 +28,7 @@ const CategoryPage: React.FC = () => {
 
   useEffect(() => {
     dispatch(fetchCourses());
-    dispatch(fetchInstructors());
+    dispatch(fetchMentors());
   }, [dispatch]);
 
   // Pagination Logic
@@ -90,7 +90,7 @@ const CategoryPage: React.FC = () => {
             <h2>Popular Instructors</h2>
             <div className={styles.mentorGrid}>
               {popularInstructors.map((instructor) => (
-                <InstructorCard key={instructor._id} instructor={instructor} />
+                <InstructorCard key={instructor.id} mentor={instructor} />
               ))}
             </div>
           </section>

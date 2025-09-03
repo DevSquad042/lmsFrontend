@@ -2,17 +2,17 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState, AppDispatch } from '../store/index'; // Assuming you have a Redux store setup
-import { fetchInstructors } from '../store/slices/mentorSlice';
+import { fetchMentors } from '../store/slices/mentorSlice';
 import InstructorCard from './cards/MentorCard';
 import styles from './ComponentStyles/TopInstructors.module.css';
 import { Link } from 'react-router-dom';
 
 const TopInstructors: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { instructors, loading, error } = useSelector((state: RootState) => state.instructors);
+  const { data: instructors, loading, error } = useSelector((state: RootState) => state.instructors);
 
   useEffect(() => {
-    dispatch(fetchInstructors());
+    dispatch(fetchMentors());
   }, [dispatch]);
 
   if (loading) {
@@ -29,7 +29,7 @@ const TopInstructors: React.FC = () => {
   return (
     <div className={styles.topinstructors}>
         <header className={styles.topcoursesheader}>
-        <h2 className= {styles.topcoursestitle}>Top Instructors</h2>
+        <h2 className={styles.topcoursestitle}>Top Instructors</h2>
         <Link
           to="/categories" 
           className={styles.topcoursesseeall}
@@ -40,7 +40,7 @@ const TopInstructors: React.FC = () => {
       </header>
       <div className={styles.instructorslist}>
         {instructors.slice(0, 4).map((instructor) => (
-          <InstructorCard key={instructor._id} instructor={instructor} />
+          <InstructorCard key={instructor.id} mentor={instructor} />
         ))}
       </div>
     </div>

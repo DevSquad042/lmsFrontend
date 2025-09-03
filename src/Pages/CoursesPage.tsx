@@ -22,7 +22,7 @@ const CoursesPages = () => {
     const fetchCourses = async () => {
       try {
         // Retrieve token from localStorage (or your preferred storage)
-        const token = localStorage.getItem("authToken"); // Adjust key based on your app
+        const token = localStorage.getItem("token"); // Use correct key from authSlice
 
         if (!token) {
           toast.error("You are not authenticated. Please log in.");
@@ -80,7 +80,7 @@ const CoursesPages = () => {
             <>
               <div className="courses-grid">
                 {paginatedCourses.map((course) => (
-                  <CourseCard key={course.id} course={course} />
+                  <CourseCard key={course._id} course={course} />
                 ))}
               </div>
 

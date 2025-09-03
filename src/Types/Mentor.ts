@@ -1,10 +1,16 @@
-// types/instructor.ts
-export interface Instructor {
-  _id: string;
+export interface Mentor {
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
   userName: string;
-  role: 'instructor';
-  // Include other relevant fields as per your API, e.g., 'rating', 'students', 'bio', 'areasOfExpertise', 'professionalExperience'
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  name?: string;
+  rating?: number;
+  reviews?: { id: string; text: string; rating: number }[];
+  bio?: string;
+  portfolio?: string;
+  image?: string;
 }

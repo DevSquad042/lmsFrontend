@@ -84,7 +84,7 @@ export const loginUser = createAsyncThunk<
 
 // Register
 export const registerUser = createAsyncThunk<
-  { user: User; token: string },
+  { user: User; token?: string },
   { firstName: string; lastName: string; userName: string; email: string; password: string },
   { rejectValue: string }
 >("auth/registerUser", async (payload, { rejectWithValue }) => {
@@ -100,20 +100,42 @@ export const registerUser = createAsyncThunk<
     try {
       data = JSON.parse(text);
     } catch {
+      // Handle empty response (204 No Content)
+      if (res.ok && text.trim() === "") {
+        return { user: payload as any, token: undefined };
+      }
       return rejectWithValue(`Invalid JSON response: ${text}`);
     }
 
     if (!res.ok) {
       return rejectWithValue(data.message || `Registration failed with status ${res.status}`);
     }
-    if (!data.user) return rejectWithValue("No user data in response");
-    if (!data.token && !data.accessToken) return rejectWithValue("No token or accessToken in response");
 
-    const token: string = data.token || data.accessToken;
+    // Handle case where server doesn't return user data but registration is successful
+    if (!data.user && res.ok) {
+      // Create a minimal user object from the payload
+      const user: User = {
+        id: data.id || payload.email, // Use email as temporary ID if no ID provided
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+        email: payload.email,
+        userName: payload.userName,
+        role: "student", // Default role
+        paidCourses: [],
+      };
+      return { user, token: data.token || data.accessToken };
+    }
+
+    if (!data.user) return rejectWithValue("No user data in response");
+
+    const token: string | undefined = data.token || data.accessToken;
     if (!data.user.paidCourses) data.user.paidCourses = [];
 
-    localStorage.setItem("user", JSON.stringify(data.user));
-    localStorage.setItem("token", token);
+    // Store data if token is available
+    if (token) {
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("token", token);
+    }
 
     return { user: data.user as User, token };
   } catch (err: any) {
@@ -257,10 +279,12 @@ const authSlice = createSlice({
       })
       .addCase(
         registerUser.fulfilled,
-        (state, action: PayloadAction<{ user: User; token: string }>) => {
+        (state, action: PayloadAction<{ user: User; token?: string }>) => {
           state.loading = false;
           state.user = action.payload.user;
-          state.token = action.payload.token;
+          if (action.payload.token) {
+            state.token = action.payload.token;
+          }
         }
       )
       .addCase(registerUser.rejected, (state, action) => {

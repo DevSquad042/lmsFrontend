@@ -2,6 +2,7 @@
   padding: 4rem 2rem;
   width: 100%;
   margin: 0 auto;
+  background: #ffffff; /* Ensure white background */
 }
 
 .top-courses-header {
@@ -36,8 +37,36 @@
   gap: 2rem;
 }
 
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: calc(100vh - 8rem); /* Full height minus padding */
+  background: #ffffff; /* White background during loading */
+}
+
+.loading-spinner::after {
+  content: '';
+  width: 50px;
+  height: 50px;
+  border: 6px solid #e5e7eb;
+  border-top: 6px solid #3b82f6; /* Blue to match contact button */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 @media (max-width: 768px) {
   .top-courses-title {
     font-size: 2rem;
+  }
+
+  .loading-spinner {
+    height: calc(100vh - 6rem); /* Adjusted for mobile padding */
   }
 }

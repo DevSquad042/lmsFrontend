@@ -73,48 +73,74 @@ const Register: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validate()) {
-      const payload = {
-        firstName: values.firstName,
-        lastName: values.lastName,
-        userName: values.userName,
-        email: values.email,
-        password: values.password,
-      };
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (validate()) {
+    const payload = {
+      firstName: values.firstName,
+      lastName: values.lastName,
+      userName: values.userName,
+      email: values.email,
+      password: values.password,
+    };
 
-      try {
-        const res = await dispatch(registerUser(payload)).unwrap();
+    try {
+      const res = await dispatch(registerUser(payload)).unwrap();
+      console.log("Registration response:", res); // Enhanced logging for debugging
 
-        if (res && typeof res === "object" && "token" in res) {
-          localStorage.setItem("token", res.token);
-        }
-
+      // The thunk returns { user, token? } on success
+      if (res && typeof res === "object" && "user" in res) {
+        // Registration successful
         setSubmitted(true);
-        toast.success("Registration successful! 🎉");
-        navigate("/login");
-      } catch (err: unknown) {
-        const maybeError = err as { response?: { status?: number } };
-        const status = maybeError?.response?.status;
-
-        if (status === 409) {
-          setErrors((prev) => ({
-            ...prev,
-            email: "This email or username is already registered.",
-          }));
-          toast.error("Email or username already exists ❌");
+        if (res.token) {
+          toast.success("Registration successful! You are now logged in! 🎉");
+          // User is already authenticated, could navigate to dashboard
+          navigate("/");
         } else {
-          console.error("Registration failed:", err);
-          setErrors((prev) => ({
-            ...prev,
-            email: "Email already in use.",
-          }));
-          toast.error("Email already in use 💔");
+          toast.success("Registration successful! Please log in to continue. 🎉");
+          navigate("/login");
         }
+      } else {
+        // Unexpected response format
+        console.warn("Unexpected response format:", res);
+        toast.error("Registration completed, but response was unexpected. Please try logging in.");
+        navigate("/login");
       }
+    } catch (err: unknown) {
+      console.error("Registration error:", err);
+
+      let errorMessage = "Something went wrong. Please try again later.";
+      let toastMessage = "Registration failed. Please try again 💔";
+
+      // Handle string errors from rejectWithValue
+      if (typeof err === "string") {
+        const errorStr = err.toLowerCase();
+        if (errorStr.includes("409") || errorStr.includes("already") || errorStr.includes("exists")) {
+          errorMessage = "This email or username is already registered.";
+          toastMessage = "Email or username already exists ❌";
+        } else if (errorStr.includes("400")) {
+          errorMessage = "Invalid registration data. Please check your input.";
+          toastMessage = "Invalid data—please check your input ❌";
+        } else if (errorStr.includes("500")) {
+          errorMessage = "Server error occurred.";
+          toastMessage = "Server error—please try again later ❌";
+        } else {
+          errorMessage = err;
+          toastMessage = err;
+        }
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+        toastMessage = err.message;
+      }
+
+      setErrors((prev) => ({
+        ...prev,
+        email: errorMessage,
+      }));
+      toast.error(toastMessage);
     }
-  };
+  }
+};
 
   const handleGoogleLogin = () => console.log("Google register clicked");
   const handleFacebookLogin = () => console.log("Facebook register clicked");

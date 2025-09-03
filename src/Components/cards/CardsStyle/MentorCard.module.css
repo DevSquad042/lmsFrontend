@@ -1,38 +1,80 @@
-/* Styles for src/Components/cards/InstructorCard.tsx */
-.instructorcard{
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+  padding: 16px;
+  width: 220px;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+}
+
+.imageContainer {
+  width: 100%;
+  height: 140px;
+  overflow: hidden;
+  border-radius: 12px; /* Rounded square, not circle */
+  margin-bottom: 12px;
+}
+
+.imageContainer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-  padding: 20px;
-  transition: transform 0.3s ease-in-out;
+  gap: 4px;
 }
 
-.instructorcard:hover {
-  transform: translateY(-5px);
-}
-
-.instructorcard img {
-  width: 100px; /* Adjust size as needed */
-  height: 100px; /* Adjust size as needed */
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #007bff; /* Example accent color */
-  margin-bottom: 15px;
-}
-
-.instructordetails h3 {
-  font-size: 1.2rem;
-  color: #333;
-  margin-bottom: 5px;
-}
-
-.instructordetails p {
-  font-size: 0.9rem;
-  color: #666;
+.name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
   margin: 0;
+  line-height: 1.4;
+}
+
+.role {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.divider {
+  width: 100%;
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 8px 0;
+}
+
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.rating {
+  color: #f59e0b;
+}
+
+.students {
+  color: #6b7280;
+}
+
+.cardLink {
+  text-decoration: none;
+  color: inherit;
 }

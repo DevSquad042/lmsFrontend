@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaChevronDown, FaPlayCircle, FaUserCircle } from 'react-icons/fa';
+import { FaChevronDown, FaPlayCircle } from 'react-icons/fa';
 import type { Course } from '../Types/Course';
 import styles from './ComponentStyles/CourseContent.module.css';
 
@@ -39,29 +39,15 @@ const CourseContent: React.FC<{ course: Course }> = ({ course }) => {
 
   return (
     <div className={styles.contentContainer}>
-      {/* Course Description with Dummy Data */}
-      <h2 className={styles.sectionHeading}>Course Description</h2>
-      <div className={styles.descriptionSection}>
-        <div className={styles.instructorInfo}>
-          <FaUserCircle className={styles.avatar} />
-          <h3 className={styles.instructorName}>Ronald Richards</h3>
-          <p className={styles.instructorTitle}>UX/UI Designer</p>
-        </div>
-        <p className={styles.descriptionText}>{dummyCourseDescription}</p>
-      </div>
-      <div className={styles.certificationSection}>
-        <h3 className={styles.certificationTitle}>Certification</h3>
-        <p className={styles.certificationText}>
-          At Byway, we understand the significance of formal recognition for your hard work and dedication to continuous learning. Upon successful completion of our courses, you will earn a prestigious certification that not only validates your expertise but also opens doors to new opportunities in your chosen field.
-        </p>
-      </div>
-
-      {/* Syllabus Section with Dummy Data */}
+      {/* Syllabus Section */}
       <h2 className={styles.sectionHeading}>Syllabus</h2>
       <div className={styles.syllabusContainer}>
-        {dummySections.map((section, index) => (
+        {course.sections.map((section, index) => (
           <div key={index} className={styles.section}>
-            <div className={styles.sectionHeader} onClick={() => toggleSection(index)}>
+            <div 
+              className={styles.sectionHeader} 
+              onClick={() => toggleSection(index)}
+            >
               <div className={styles.titleWrapper}>
                 <FaChevronDown
                   className={`${styles.chevron} ${openSection === index ? styles.open : ''}`}
@@ -69,8 +55,48 @@ const CourseContent: React.FC<{ course: Course }> = ({ course }) => {
                 <h3 className={styles.sectionTitle}>{section.title}</h3>
               </div>
               <span className={styles.sectionStatus}>
-                Preview
+                {section.isPreview ? 'Preview' : 'Video'}
               </span>
+            </div>
+            {openSection === index && (
+              <div className={styles.sectionContent}>
+                <div className={styles.lesson}>
+                  <FaPlayCircle className={styles.playIcon} />
+                  <span className={styles.lessonTitle}>Introduction to {section.title}</span>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Course Description */}
+      <p className={styles.descriptionText}>{dummyCourseDescription}</p>
+
+      {/* Certification Section */}
+      <div className={styles.certificationSection}>
+        <h3 className={styles.certificationTitle}>Certification</h3>
+        <p className={styles.certificationText}>
+          At Byway, we understand the significance of formal recognition for your hard work and dedication to continuous learning. Upon successful completion of our courses, you will earn a prestigious certification that not only validates your expertise but also opens doors to new opportunities in your chosen field.
+        </p>
+      </div>
+
+      {/* Dummy Syllabus Section */}
+      <h2 className={styles.sectionHeading}>Syllabus</h2>
+      <div className={styles.syllabusContainer}>
+        {dummySections.map((section, index) => (
+          <div key={index} className={styles.section}>
+            <div 
+              className={styles.sectionHeader} 
+              onClick={() => toggleSection(index)}
+            >
+              <div className={styles.titleWrapper}>
+                <FaChevronDown
+                  className={`${styles.chevron} ${openSection === index ? styles.open : ''}`}
+                />
+                <h3 className={styles.sectionTitle}>{section.title}</h3>
+              </div>
+              <span className={styles.sectionStatus}>Preview</span>
             </div>
             {openSection === index && (
               <div className={styles.sectionContent}>
