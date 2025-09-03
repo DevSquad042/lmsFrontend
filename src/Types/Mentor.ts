@@ -9,11 +9,11 @@ export interface Mentor {
   id: string;
   firstName: string;
   lastName: string;
-  email: string;
-  userName: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
+  email?: string;
+  userName?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  __v?: number;
 
   // Optional fields
   name?: string;

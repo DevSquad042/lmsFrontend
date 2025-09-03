@@ -4,7 +4,6 @@ import type { RootState, AppDispatch } from "../../store/";
 import { fetchCourses } from "../../store/slices/courseSlice";
 import { FaStar } from "react-icons/fa";
 import styles from "./CardsStyle/CourseCard.module.css";
-import type { Course } from "../CourseContent";
 
 interface CourseCard2Props {
   mentorId?: string;
@@ -14,19 +13,19 @@ const CourseCard2: React.FC<CourseCard2Props> = ({ mentorId }) => {
   const dispatch = useDispatch<AppDispatch>();
 
   // ✅ Defensive destructuring
-  const { data: courses = [], loading, error } = useSelector(
-    (state: RootState) => state.courses || {}
-  );
+  const {
+    data: courses = [],
+    loading,
+    error,
+  } = useSelector((state: RootState) => state.courses || {});
 
   useEffect(() => {
     if (!courses.length) dispatch(fetchCourses());
   }, [dispatch, courses.length]);
 
-
-
   // ✅ Mentor filter (shorthand)
   const filteredCourses = mentorId
-    ? courses.filter((c: Course) => c.mentorId === mentorId)
+    ? courses.filter((c) => c.instructor === mentorId)
     : courses;
 
   if (loading) return <p>Loading courses...</p>;
@@ -36,7 +35,7 @@ const CourseCard2: React.FC<CourseCard2Props> = ({ mentorId }) => {
     <div className="course-grid">
       {filteredCourses.map((course) => {
         const {
-          id,
+          _id,
           title,
           description,
           price = 0,
@@ -50,7 +49,7 @@ const CourseCard2: React.FC<CourseCard2Props> = ({ mentorId }) => {
         const reviewCount = Array.isArray(reviews) ? reviews.length : reviews;
 
         return (
-          <article key={id} className={styles.card} role="article">
+          <article key={_id} className={styles.card} role="article">
             <div className={styles.imageContainer}>
               <img
                 src={thumbnail}
@@ -76,7 +75,7 @@ const CourseCard2: React.FC<CourseCard2Props> = ({ mentorId }) => {
                       key={i}
                       color={i < safeRating ? "#FFC107" : "#ccc"}
                       style={{ cursor: "pointer" }}
-                      onClick={() => handleRating(id, i + 1)}
+                      // onClick={() => handleRating(id, i + 1)}
                     />
                   ))}
                 </div>
@@ -87,9 +86,7 @@ const CourseCard2: React.FC<CourseCard2Props> = ({ mentorId }) => {
 
               <p className={styles.details}>{description}</p>
               <div className={styles.priceContainer}>
-                <strong className={styles.price}>
-                  ${price.toFixed(2)}
-                </strong>
+                <strong className={styles.price}>${price.toFixed(2)}</strong>
               </div>
             </div>
           </article>

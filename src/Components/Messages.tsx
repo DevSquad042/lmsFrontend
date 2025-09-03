@@ -1,7 +1,6 @@
-
 // src/components/messages/Messages.tsx
 
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Filter2 from "./Filters/Filter2";
 import "./ComponentStyles/Messages.css";
@@ -36,15 +35,20 @@ const sampleMessages: Message[] = [
 const Messages: React.FC = () => {
   const navigate = useNavigate();
 
+  const [search, setSearch] = useState("");
+
   const handleClick = (id: number) => {
     console.log("Navigating to:", `/profile5/${id}`); // ✅ Debug log
-navigate(`/profile5/${id}`);
-
+    navigate(`/profile5/${id}`);
   };
 
   return (
     <div className="messages-container">
-      <Filter2 title="Messages" />
+      <Filter2
+        title="Messages"
+        searchQuery={search}
+        setSearchQuery={setSearch}
+      />
 
       <div className="messages-list">
         {sampleMessages.map((msg) => (
@@ -72,8 +76,3 @@ navigate(`/profile5/${id}`);
 };
 
 export default Messages;
-
-
-
-
-

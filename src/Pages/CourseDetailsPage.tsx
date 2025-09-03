@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import type { RootState, AppDispatch } from "../store/index";
-import { fetchCourseById } from '../store/slices/coursesSlice';
+//import { fetchCourseById } from "../store/slices/courseSlice";
 import CourseDetails from "../Components/CourseHero";
 import CourseSidebar from "../Components/CourseSidebar";
 import Reviews from "../Components/Rating";
@@ -17,14 +17,16 @@ import Footer from "../Components/Layout/Footer";
 const CoursePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const { data :selectedCourse, loading, error } = useSelector(
-    (state: RootState) => state.courses
-  );
-  const currentCourse = selectedCourse.find(course => course._id === id);
+  const {
+    data: selectedCourse,
+    loading,
+    error,
+  } = useSelector((state: RootState) => state.courses);
+  const currentCourse = selectedCourse.find((course) => course._id === id);
 
   const fetchData = useCallback(() => {
     if (id) {
-      dispatch(fetchCourseById(id));
+      //  dispatch(fetchCourseById(id));
     }
   }, [dispatch, id]);
 
@@ -44,30 +46,28 @@ const CoursePage: React.FC = () => {
 
   return (
     <>
-    <Header2/>
+      <Header2 />
 
-    <main className={styles.main}>
-      <Breadcrumb links={breadcrumbLinks} />
-      <div className={styles.coursePage}>
-        <div className={styles.mainContent}>
-          <CourseDetails course={currentCourse} />
-          <CourseContent course={currentCourse} />
-          
-        </div>
-        <div className={styles.sidebar}>
-          <CourseSidebar course={currentCourse} />
-        </div>
+      <main className={styles.main}>
+        <Breadcrumb links={breadcrumbLinks} />
+        <div className={styles.coursePage}>
+          <div className={styles.mainContent}>
+            <CourseDetails course={currentCourse} />
+            <CourseContent course={currentCourse} />
+          </div>
+          <div className={styles.sidebar}>
+            <CourseSidebar course={currentCourse} />
+          </div>
 
-        <div className={styles.review}>
-          <Reviews course={currentCourse} onReviewAdded={fetchData} />
-          <TestimonialCard />
-          <RelatedCourses />
+          <div className={styles.review}>
+            <Reviews course={currentCourse} onReviewAdded={fetchData} />
+            <TestimonialCard />
+            <RelatedCourses />
+          </div>
         </div>
-      </div>
-    
-    </main>
+      </main>
 
-      <Footer/>
+      <Footer />
     </>
   );
 };

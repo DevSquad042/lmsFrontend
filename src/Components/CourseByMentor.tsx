@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import type { Course } from '../Types/Course';
-import CourseCard from './cards/CourseCard';
-import styles from '../Styles/CoursesByMentor.module.css';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import type { Course } from "../Types/Course";
+import CourseCard from "./cards/CourseCard";
+import styles from "../Styles/CoursesByMentor.module.css";
 
 interface Props {
   mentorId: string;
@@ -40,7 +40,7 @@ const CoursesByMentor: React.FC<Props> = ({ mentorId }) => {
       <h2>Courses Taught by This Mentor</h2>
       <div className={styles.grid}>
         {courses.map((course) => (
-          <CourseCard key={course.id} course={course} />
+          <CourseCard key={course._id} course={course} />
         ))}
       </div>
     </div>

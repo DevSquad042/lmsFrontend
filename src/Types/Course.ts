@@ -1,14 +1,12 @@
-
-
 export interface Section {
- title: string;
-        videoFile: string;
-        videoUrl: string;
-        pdf: string;
-        _id: string;
+  title: string;
+  videoFile: string;
+  videoUrl: string;
+  pdf: string;
+  _id: string;
 }
 
-export type CourseLevel = 'Beginner' | 'Intermediate' | 'Advanced';
+export type CourseLevel = "Beginner" | "Intermediate" | "Advanced";
 
 export interface Review {
   id: string;
@@ -33,11 +31,11 @@ export interface Course {
 
   // Categories & tags
   categories: string[];
-  tags: string[];
+  tags?: string[];
 
   // Media
   thumbnail: string;
-  sections: Section[];
+  sections?: Section[];
 
   // Extra learning info
   hours: number;
@@ -46,7 +44,7 @@ export interface Course {
   level: CourseLevel;
 
   // Meta
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
+  createdAt?: string;
+  updatedAt?: string;
+  __v?: number;
 }
