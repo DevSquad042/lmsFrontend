@@ -1,6 +1,7 @@
 // src/Types/Course.ts
 
 export interface Section {
+  [x: string]: any;
   title: string;
   videoFile: string;
   videoUrl: string;

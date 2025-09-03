@@ -1,5 +1,3 @@
-// src/Components/TopCourses.tsx
-
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
@@ -10,7 +8,7 @@ import './ComponentStyles/TopCourses.css';
 
 const TopCourses: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { data:courses, loading, error } = useSelector(
+  const { data: courses, loading, error } = useSelector(
     (state: RootState) => state.courses
   );
 
@@ -26,7 +24,11 @@ const TopCourses: React.FC = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (loading === "pending") return <p>Loading top courses...</p>;
+  if (loading === "pending") return (
+    <section className="top-courses">
+      <div className="loading-spinner"></div>
+    </section>
+  );
   if (error) return <p>Error: {error}</p>;
 
   return (

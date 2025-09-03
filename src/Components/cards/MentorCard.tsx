@@ -1,9 +1,6 @@
-// src/Components/cards/MentorCard.tsx
-
 import React from 'react';
-import { MdOutlineEmail } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import type { Mentor } from '../../Types/Mentor'; // Adjust import path
+import type { Mentor } from '../../Types/Mentor';
 import styles from './CardsStyle/MentorCard.module.css';
 
 interface Props {
@@ -11,45 +8,35 @@ interface Props {
 }
 
 const MentorCard: React.FC<Props> = ({ mentor }) => {
+  const displayName = `${mentor.firstName} ${mentor.lastName}`;
+  const defaultAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&size=150&background=ccc&color=fff`;
+
   return (
     <Link to={`/mentor/${mentor.id}`} className={styles.cardLink}>
-      <article className={styles.card} role="article">
-        {/* Profile Image */}
+      <article className={styles.card}>
+        {/* Image */}
         <div className={styles.imageContainer}>
           <img
-            src={mentor.image}
-            alt={`Profile picture of ${mentor.name}`}
+            src={mentor.image || defaultAvatar}
+            alt={`Profile picture of ${displayName}`}
             loading="lazy"
             onError={(e) => {
-              e.currentTarget.src = '/placeholder-avatar.jpg';
+              e.currentTarget.src = defaultAvatar;
             }}
           />
         </div>
 
-        {/* Content */}
+        {/* Name & Profession */}
         <div className={styles.content}>
-          <h4 className={styles.name}>{mentor.name}</h4>
-          <p className={styles.role}>{mentor.role}</p>
+          <h4 className={styles.name}>{displayName}</h4>
+          <p className={styles.role}>{mentor.profession || 'Frontend Developer'}</p>
 
-          <hr />
+          <hr className={styles.divider} />
 
-          {/* Conditional rendering */}
+          {/* Rating & Students */}
           <div className={styles.stats}>
-            <span className={styles.rating} aria-label={`Rating: ${mentor.rating} stars`}>
-              ⭐ {mentor.rating}
-            </span>
-            <span className={styles.separator}>|</span>
-            <span className={styles.totalReviews}>
-              {mentor.reviews.length} reviews
-            </span>
-          </div>
-
-          <div className={styles.contact}>
-            <span className={styles.contactItem}>
-              <MdOutlineEmail className={styles.icon} />
-              {/* This could be a link to a contact page or modal */}
-              <span className={styles.contactText}>Contact</span>
-            </span>
+            <span className={styles.rating}>⭐ {mentor.rating?.toFixed(1) || '4.9'}</span>
+            <span className={styles.students}>2400 Students</span>
           </div>
         </div>
       </article>

@@ -12,7 +12,7 @@ const CourseContent: React.FC<{ course: Course }> = ({ course }) => {
 
   return (
     <div className={styles.contentContainer}>
-      <h2>Course Content</h2>
+      <h2>Syllabus</h2>
       {course.sections.map((section, index) => (
         <div key={index} className={styles.section}>
           <div className={styles.sectionHeader} onClick={() => toggleSection(index)}>
