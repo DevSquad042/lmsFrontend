@@ -36,7 +36,7 @@ const CartPage: React.FC = () => {
   const tax = (price + discount) * 0.1;
   const total = price + discount + tax;
 
-  // Function to handle adding item to cart via API
+
   const handleAddToCart = async (courseId: string) => {
     try {
       const response = await axios.post(
@@ -45,20 +45,19 @@ const CartPage: React.FC = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            // Add authorization header if required (e.g., JWT token)
-            // Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+         
           },
         }
       );
 
       if (response.status === 200 || response.status === 201) {
-        // ✅ Fixed syntax: Properly dispatch the moveToCart action
+      
         dispatch(moveToCart(courseId));
         console.log("Course added to cart successfully:", response.data);
       }
     } catch (error) {
       console.error("Error adding course to cart:", error);
-      // Show user-friendly error message
+   
       alert("Failed to add course to cart. Please try again.");
     }
   };
@@ -67,7 +66,7 @@ const CartPage: React.FC = () => {
     <div className="shopping-cart-page">
       <Header />
 
-      {/* Breadcrumb and Title */}
+    
       <div className="breadcrumb-container">
         <h1 className="cart-title">Shopping Cart</h1>
         <nav className="breadcrumb-nav">
@@ -84,7 +83,7 @@ const CartPage: React.FC = () => {
 
       <div className="main-content">
         <div className="content-grid">
-          {/* LEFT - Cart items */}
+         
           <div className="cart-section">
             <div className="cart-container">
               <div className="cart-header">

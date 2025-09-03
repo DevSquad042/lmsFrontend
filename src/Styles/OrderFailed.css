@@ -12,8 +12,8 @@ body{
 }
 
 
-.order-status__icon {
-  background-color: red; /* Green background */
+.order-status__iconn {
+   background-color: red;  
   border-radius: 50%;
   width: 200px;
   height: 200px;

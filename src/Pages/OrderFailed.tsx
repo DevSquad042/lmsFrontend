@@ -8,7 +8,7 @@ const OrderFailed: React.FC = () => {
     <div className="orders-page">
       <Header2 />
       <div className="order-status">
-        <div className="order-status__icon">
+        <div className="order-status__iconn">
           <MdCancel className="order-status__tick" />
         </div>
         <h2 className="order-status__title">Order Failed</h2>
