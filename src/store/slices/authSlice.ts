@@ -252,19 +252,6 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-<<<<<<< HEAD
-      .addCase(
-        registerUser.fulfilled,
-        (state, action: PayloadAction<{ user: User; token: string }>) => {
-          state.loading = false;
-          state.user = action.payload.user;
-          state.token = action.payload.token;
-        }
-      )
-      .addCase(registerUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = (action.payload as string) || "Registration failed";
-=======
       .addCase(registerUser.fulfilled, (state, action: PayloadAction<{ user: User; token: string }>) => {
         state.loading = false;
         state.user = action.payload.user;
@@ -275,7 +262,6 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload || "Registration failed";
         console.log("Register failed with error:", state.error); // Debug log
->>>>>>> 6fa8f2cd470c3974d9f0b8e0ad0df36a7a05c84b
       })
 
       // google login
@@ -283,19 +269,6 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-<<<<<<< HEAD
-      .addCase(
-        googleLogin.fulfilled,
-        (state, action: PayloadAction<{ user: User; token: string }>) => {
-          state.loading = false;
-          state.user = action.payload.user;
-          state.token = action.payload.token;
-        }
-      )
-      .addCase(googleLogin.rejected, (state, action) => {
-        state.loading = false;
-        state.error = (action.payload as string) || "Google login failed";
-=======
       .addCase(googleLogin.fulfilled, (state, action: PayloadAction<{ user: User; token: string }>) => {
         state.loading = false;
         state.user = action.payload.user;
@@ -306,7 +279,6 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string || "Google login failed";
         console.log("Google login failed with error:", state.error); // Debug log
->>>>>>> 6fa8f2cd470c3974d9f0b8e0ad0df36a7a05c84b
       })
 
       // fetch paid courses
@@ -338,9 +310,5 @@ const authSlice = createSlice({
   },
 });
 
-<<<<<<< HEAD
-export const { logout, setPaidCourses, setUser } = authSlice.actions;
-=======
 export const { logout, setPaidCourses } = authSlice.actions;
->>>>>>> 6fa8f2cd470c3974d9f0b8e0ad0df36a7a05c84b
 export default authSlice.reducer;
