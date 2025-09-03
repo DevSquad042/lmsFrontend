@@ -41,6 +41,7 @@
   .stat-block {
     flex-direction: column;
     padding: 20px;
+    margin: 30px 16px;
   }
 
   .with-border {
@@ -50,6 +51,40 @@
 
   .stat-item {
     padding: 16px 12px;
+  }
+
+  .stat-value {
+    font-size: 32px;
+  }
+
+  .stat-title {
+    font-size: 14px;
+  }
+}
+
+/* Additional mobile breakpoint for very small screens */
+@media (max-width: 480px) {
+  .stat-block {
+    padding: 16px;
+    margin: 20px 12px;
+    border-radius: 8px;
+  }
+
+  .stat-item {
+    padding: 12px 8px;
+  }
+
+  .stat-value {
+    font-size: 28px;
+    margin-bottom: 6px;
+  }
+
+  .stat-title {
+    font-size: 13px;
+  }
+
+  .with-border {
+    border-bottom: 1px solid #e5e7eb;
   }
 }
 

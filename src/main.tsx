@@ -13,7 +13,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <Provider store={store}>
       {/* Wrap your App component with BrowserRouter for routing */}
     <BrowserRouter>
-    <GoogleOAuthProvider clientId="GOOGLE_CLIENT_ID=1046556497634-2qd94236td1kn6t0g5dtcplurq8gul0a.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <App />
     </GoogleOAuthProvider>
     </BrowserRouter>

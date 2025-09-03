@@ -39,7 +39,7 @@ export const fetchReviews = createAsyncThunk(
   "reviews/fetchReviews",
   async ({ targetId, type }: { targetId: string; type: "Course" | "instructor" }) => {
     const res = await axios.get(
-      "https://byway-hoce.onrender.com/api/review/getReviews",
+      `http://localhost:3000/api/review/getReviews/${targetId}`,
       {
         params: { targetId, type },
         ...getAuthHeader(),
@@ -66,7 +66,7 @@ export const addReview = createAsyncThunk(
     comment: string;
   }) => {
     const res = await axios.post(
-      `https://byway-hoce.onrender.com/api/review/addReview/${userId}/${targetId}`,
+      `http://localhost:3000/api/review/addReview/${userId}/${targetId}`,
       { rating, comment }, // body only
       {
         params: { type },   // ✅ send type as query parameter
@@ -82,7 +82,7 @@ export const fetchAverage = createAsyncThunk(
   "reviews/fetchAverage",
   async ({ targetId, type }: { targetId: string; type: "Course" | "instructor" }) => {
     const res = await axios.get(
-      `https://byway-hoce.onrender.com/api/review/${targetId}/average`,
+      `http://localhost:3000/api/review/${targetId}/average`,
       {
         params: { type },
         ...getAuthHeader(),

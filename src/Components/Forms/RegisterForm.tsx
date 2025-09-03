@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import type { AppDispatch } from "../../store/index";
@@ -39,6 +39,54 @@ const Register: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  // Autocomplete data
+  const [autocompleteData, setAutocompleteData] = useState<{
+    firstNames: string[];
+    lastNames: string[];
+    userNames: string[];
+    emails: string[];
+  }>({
+    firstNames: [],
+    lastNames: [],
+    userNames: [],
+    emails: [],
+  });
+
+  // Load autocomplete data from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem("registerAutocomplete");
+    if (saved) {
+      try {
+        setAutocompleteData(JSON.parse(saved));
+      } catch (error) {
+        console.error("Error loading autocomplete data:", error);
+      }
+    }
+  }, []);
+
+  // Save to autocomplete data
+  const saveToAutocomplete = (field: keyof FormValues, value: string) => {
+    if (!value.trim()) return;
+
+    setAutocompleteData(prev => {
+      const updated = { ...prev };
+      const fieldMap: Record<string, keyof typeof updated> = {
+        firstName: 'firstNames',
+        lastName: 'lastNames',
+        userName: 'userNames',
+        email: 'emails',
+      };
+
+      const arrayKey = fieldMap[field];
+      if (arrayKey && !updated[arrayKey].includes(value)) {
+        updated[arrayKey] = [value, ...updated[arrayKey].slice(0, 4)]; // Keep only 5 recent entries
+      }
+
+      localStorage.setItem("registerAutocomplete", JSON.stringify(updated));
+      return updated;
+    });
+  };
 
   const handleChange =
     (field: keyof FormValues) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,23 +134,32 @@ const handleSubmit = async (e: React.FormEvent) => {
 
     try {
       const res = await dispatch(registerUser(payload)).unwrap();
-      console.log("Registration response:", res); // Enhanced logging for debugging
 
       // The thunk returns { user, token? } on success
       if (res && typeof res === "object" && "user" in res) {
-        // Registration successful
+        // Check if the response contains error information despite having a user
+        if (res.user && typeof res.user === 'object' && 'error' in res.user) {
+          throw new Error(res.user.error as string);
+        }
+
         setSubmitted(true);
+
+        // Save successful registration data to autocomplete
+        saveToAutocomplete("firstName", values.firstName);
+        saveToAutocomplete("lastName", values.lastName);
+        saveToAutocomplete("userName", values.userName);
+        saveToAutocomplete("email", values.email);
+
         if (res.token) {
           toast.success("Registration successful! You are now logged in! 🎉");
           // User is already authenticated, could navigate to dashboard
           navigate("/");
         } else {
-          toast.success("Registration successful! Please log in to continue. 🎉");
+          toast.success("Registration successful! Please check your email to verify your account before logging in. 📧");
           navigate("/login");
         }
       } else {
         // Unexpected response format
-        console.warn("Unexpected response format:", res);
         toast.error("Registration completed, but response was unexpected. Please try logging in.");
         navigate("/login");
       }
@@ -115,15 +172,32 @@ const handleSubmit = async (e: React.FormEvent) => {
       // Handle string errors from rejectWithValue
       if (typeof err === "string") {
         const errorStr = err.toLowerCase();
-        if (errorStr.includes("409") || errorStr.includes("already") || errorStr.includes("exists")) {
-          errorMessage = "This email or username is already registered.";
-          toastMessage = "Email or username already exists ❌";
+
+        if (errorStr.includes("409") || errorStr.includes("already") || errorStr.includes("exists") || errorStr.includes("duplicate") || errorStr.includes("taken") || errorStr.includes("registered") || errorStr.includes("conflict") || errorStr.includes("email") || errorStr.includes("in use")) {
+          errorMessage = "This email is already registered. Please use a different email or try logging in.";
+          toastMessage = "Email already registered. Please use a different email or log in. ❌";
         } else if (errorStr.includes("400")) {
           errorMessage = "Invalid registration data. Please check your input.";
           toastMessage = "Invalid data—please check your input ❌";
-        } else if (errorStr.includes("500")) {
-          errorMessage = "Server error occurred.";
+        } else if (errorStr.includes("500") || errorStr.includes("internal server")) {
+          errorMessage = "Server error occurred. Please try again later.";
           toastMessage = "Server error—please try again later ❌";
+        } else if (errorStr.includes("registration failed")) {
+          // Generic registration failure - extract status if possible
+          const statusMatch = errorStr.match(/status (\d+)/);
+          if (statusMatch) {
+            const status = statusMatch[1];
+            if (status === "500") {
+              errorMessage = "Server error occurred. Please try again later.";
+              toastMessage = "Server error—please try again later ❌";
+            } else {
+              errorMessage = `Registration failed (Error ${status}). Please try again.`;
+              toastMessage = `Registration failed (Error ${status}) ❌`;
+            }
+          } else {
+            errorMessage = "Registration failed. Please try again.";
+            toastMessage = "Registration failed ❌";
+          }
         } else {
           errorMessage = err;
           toastMessage = err;
@@ -163,14 +237,30 @@ const handleSubmit = async (e: React.FormEvent) => {
                 placeholder="First Name"
                 value={values.firstName}
                 onChange={handleChange("firstName")}
+                list="firstNameList"
+                autoComplete="given-name"
               />
               <input
                 type="text"
                 placeholder="Last Name"
                 value={values.lastName}
                 onChange={handleChange("lastName")}
+                list="lastNameList"
+                autoComplete="family-name"
               />
             </div>
+
+            {/* Datalist for autocomplete */}
+            <datalist id="firstNameList">
+              {autocompleteData.firstNames.map((name, index) => (
+                <option key={index} value={name} />
+              ))}
+            </datalist>
+            <datalist id="lastNameList">
+              {autocompleteData.lastNames.map((name, index) => (
+                <option key={index} value={name} />
+              ))}
+            </datalist>
             {errors.firstName && <p className={styles.error}>{errors.firstName}</p>}
             {errors.lastName && <p className={styles.error}>{errors.lastName}</p>}
 
@@ -179,6 +269,8 @@ const handleSubmit = async (e: React.FormEvent) => {
               placeholder="Username"
               value={values.userName}
               onChange={handleChange("userName")}
+              list="userNameList"
+              autoComplete="username"
             />
             {errors.userName && <p className={styles.error}>{errors.userName}</p>}
 
@@ -187,8 +279,22 @@ const handleSubmit = async (e: React.FormEvent) => {
               placeholder="Email"
               value={values.email}
               onChange={handleChange("email")}
+              list="emailList"
+              autoComplete="email"
             />
             {errors.email && <p className={styles.error}>{errors.email}</p>}
+
+            {/* Additional datalist elements */}
+            <datalist id="userNameList">
+              {autocompleteData.userNames.map((username, index) => (
+                <option key={index} value={username} />
+              ))}
+            </datalist>
+            <datalist id="emailList">
+              {autocompleteData.emails.map((email, index) => (
+                <option key={index} value={email} />
+              ))}
+            </datalist>
 
             <div className={styles.passwordGroup}>
               <div className={styles.passwordField}>

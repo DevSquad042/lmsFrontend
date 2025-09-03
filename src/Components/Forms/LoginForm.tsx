@@ -16,38 +16,79 @@ const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const { user, token, loading } = useSelector((state: RootState) => state.auth);
 
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
+  // Autocomplete data for login
+  const [loginHistory, setLoginHistory] = useState<string[]>([]);
+
+  // Load login history from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem("loginHistory");
+    if (saved) {
+      try {
+        setLoginHistory(JSON.parse(saved));
+      } catch (error) {
+        console.error("Error loading login history:", error);
+      }
+    }
+  }, []);
+
+  // Save successful login to history
+  const saveToLoginHistory = (value: string) => {
+    if (!value.trim()) return;
+
+    setLoginHistory(prev => {
+      const updated = [value, ...prev.filter(item => item !== value)].slice(0, 5); // Keep only 5 recent entries
+      localStorage.setItem("loginHistory", JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   useEffect(() => {
     if (user && token) {
       console.log("User and token after login:", { user, token }); // Debug log
+      // Save successful login identifier to history
+      if (identifier) {
+        saveToLoginHistory(identifier);
+      }
       toast.success("Login successful!");
       navigate("/profile1");
     }
-  }, [user, token, navigate]);
+  }, [user, token, navigate, identifier]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError(null);
 
+    // Basic validation
+    if (!identifier.trim()) {
+      setLoginError("Please enter your username or email");
+      return;
+    }
+
+    if (!password) {
+      setLoginError("Please enter your password");
+      return;
+    }
+
     try {
-      const result = await dispatch(loginUser({ email, password })).unwrap();
+      const result = await dispatch(loginUser({ identifier, password })).unwrap();
       console.log("Login result:", result); // Debug log
     } catch (err) {
-       if (err instanceof Error) {
-         const errorMessage = err.message || "Account not found. Please register first or check your credentials.";
-        setLoginError(errorMessage);
-        toast.error(errorMessage);
-      } else {
-        setLoginError("An unknown error occurred");
-        toast.error("An unknown error occurred");
-      }
-    
-    }
-  };
+        if (err instanceof Error) {
+          const errorMessage = err.message || "Account not found. Please register first or check your credentials.";
+         setLoginError(errorMessage);
+         toast.error(errorMessage);
+       } else {
+         setLoginError("An unknown error occurred");
+         toast.error("An unknown error occurred");
+       }
+
+     }
+   };
 
   const handleFacebookLogin = () => console.log("Facebook login clicked");
   const handleMicrosoftLogin = () => console.log("Microsoft login clicked");
@@ -92,19 +133,27 @@ const LoginForm: React.FC = () => {
           )}
 
           <form onSubmit={handleSubmit}>
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              placeholder="Username or Email ID"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-            />
+            <label htmlFor="identifier">Username or Email</label>
+             <input
+               id="identifier"
+               type="text"
+               placeholder="Username or Email ID"
+               value={identifier}
+               onChange={(e) => setIdentifier(e.target.value)}
+               list="loginHistoryList"
+               required
+               autoComplete="username"
+             />
+
+             {/* Datalist for login history */}
+             <datalist id="loginHistoryList">
+               {loginHistory.map((item, index) => (
+                 <option key={index} value={item} />
+               ))}
+             </datalist>
 
             <label htmlFor="password">Password</label>
-            <div style={{ position: "relative" }}>
+            <div className={styles.passwordField}>
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
@@ -113,18 +162,10 @@ const LoginForm: React.FC = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="current-password"
-                style={{ paddingRight: "2.5rem" }}
               />
               <span
                 onClick={() => setShowPassword(!showPassword)}
-                style={{
-                  position: "absolute",
-                  right: "0.75rem",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  cursor: "pointer",
-                  color: "#555",
-                }}
+                className={styles.eyeIcon}
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
@@ -132,7 +173,7 @@ const LoginForm: React.FC = () => {
 
             <button
               type="submit"
-              className={styles2.signUpBtn}
+              className={styles.loginBtn}
               disabled={loading}
               aria-busy={loading}
             >

@@ -32,7 +32,7 @@ const CoursesPages = () => {
 
         // Make API request with Authorization header
         const response = await axios.get(
-          "https://byway-hoce.onrender.com/api/enrollments",
+          "http://localhost:3000/api/enrollments",
           {
             headers: {
               Authorization: `Bearer ${token}`, // Include token in header

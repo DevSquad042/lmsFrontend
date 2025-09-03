@@ -22,7 +22,7 @@ interface Message {
 }
 
 // API base URL
-const API_URL = "https://byway-hoce.onrender.com/api/chats";
+const API_URL = "http://localhost:3000/api/chats";
 
 const MessagesPage2: FC = () => {
   const { id } = useParams<{ id: string }>();

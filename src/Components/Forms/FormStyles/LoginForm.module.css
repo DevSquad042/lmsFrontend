@@ -12,10 +12,40 @@
   margin: auto;
 }
 
+/* Mobile-first responsive design */
+@media (max-width: 768px) {
+  .formSection {
+    padding: 24px 20px;
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .formSection {
+    padding: 20px 16px;
+    width: 95%;
+  }
+}
+
 .formSection h2 {
   margin-bottom: 24px;
   font-size: 24px;
   color: #1d1d1f;
+}
+
+/* Mobile font sizes */
+@media (max-width: 768px) {
+  .formSection h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .formSection h2 {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
 }
 
 .formSection form {
@@ -23,6 +53,19 @@
   flex-direction: column;
   width: 100%;
   gap: 12px;
+}
+
+/* Mobile form gap improvements for login */
+@media (max-width: 768px) {
+  .formSection form {
+    gap: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .formSection form {
+    gap: 16px;
+  }
 }
 
 .formSection label {
@@ -38,13 +81,72 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.formSection input:focus {
+  border-color: #2C7A4B;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(44, 122, 75, 0.15);
+}
+
+/* Mobile input improvements */
+@media (max-width: 768px) {
+  .formSection input {
+    padding: 14px 12px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+@media (max-width: 480px) {
+  .formSection input {
+    padding: 16px 12px;
+  }
 }
 
 
 
-.signUpBtn:disabled {
+.loginBtn {
+  background-color: rgb(0, 0, 0);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: auto;
+  cursor: pointer;
+  width: 40%;
+  transition: background-color 0.25s ease;
+  min-height: 44px;
+}
+
+.loginBtn:hover {
+  background-color: hsl(0, 0%, 30%);
+}
+
+.loginBtn:disabled {
   background-color: #A9A9A9;
   cursor: not-allowed;
+}
+
+/* Mobile login button improvements */
+@media (max-width: 768px) {
+  .loginBtn {
+    width: 60%;
+    font-size: 16px;
+    padding: 14px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .loginBtn {
+    width: 100%;
+    font-size: 16px;
+    padding: 16px 12px;
+  }
 }
 
 .divider {
@@ -85,6 +187,31 @@
   cursor: pointer;
   background: white;
   transition: background 0.3s, border-color 0.3s;
+  min-height: 44px; /* Touch-friendly minimum */
+}
+
+/* Mobile social button improvements */
+@media (max-width: 768px) {
+  .socialButtons {
+    gap: 8px;
+  }
+
+  .socialBtn {
+    padding: 12px 10px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .socialButtons {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .socialBtn {
+    padding: 14px 12px;
+    font-size: 16px;
+  }
 }
 
 .socialBtn:hover {
@@ -124,10 +251,51 @@
   text-align: center;
 }
 
+/* Mobile login redirect improvements */
+@media (max-width: 768px) {
+  .loginRedirect {
+    margin-top: 16px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .loginRedirect {
+    margin-top: 14px;
+    font-size: 16px;
+    padding: 0 8px;
+  }
+}
+
 .loginLink {
   color: #007bff;
   cursor: pointer;
   text-decoration: underline;
+}
+
+.passwordField {
+  position: relative;
+}
+
+.eyeIcon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #555;
+}
+
+.error {
+  font-size: 0.8rem;
+  color: red;
+  margin: 0;
+}
+
+.success {
+  font-size: 0.9rem;
+  color: green;
+  margin-top: 1rem;
 }
 
 
@@ -143,5 +311,26 @@
 
   .imageSection img {
     height: 250px;
+  }
+}
+
+/* Additional mobile breakpoints for image section */
+@media (max-width: 768px) {
+  .imageSection {
+    height: 200px;
+  }
+
+  .imageSection img {
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .imageSection {
+    height: 150px;
+  }
+
+  .imageSection img {
+    height: 150px;
   }
 }

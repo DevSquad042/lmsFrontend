@@ -19,7 +19,7 @@ const CoursesByMentor: React.FC<Props> = ({ mentorId }) => {
       try {
         setLoading(true);
         const response = await axios.get<Course[]>(
-          `https://byway-hoce.onrender.com/api/courses?mentorId=${mentorId}`
+          `http://localhost:3000/api/courses?mentorId=${mentorId}`
         );
         setCourses(response.data);
       } catch (err) {

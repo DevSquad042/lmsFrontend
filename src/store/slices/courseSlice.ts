@@ -18,7 +18,7 @@ const initialState: CourseState = {
   error: null,
 };
 
-const baseUrl = 'https://byway-hoce.onrender.com'; // API base URL
+const baseUrl = 'http://localhost:3000'; // API base URL
 const defaultThumbnail = 'https://images.unsplash.com/photo-1610500796385-3ffc1ae2f046?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8c3R1ZGVudCUyMGxlYXJuaW5nfGVufDB8fDB8fHww'; // Fallback PNG
 
 export const fetchCourses = createAsyncThunk<Course[]>(

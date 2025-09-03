@@ -53,7 +53,7 @@ const CartPage: React.FC = () => {
   const handleAddToCart = async (courseId: string) => {
     try {
       const response = await axios.post(
-        "https://byway-hoce.onrender.com/api/cart/add-to-cart",
+        "http://localhost:3000/api/cart/add-to-cart",
         { courseId },
         {
           headers: {

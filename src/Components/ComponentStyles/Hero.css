@@ -147,4 +147,48 @@
   .stat-img {
     width: 120px;
   }
+
+  .hero-button {
+    width: 100%;
+    max-width: 260px;
+    min-height: 48px;
+    font-size: 16px;
+  }
+}
+
+/* Additional mobile breakpoint for very small screens */
+@media (max-width: 480px) {
+  .hero-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .hero-text h1 {
+    font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-text p {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .main-hero-img {
+    max-height: 250px;
+  }
+
+  .hero-button {
+    width: 100%;
+    max-width: 280px;
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .stat-img {
+    width: 100px;
+  }
+
+  .stats-container {
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
 }

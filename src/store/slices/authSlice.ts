@@ -39,21 +39,28 @@ const initialState: AuthState = {
 };
 
 /** ===== Helpers ===== */
-const API_BASE = "https://byway-hoce.onrender.com/api";
+const API_BASE = "http://localhost:3000/api";
 
 /** ===== Thunks ===== */
 
 // Login
 export const loginUser = createAsyncThunk<
   { user: User; token: string },
-  { email: string; password: string },
+  { identifier: string; password: string }, // Changed from email to identifier
   { rejectValue: string }
->("auth/loginUser", async ({ email, password }, { rejectWithValue }) => {
+>("auth/loginUser", async ({ identifier, password }, { rejectWithValue }) => {
   try {
+    // Determine if identifier is email or username
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier);
+
+    const payload = isEmail
+      ? { email: identifier, password }
+      : { userName: identifier, password };
+
     const res = await fetch(`${API_BASE}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify(payload),
     });
 
     const text = await res.text();
@@ -87,7 +94,7 @@ export const registerUser = createAsyncThunk<
   { user: User; token?: string },
   { firstName: string; lastName: string; userName: string; email: string; password: string },
   { rejectValue: string }
->("auth/registerUser", async (payload, { rejectWithValue }) => {
+>("auth/signup", async (payload, { rejectWithValue }) => {
   try {
     const res = await fetch(`${API_BASE}/auth/signup`, {
       method: "POST",
@@ -104,11 +111,23 @@ export const registerUser = createAsyncThunk<
       if (res.ok && text.trim() === "") {
         return { user: payload as any, token: undefined };
       }
+      // For non-OK responses with invalid JSON, still reject with status
+      if (!res.ok) {
+        return rejectWithValue(`Registration failed with status ${res.status}: ${text || 'Unknown error'}`);
+      }
       return rejectWithValue(`Invalid JSON response: ${text}`);
     }
 
     if (!res.ok) {
-      return rejectWithValue(data.message || `Registration failed with status ${res.status}`);
+      const errorMessage = data?.message || data?.error || `Registration failed with status ${res.status}`;
+      console.log("Registration failed:", res.status, errorMessage);
+      return rejectWithValue(errorMessage);
+    }
+
+    // Check if response contains error information despite 200 status
+    if (data && (data.error || data.message) && !data.user) {
+      console.log("Thunk: Response contains error despite 200 status:", data.error || data.message);
+      return rejectWithValue(data.error || data.message || "Registration failed");
     }
 
     // Handle case where server doesn't return user data but registration is successful
@@ -128,16 +147,34 @@ export const registerUser = createAsyncThunk<
 
     if (!data.user) return rejectWithValue("No user data in response");
 
+    // Transform backend user object to match frontend User interface
+    const transformedUser: User = {
+      id: data.user._id || data.user.id,
+      firstName: data.user.firstName,
+      lastName: data.user.lastName,
+      email: data.user.email,
+      userName: data.user.userName,
+      role: data.user.role || "student", // Default to student if not provided
+      paidCourses: data.user.paidCourses || [],
+      headline: data.user.headline,
+      description: data.user.description,
+      linkedin: data.user.linkedin,
+      youtube: data.user.youtube,
+      facebook: data.user.facebook,
+      website: data.user.website,
+      x: data.user.x,
+      profilePicture: data.user.profilePicture,
+    };
+
     const token: string | undefined = data.token || data.accessToken;
-    if (!data.user.paidCourses) data.user.paidCourses = [];
 
     // Store data if token is available
     if (token) {
-      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("user", JSON.stringify(transformedUser));
       localStorage.setItem("token", token);
     }
 
-    return { user: data.user as User, token };
+    return { user: transformedUser, token };
   } catch (err: any) {
     return rejectWithValue(err.message || "Registration failed");
   }

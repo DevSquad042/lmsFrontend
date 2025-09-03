@@ -35,7 +35,7 @@ const TeachersPage: React.FC = () => {
     const fetchMentors = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("https://byway-hoce.onrender.com/api/instructors");
+        const res = await axios.get("http://localhost:3000/api/instructors");
         console.log("API Response:", res.data); // Debug raw data
         const data = Array.isArray(res.data) ? res.data : res.data.data || [];
         const transformedMentors = data.map((instructor: any) => {

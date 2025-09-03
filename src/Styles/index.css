@@ -7,3 +7,53 @@
 body{
   background-color: #FFFFFF;
 }
+
+/* Global responsive styles */
+@media (max-width: 768px) {
+  body {
+    font-size: 15px;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Improve touch targets */
+  button, a, input, select, textarea {
+    min-height: 44px;
+  }
+
+  /* Better spacing for mobile */
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.75rem; }
+  h3 { font-size: 1.5rem; }
+  p { line-height: 1.6; }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+
+  /* Smaller headings for very small screens */
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
+
+  /* Ensure all interactive elements are touch-friendly */
+  button, a, input, select, textarea {
+    min-height: 40px;
+  }
+
+  /* Better mobile scrolling */
+  html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+  }
+
+  /* Prevent horizontal scroll */
+  body {
+    overflow-x: hidden;
+  }
+}

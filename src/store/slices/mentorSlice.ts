@@ -22,7 +22,7 @@ export const fetchMentors = createAsyncThunk<Mentor[]>(
   'mentors/fetchMentors',
   async () => {
     const response = await axios.get(
-      'https://byway-hoce.onrender.com/api/instructors'
+      'http://localhost:3000/api/instructors'
     );
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return response.data.map((instructor: any) => ({
@@ -36,7 +36,7 @@ export const fetchMentorById = createAsyncThunk<Mentor, string>(
   'mentors/fetchMentorById',
   async (id) => {
     const response = await axios.get(
-      `https://byway-hoce.onrender.com/api/instructors/${id}`
+      `http://localhost:3000/api/instructors/${id}`
     );
     return { ...response.data, id: response.data._id } as Mentor;
   }

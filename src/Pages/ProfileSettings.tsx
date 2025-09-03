@@ -103,7 +103,7 @@ const ProfileSettings: React.FC = () => {
       });
 
       const response = await fetch(
-        `https://byway-hoce.onrender.com/api/profile/update`, // Updated endpoint
+        `http://localhost:3000/api/profile/update`, // Updated endpoint
         {
           method: "PUT",
           headers: {

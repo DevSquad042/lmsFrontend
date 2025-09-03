@@ -9,6 +9,22 @@
   max-width: 600px;
   width: 70%;
   margin: auto;
+  padding: 40px;
+}
+
+/* Mobile-first responsive design for register form */
+@media (max-width: 768px) {
+  .formSection {
+    padding: 24px 20px;
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .formSection {
+    padding: 20px 16px;
+    width: 95%;
+  }
 }
 
 .formSection h2 {
@@ -17,11 +33,39 @@
   color: #1d1d1f;
 }
 
+/* Mobile font sizes for register form */
+@media (max-width: 768px) {
+  .formSection h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .formSection h2 {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+}
+
 .formSection form {
   display: flex;
   flex-direction: column;
   width: 100%;
   gap: 12px;
+}
+
+/* Mobile form gap improvements */
+@media (max-width: 768px) {
+  .formSection form {
+    gap: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .formSection form {
+    gap: 16px;
+  }
 }
 
 .inputGroup {
@@ -37,6 +81,29 @@
   width: 100%;
 }
 
+/* Mobile input improvements for register form */
+@media (max-width: 768px) {
+  .formSection input {
+    padding: 14px 12px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  .inputGroup {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .formSection input {
+    padding: 16px 12px;
+  }
+
+  .inputGroup {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
 .signUpBtn {
   background-color: rgb(0, 0, 0);
   color: #fff;
@@ -50,6 +117,24 @@
   cursor: pointer;
   width: 40%;
   transition: background-color 0.25s ease;
+  min-height: 44px; /* Touch-friendly minimum */
+}
+
+/* Mobile sign up button improvements */
+@media (max-width: 768px) {
+  .signUpBtn {
+    width: 60%;
+    font-size: 16px;
+    padding: 14px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .signUpBtn {
+    width: 100%;
+    font-size: 16px;
+    padding: 16px 12px;
+  }
 }
 
 .signUpBtn:hover {
@@ -62,23 +147,45 @@
 }
 
 .passwordGroup {
- display: flex;
+  display: flex;
   justify-content: space-between;
   /* consistent spacing between fields */
   width: 100%;
+  gap: 12px;
 }
 
 .passwordGroup input {
-  width: 250px;
-  
   flex: 1; /* make both fields equal width */
   padding: 12px;
   border: 1px solid #ccc;
   border-radius: 8px; /* smoother corners */
   font-size: 14px;
-  gap: 12px;
   font-family: 'Inter', sans-serif;
   transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%; /* Ensure full width within flex container */
+}
+
+/* Mobile password group improvements */
+@media (max-width: 768px) {
+  .passwordGroup {
+    gap: 8px;
+  }
+
+  .passwordGroup input {
+    padding: 14px 12px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+@media (max-width: 480px) {
+  .passwordGroup {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .passwordGroup input {
+    padding: 16px 12px;
+  }
 }
 
 .passwordGroup input:focus {
@@ -137,6 +244,31 @@
   cursor: pointer;
   background: white;
   transition: background 0.3s, border-color 0.3s;
+  min-height: 44px; /* Touch-friendly minimum */
+}
+
+/* Mobile social button improvements for register form */
+@media (max-width: 768px) {
+  .socialButtons {
+    gap: 8px;
+  }
+
+  .socialBtn {
+    padding: 12px 10px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .socialButtons {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .socialBtn {
+    padding: 14px 12px;
+    font-size: 16px;
+  }
 }
 
 .socialBtn:hover {
@@ -176,6 +308,22 @@
   text-align: center;
 }
 
+/* Mobile login redirect improvements for register form */
+@media (max-width: 768px) {
+  .loginRedirect {
+    margin-top: 16px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .loginRedirect {
+    margin-top: 14px;
+    font-size: 16px;
+    padding: 0 8px;
+  }
+}
+
 .loginLink {
   color: #007bff;
   cursor: pointer;
@@ -210,5 +358,26 @@
 
   .inputGroup {
     flex-direction: column;
+  }
+}
+
+/* Additional mobile breakpoints for register form image section */
+@media (max-width: 768px) {
+  .imageSection {
+    height: 200px;
+  }
+
+  .imageSection img {
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .imageSection {
+    height: 150px;
+  }
+
+  .imageSection img {
+    height: 150px;
   }
 }
