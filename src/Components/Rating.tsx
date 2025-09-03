@@ -15,7 +15,6 @@ const Reviews: React.FC<{
   const [comment, setComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  // ✅ get logged-in userId from Redux (or localStorage fallback)
   const userId =
     useSelector((state: RootState) => state.auth.user?.id) ||
     localStorage.getItem("userId");
