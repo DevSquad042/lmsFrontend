@@ -1,7 +1,7 @@
 
 import './SharedStyles/Header1.css';
 import { FaShoppingCart, FaSearch } from 'react-icons/fa';
-import Logo1 from '../../assets/logo/Byway .png'
+import Logo1 from '../../assets/logo/logo copy.png'
 import { Link } from 'react-router-dom';
 
 const Header1: React.FC = () => {
