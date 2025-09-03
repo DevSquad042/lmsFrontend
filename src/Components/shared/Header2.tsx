@@ -3,10 +3,11 @@ import { IoMdHeartEmpty } from "react-icons/io";
 import { FaShoppingCart, FaSearch } from 'react-icons/fa';
 import { IoIosNotificationsOutline } from "react-icons/io";
 import Logo1 from '../../assets/logo/logo copy.png';
-import { Link } from 'react-router-dom';
-import { useSelector } from "react-redux";
+import { Link, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from "react-redux";
 import { useState } from 'react';
-import type { RootState } from "../../store/store";
+import type { RootState, AppDispatch } from "../../store/store";
+import { searchCourses } from '../../store/slices/coursesSlice';
 import LogoutButton from '../../Components/Logout';
 
 const Header2: React.FC = () => {
@@ -14,11 +15,22 @@ const Header2: React.FC = () => {
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const [query, setQuery] = useState('');
+
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
-  // Close dropdown after logout to improve UX
   const handleLogoutSuccess = () => {
-    setDropdownOpen(false); // Close dropdown after logout
+    setDropdownOpen(false);
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (query.trim()) {
+      dispatch(searchCourses(query));
+      navigate(`/search?query=${query}`);
+    }
   };
 
   return (
@@ -30,14 +42,16 @@ const Header2: React.FC = () => {
         <Link to="/categories" className="header-link">Categories</Link>
       </div>
 
-      <div className="header-search4">
-        <FaSearch className="search-icon4" />
+      <form className="header-search4" onSubmit={handleSearch}>
+        <FaSearch className="search-icon4" onClick={handleSearch} />
         <input
           type="text"
           placeholder="Search courses"
           className="search-input4"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
         />
-      </div>
+      </form>
 
       <div className="right-header2">
         <Link to="/" className="header-link2">Teach on Byway</Link>
@@ -65,7 +79,7 @@ const Header2: React.FC = () => {
             <div className="user-dropdown">
               <Link to="/">Home</Link>
               <Link to="/profile1">Settings</Link>
-              <LogoutButton onLogoutSuccess={handleLogoutSuccess} /> {/* Replace Link with LogoutButton */}
+              <LogoutButton onLogoutSuccess={handleLogoutSuccess} />
             </div>
           )}
         </div>

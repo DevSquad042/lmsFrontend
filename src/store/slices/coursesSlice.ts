@@ -1,71 +1,127 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-
-// Define your Course type (extend with the fields you need)
-export interface Course {
-  id: string;
-  title: string;
-  description: string;
-  thumbnail: string,
-  // …other fields…
-}
+import type { Course } from '../../Types/Course';
+import type { RootState } from '../../store/index';
 
 interface CourseState {
-  selectedCourse: Course | null;
-  loading: boolean;
+  data: Course[];
+  searchResults: Course[];
+  loading: 'idle' | 'pending' | 'succeeded' | 'failed';
   error: string | null;
 }
 
 const initialState: CourseState = {
-  selectedCourse: null,
-  loading: false,
+  data: [],
+  searchResults: [],
+  loading: 'idle',
   error: null,
 };
 
-export const fetchCourseById = createAsyncThunk<
-  Course,
-  string,
-  { rejectValue: string }
->(
-  'course/fetchById',
-  async (courseId, { rejectWithValue }) => {
-    try {
-      const response = await axios.get(`/api/courses/${courseId}`);
-      return response.data as Course;
-    } catch (err) {
-        let message;
-         if (err instanceof Error) {
-          message =
-        err.message ||
-        'Failed to fetch course';
-      } else {
-        message = 'An unknown error occurred';
-      }
-   
-      return rejectWithValue(message);
-    }
+const baseUrl = 'https://byway-hoce.onrender.com';
+const defaultThumbnail = 'https://placehold.co/150x150/png';
+
+export const fetchCourses = createAsyncThunk<Course[]>(
+  'courses/fetchCourses',
+  async () => {
+    const response = await axios.get<Course[]>(`${baseUrl}/api/courses`);
+    return response.data.map((course) => ({
+      ...course,
+      thumbnail: course.thumbnail
+        ? course.thumbnail.startsWith('http')
+          ? course.thumbnail
+          : `${baseUrl}/images/${course.thumbnail}`
+        : defaultThumbnail,
+    }));
   }
 );
 
-const courseSlice = createSlice({
-  name: 'course',
+export const fetchCoursesByCategory = createAsyncThunk<Course[], string>(
+  'courses/fetchByCategory',
+  async (category) => {
+    const response = await axios.get<Course[]>(
+      `${baseUrl}/api/courses?category=${category}`
+    );
+    return response.data.map((course) => ({
+      ...course,
+      thumbnail: course.thumbnail
+        ? course.thumbnail.startsWith('http')
+          ? course.thumbnail
+          : `${baseUrl}/images/${course.thumbnail}`
+        : defaultThumbnail,
+    }));
+  }
+);
+
+// ✅ NEW: search courses
+export const searchCourses = createAsyncThunk<Course[], string>(
+  'courses/search',
+  async (query) => {
+    const response = await axios.get<Course[]>(
+      `${baseUrl}/api/search?query=${query}`
+    );
+    return response.data.map((course) => ({
+      ...course,
+      thumbnail: course.thumbnail
+        ? course.thumbnail.startsWith('http')
+          ? course.thumbnail
+          : `${baseUrl}/images/${course.thumbnail}`
+        : defaultThumbnail,
+    }));
+  }
+);
+
+const coursesSlice = createSlice({
+  name: 'courses',
   initialState,
   reducers: {},
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(fetchCourseById.pending, state => {
-        state.loading = true;
+      // All Courses
+      .addCase(fetchCourses.pending, (state) => {
+        state.loading = 'pending';
         state.error = null;
       })
-      .addCase(fetchCourseById.fulfilled, (state, action) => {
-        state.loading = false;
-        state.selectedCourse = action.payload;
+      .addCase(fetchCourses.fulfilled, (state, action) => {
+        state.data = action.payload;
+        state.loading = 'succeeded';
       })
-      .addCase(fetchCourseById.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload ?? 'Unknown error';
+      .addCase(fetchCourses.rejected, (state, action) => {
+        state.loading = 'failed';
+        state.error = action.error.message || 'Failed to fetch courses.';
+      })
+
+      // Category
+      .addCase(fetchCoursesByCategory.pending, (state) => {
+        state.loading = 'pending';
+        state.error = null;
+      })
+      .addCase(fetchCoursesByCategory.fulfilled, (state, action) => {
+        state.data = action.payload;
+        state.loading = 'succeeded';
+      })
+      .addCase(fetchCoursesByCategory.rejected, (state, action) => {
+        state.loading = 'failed';
+        state.error = action.error.message || 'Failed to fetch courses by category.';
+      })
+
+      // Search
+      .addCase(searchCourses.pending, (state) => {
+        state.loading = 'pending';
+        state.error = null;
+      })
+      .addCase(searchCourses.fulfilled, (state, action) => {
+        state.searchResults = action.payload;
+        state.loading = 'succeeded';
+      })
+      .addCase(searchCourses.rejected, (state, action) => {
+        state.loading = 'failed';
+        state.error = action.error.message || 'Failed to search courses.';
       });
   },
 });
 
-export default courseSlice.reducer;
+export const selectCourses = (state: RootState) => state.courses.data;
+export const selectCoursesStatus = (state: RootState) => state.courses.loading;
+export const selectSearchResults = (state: RootState) => state.courses.searchResults;
+
+export default coursesSlice.reducer;

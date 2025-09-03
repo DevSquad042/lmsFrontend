@@ -1,4 +1,3 @@
-
 import { configureStore, type Middleware } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
@@ -11,7 +10,8 @@ import cartReducer, {
   moveToCart,
   removeFromSaveForLater,
 } from "./slices/cartSlice";
-import profileReducer from "./slices/ProfileSlice"; // ✅ NEW
+import profileReducer from "./slices/ProfileSlice"; 
+import courseReducer from "./slices/courseSlice"; // ✅ NEW
 
 // ✅ Custom middleware with action matching
 type ReduxAction = { type: string; [key: string]: unknown };
@@ -55,7 +55,8 @@ const store = configureStore({
   reducer: {
     auth: authReducer,
     cart: cartReducer,
-    profile: profileReducer, // ✅ NEW
+    profile: profileReducer,
+    course: courseReducer, // ✅ Added here
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(toastMiddleware),
@@ -67,6 +68,7 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export default store;
+
 
 
 

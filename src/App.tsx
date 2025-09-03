@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Routes, Route } from "react-router-dom";
+import SearchResultsPage from "./Components/SearchResultPage";
 
 // ✅ Pages and Components
 import Home from "./Pages/Home";
@@ -61,6 +62,11 @@ function App() {
         <Route path="/categories" element={<CategoryPage />} />
         <Route path="/courses/:id" element={<CourseDetailPage />} />
         <Route path="/teacher/:id" element={<InstructorDetailPage />} />
+        <Route path="/search" element={<SearchResultsPage />} />
+        <Routes>
+           
+  ...
+</Routes>
 
         {/* Protected Routes */}
         <Route

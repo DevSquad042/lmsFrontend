@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "../../store/";
-import { fetchCourses, patchCourseRating } from "../../store/slices/courseSlice";
+import { fetchCourses } from "../../store/slices/courseSlice";
 import { FaStar } from "react-icons/fa";
 import styles from "./CardsStyle/CourseCard.module.css";
+import type { Course } from "../CourseContent";
 
 interface CourseCard2Props {
   mentorId?: string;
@@ -21,13 +22,11 @@ const CourseCard2: React.FC<CourseCard2Props> = ({ mentorId }) => {
     if (!courses.length) dispatch(fetchCourses());
   }, [dispatch, courses.length]);
 
-  const handleRating = (id: string, rating: number) => {
-    dispatch(patchCourseRating({ id, rating }));
-  };
+
 
   // ✅ Mentor filter (shorthand)
   const filteredCourses = mentorId
-    ? courses.filter((c: any) => c.mentorId === mentorId)
+    ? courses.filter((c: Course) => c.mentorId === mentorId)
     : courses;
 
   if (loading) return <p>Loading courses...</p>;
