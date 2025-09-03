@@ -7,7 +7,7 @@ import styles from "./CardsStyle/CourseCard.module.css";
 
 const CourseCard: React.FC<{ course: Course }> = ({ course }) => {
   const safeRating = Math.max(0, Math.min(5, course.rating || 0));
-  const defaultThumbnail = "https://placehold.co/150x150/png"; // PNG fallback
+  const defaultThumbnail = "https://images.unsplash.com/photo-1610500796385-3ffc1ae2f046?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8c3R1ZGVudCUyMGxlYXJuaW5nfGVufDB8fDB8fHww"; // PNG fallback
 
   // Log thumbnail details for debugging
   console.log(`Course: ${course.title}, Thumbnail: ${course.thumbnail || 'undefined'}`);

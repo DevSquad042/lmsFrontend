@@ -2,7 +2,7 @@ import './SharedStyles/Header2.css';
 import { IoMdHeartEmpty } from "react-icons/io";
 import { FaShoppingCart, FaSearch } from 'react-icons/fa';
 import { IoIosNotificationsOutline } from "react-icons/io";
-import Logo1 from '../../assets/logo/Byway .png';
+import Logo1 from '../../assets/logo/logo copy.png';
 import { Link } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { useState } from 'react';

@@ -17,8 +17,8 @@ const initialState: CourseState = {
   error: null,
 };
 
-const baseUrl = 'https://byway-hoce.onrender.com'; 
-const defaultThumbnail = 'https://placehold.co/150x150/png'; 
+const baseUrl = 'https://byway-hoce.onrender.com'; // API base URL
+const defaultThumbnail = 'https://placehold.co/150x150/png'; // Fallback PNG
 
 export const fetchCourses = createAsyncThunk<Course[]>(
   'courses/fetchCourses',

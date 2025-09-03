@@ -289,24 +289,24 @@ const authSlice = createSlice({
         }
       })
 
-      // logout via API
-      .addCase(logoutUser.fulfilled, (state) => {
-        console.log("Logout fulfilled, clearing state");
-        state.user = null;
-        state.token = null;
-        state.error = null;
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
-      })
-      .addCase(logoutUser.rejected, (state, action) => {
-        // Even if API fails, log out locally
-        console.log("Logout rejected, error:", action.payload);
-        state.user = null;
-        state.token = null;
-        state.error = action.payload as string;
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
-      });
+      // // logout via API
+      // .addCase(logout., (state) => {
+      //   console.log("Logout fulfilled, clearing state");
+      //   state.user = null;
+      //   state.token = null;
+      //   state.error = null;
+      //   localStorage.removeItem("user");
+      //   localStorage.removeItem("token");
+      // })
+      // .addCase(logoutUser.rejected, (state, action) => {
+      //   // Even if API fails, log out locally
+      //   console.log("Logout rejected, error:", action.payload);
+      //   state.user = null;
+      //   state.token = null;
+      //   state.error = action.payload as string;
+      //   localStorage.removeItem("user");
+      //   localStorage.removeItem("token");
+      // });
   },
 });
 

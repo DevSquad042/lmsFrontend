@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
+//import { useSelector } from "react-redux";
 import Header2 from "../Components/shared/Header2";
 import ProfileSidebar from "../Components/shared/ProfileSidebar";
 import Footer from "../Components/Layout/Footer";
@@ -8,7 +9,7 @@ import Pagination from "../Components/Pagination";
 import Filter2 from "../Components/Filters/Filter2";
 import MentorCard from "../Components/cards/MentorCard";
 import "../Styles/TeachersPage.css";
-import type { RootState } from "../store/store"; // ✅ Import RootState
+//import type { RootState } from "../store/store";
 
 export interface Mentor {
   id: string;
@@ -17,6 +18,13 @@ export interface Mentor {
   rating: number;
   students: number;
   image: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  userName: string;
 }
 
 const TeachersPage: React.FC = () => {
@@ -26,29 +34,30 @@ const TeachersPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  // ✅ Typed selector for paidCourses
-  const paidCourses = useSelector(
-    (state: RootState) => state.auth.user?.paidCourses || []
-  );
+  // const paidCourses = useSelector(
+  //   (state: RootState) => state.auth.user?.paidCourses || []
+  // );
 
   useEffect(() => {
     const fetchMentors = async () => {
       try {
         setLoading(true);
-
-        if (paidCourses.length === 0) {
-          setMentors([]);
-          return;
-        }
-
-        // 🔹 Build query string from paidCourses
-        const query = paidCourses.map((id) => `courseId=${id}`).join("&");
-
-        // 🔹 Replace with your actual API endpoint
-        const res = await axios.get(`/api/mentors?${query}`);
-
-        const data = Array.isArray(res.data) ? res.data : res.data.data;
-        setMentors(data || []);
+        const res = await axios.get("https://byway-hoce.onrender.com/api/instructors");
+        console.log("API Response:", res.data); // Debug raw data
+        const data = Array.isArray(res.data) ? res.data : res.data.data || [];
+        const transformedMentors = data.map((instructor: any) => {
+          console.log("Processing instructor:", instructor); // Debug each instructor
+          return {
+            id: instructor._id,
+            name: `${instructor.firstName || ""} ${instructor.lastName || ""}`.trim(),
+            role: instructor.role || "Instructor",
+            rating: 0,
+            students: 0,
+            image: "",
+          } as Mentor;
+        });
+        console.log("Transformed Mentors:", transformedMentors); // Debug transformed data
+        setMentors(transformedMentors);
       } catch (error) {
         console.error("Error fetching mentors:", error);
         setMentors([]);
@@ -58,15 +67,13 @@ const TeachersPage: React.FC = () => {
     };
 
     fetchMentors();
-  }, [paidCourses]);
+  }, []);
 
-  // 🔍 Filter by search query
   const searchedMentors = mentors.filter((mentor) =>
     mentor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     mentor.role.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // 📦 Paginate the filtered mentors
   const totalPages = Math.ceil(searchedMentors.length / itemsPerPage);
   const paginatedMentors = searchedMentors.slice(
     (currentPage - 1) * itemsPerPage,
@@ -92,9 +99,7 @@ const TeachersPage: React.FC = () => {
           />
 
           {loading ? (
-            <p>Loading teachers...</p>
-          ) : paidCourses.length === 0 ? (
-            <p>You haven’t enrolled in any courses yet.</p>
+            <div className="loading-spinner"></div>
           ) : searchedMentors.length === 0 ? (
             <p>No teachers match your search.</p>
           ) : (
@@ -103,7 +108,7 @@ const TeachersPage: React.FC = () => {
                 <MentorCard
                   key={mentor.id}
                   mentor={mentor}
-                  showRating={false}
+                  //showRating={mentor }
                 />
               ))}
             </div>
