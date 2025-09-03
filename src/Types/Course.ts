@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 // src/Types/Course.ts
 
 export interface Section {
+=======
+import type { Key } from "react";
+
+// types/Course.ts
+export interface Course {
+  [x: string]: Key | null | undefined;
+  id: string;
+>>>>>>> 6fa8f2cd470c3974d9f0b8e0ad0df36a7a05c84b
   title: string;
   videoFile: string;
   videoUrl: string;

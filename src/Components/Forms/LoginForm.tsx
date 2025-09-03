@@ -1,15 +1,34 @@
+<<<<<<< HEAD
 import { GoogleLogin } from "@react-oauth/google";
 import React, { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash, FaFacebookF, FaMicrosoft } from "react-icons/fa";
+=======
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState, useEffect } from "react";
+>>>>>>> 6fa8f2cd470c3974d9f0b8e0ad0df36a7a05c84b
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import LoginImage from "../../assets/Images/login-image.png";
 import type { AppDispatch, RootState } from "../../store";
+<<<<<<< HEAD
 import { googleLogin, loginUser } from "../../store/slices/authSlice";
 import Header1 from "../shared/Header1";
 import styles from "./FormStyles/LoginForm.module.css";
 import styles2 from "./FormStyles/register.module.css";
+=======
+import { loginUser } from "../../store/slices/authSlice";
+import { useNavigate, Link } from "react-router-dom";
+import styles from "./FormStyles/LoginForm.module.css";
+import styles2 from "./FormStyles/register.module.css";
+import { FaFacebookF, FaMicrosoft, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import Header1 from "../shared/Header1";
+import LoginImage from "../../assets/Images/login-image.png";
+import { useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
+import { toast } from "react-toastify";
+>>>>>>> 6fa8f2cd470c3974d9f0b8e0ad0df36a7a05c84b
 
 const LoginForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -36,6 +55,7 @@ const LoginForm: React.FC = () => {
     try {
       const result = await dispatch(loginUser({ email, password })).unwrap();
       console.log("Login result:", result); // Debug log
+<<<<<<< HEAD
     } catch (err) {
        if (err instanceof Error) {
          const errorMessage = err.message || "Account not found. Please register first or check your credentials.";
@@ -46,12 +66,19 @@ const LoginForm: React.FC = () => {
         toast.error("An unknown error occurred");
       }
     
+=======
+    } catch (err: any) {
+      const errorMessage = err || "Account not found. Please register first or check your credentials.";
+      setLoginError(errorMessage);
+      toast.error(errorMessage);
+>>>>>>> 6fa8f2cd470c3974d9f0b8e0ad0df36a7a05c84b
     }
   };
 
   const handleFacebookLogin = () => console.log("Facebook login clicked");
   const handleMicrosoftLogin = () => console.log("Microsoft login clicked");
 
+<<<<<<< HEAD
   // const googleLogin = useGoogleLogin({
   //   onSuccess: async (tokenResponse) => {
   //     try {
@@ -74,6 +101,30 @@ const LoginForm: React.FC = () => {
   //     toast.error("Google sign-in failed. Try again.");
   //   },
   // });
+=======
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        const res = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
+          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+        });
+        console.log("Google User:", res.data);
+        const result = await dispatch(googleLogin(res.data.sub)).unwrap();
+        console.log("Google login result:", result);
+        toast.success("Google login successful!");
+      } catch (error) {
+        console.error("Google login failed", error);
+        setLoginError("Google sign-in failed. Try again.");
+        toast.error("Google sign-in failed. Try again.");
+      }
+    },
+    onError: () => {
+      console.log("Google Login Failed");
+      setLoginError("Google sign-in failed. Try again.");
+      toast.error("Google sign-in failed. Try again.");
+    },
+  });
+>>>>>>> 6fa8f2cd470c3974d9f0b8e0ad0df36a7a05c84b
 
   return (
     <>

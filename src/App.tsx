@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 
+=======
+/* eslint-disable react-hooks/exhaustive-deps */
+>>>>>>> 6fa8f2cd470c3974d9f0b8e0ad0df36a7a05c84b
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Routes, Route } from "react-router-dom";
@@ -31,7 +35,11 @@ import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "./Components/ProtectedRoute";
 
 // ✅ Redux Slice
+<<<<<<< HEAD
 import {  setUser } from "./store/slices/authSlice";
+=======
+import { loginUser } from "./store/slices/authSlice";
+>>>>>>> 6fa8f2cd470c3974d9f0b8e0ad0df36a7a05c84b
 
 function App() {
   const dispatch = useDispatch();
@@ -41,7 +49,11 @@ function App() {
     const userData = localStorage.getItem("user");
 
     if (token && userData) {
+<<<<<<< HEAD
       dispatch(setUser(JSON.parse(userData)));
+=======
+      dispatch(loginUser(JSON.parse(userData)));
+>>>>>>> 6fa8f2cd470c3974d9f0b8e0ad0df36a7a05c84b
     }
   }, [dispatch]); 
 

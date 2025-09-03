@@ -13,7 +13,10 @@ import OrderSummaryCard from "../Components/cards/OrderSummaryCard";
 import "../styles/CartPage.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+<<<<<<< HEAD
 import { courseData } from "../data/coursedata";
+=======
+>>>>>>> 6fa8f2cd470c3974d9f0b8e0ad0df36a7a05c84b
 
 
 
@@ -36,7 +39,11 @@ const CartPage: React.FC = () => {
   const tax = (price + discount) * 0.1;
   const total = price + discount + tax;
 
+<<<<<<< HEAD
 
+=======
+  // Function to handle adding item to cart via API
+>>>>>>> 6fa8f2cd470c3974d9f0b8e0ad0df36a7a05c84b
   const handleAddToCart = async (courseId: string) => {
     try {
       const response = await axios.post(
@@ -45,19 +52,32 @@ const CartPage: React.FC = () => {
         {
           headers: {
             "Content-Type": "application/json",
+<<<<<<< HEAD
          
+=======
+            // Add authorization header if required (e.g., JWT token)
+            // Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+>>>>>>> 6fa8f2cd470c3974d9f0b8e0ad0df36a7a05c84b
           },
         }
       );
 
       if (response.status === 200 || response.status === 201) {
+<<<<<<< HEAD
       
+=======
+        // ✅ Fixed syntax: Properly dispatch the moveToCart action
+>>>>>>> 6fa8f2cd470c3974d9f0b8e0ad0df36a7a05c84b
         dispatch(moveToCart(courseId));
         console.log("Course added to cart successfully:", response.data);
       }
     } catch (error) {
       console.error("Error adding course to cart:", error);
+<<<<<<< HEAD
    
+=======
+      // Show user-friendly error message
+>>>>>>> 6fa8f2cd470c3974d9f0b8e0ad0df36a7a05c84b
       alert("Failed to add course to cart. Please try again.");
     }
   };
@@ -66,7 +86,11 @@ const CartPage: React.FC = () => {
     <div className="shopping-cart-page">
       <Header />
 
+<<<<<<< HEAD
     
+=======
+      {/* Breadcrumb and Title */}
+>>>>>>> 6fa8f2cd470c3974d9f0b8e0ad0df36a7a05c84b
       <div className="breadcrumb-container">
         <h1 className="cart-title">Shopping Cart</h1>
         <nav className="breadcrumb-nav">
@@ -74,7 +98,11 @@ const CartPage: React.FC = () => {
             Categories
           </Link>{" "}
           ›{" "}
+<<<<<<< HEAD
           <Link to={`/courses/${courseData.id}`} className="breadcrumb-link">
+=======
+          <Link to="/details" className="breadcrumb-link">
+>>>>>>> 6fa8f2cd470c3974d9f0b8e0ad0df36a7a05c84b
             Details
           </Link>{" "}
           › <span className="breadcrumb-current">Shopping Cart</span>
