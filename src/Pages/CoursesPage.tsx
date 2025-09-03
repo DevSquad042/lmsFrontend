@@ -80,7 +80,7 @@ const CoursesPages = () => {
             <>
               <div className="courses-grid">
                 {paginatedCourses.map((course) => (
-                  <CourseCard key={course.id} course={course} />
+                  <CourseCard key={course._id} course={course} />
                 ))}
               </div>
 

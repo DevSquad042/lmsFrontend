@@ -1,5 +1,5 @@
 export interface Mentor {
-  [x: string]: ReactNode;
+  //[x: string]: React.ReactNode;
   id: string; 
   firstName: string; 
   lastName: string; 
