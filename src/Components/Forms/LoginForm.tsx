@@ -9,11 +9,11 @@ import { loginUser } from "../../store/slices/authSlice";
 import styles from "./FormStyles/LoginForm.module.css";
 import styles2 from "./FormStyles/register.module.css";
 import { FaFacebookF, FaMicrosoft, FaEye, FaEyeSlash } from "react-icons/fa";
-// import { FcGoogle } from "react-icons/fc";
 import Header1 from "../shared/Header1";
 import LoginImage from "../../assets/Images/login-image.png";
- import { useGoogleLogin } from "@react-oauth/google";
- import axios from "axios";
+
+import { GoogleLogin, type CredentialResponse } from "@react-oauth/google";
+import axios from "axios";
 import { toast } from "react-toastify";
 
 const LoginForm: React.FC = () => {
@@ -28,7 +28,7 @@ const LoginForm: React.FC = () => {
 
   useEffect(() => {
     if (user && token) {
-      console.log("User and token after login:", { user, token }); // Debug log
+      console.log("User and token after login:", { user, token });
       toast.success("Login successful!");
       navigate("/profile1");
     }
@@ -40,39 +40,55 @@ const LoginForm: React.FC = () => {
 
     try {
       const result = await dispatch(loginUser({ email, password })).unwrap();
-      console.log("Login result:", result); // Debug log
+      console.log("Login result:", result);
     } catch (err: any) {
-      const errorMessage = err || "Account not found. Please register first or check your credentials.";
+      const errorMessage =
+        err || "Account not found. Please register first or check your credentials.";
       setLoginError(errorMessage);
       toast.error(errorMessage);
     }
   };
 
-  const handleFacebookLogin = () => console.log("Facebook login clicked");
-  const handleMicrosoftLogin = () => console.log("Microsoft login clicked");
+  const handleFacebookLogin = () => {
+    console.log("Facebook login clicked");
+  };
 
-  const googleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      try {
-        const res = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
-          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
-        });
-        console.log("Google User:", res.data);
-        const result = await dispatch(googleLogin(res.data.sub)).unwrap();
-        console.log("Google login result:", result);
-        toast.success("Google login successful!");
-      } catch (error) {
-        console.error("Google login failed", error);
-        setLoginError("Google sign-in failed. Try again.");
-        toast.error("Google sign-in failed. Try again.");
+  const handleMicrosoftLogin = () => {
+    console.log("Microsoft login clicked");
+  };
+
+  const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+    try {
+      if (!credentialResponse.credential) {
+        throw new Error("No credential returned from Google");
       }
-    },
-    onError: () => {
-      console.log("Google Login Failed");
+
+      // Send the Google credential (JWT) to your backend
+      const res = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
+        headers: { Authorization: `Bearer ${credentialResponse.credential}` },
+      });
+
+      console.log("Google User:", res.data);
+
+      // Example: dispatch authSlice action with google user id
+      const result = await dispatch(loginUser({
+        email: res.data.email,
+        password: ""
+      })).unwrap();
+
+      console.log("Google login result:", result);
+      toast.success("Google login successful!");
+    } catch (error) {
+      console.error("Google login failed", error);
       setLoginError("Google sign-in failed. Try again.");
       toast.error("Google sign-in failed. Try again.");
-    },
-  });
+    }
+  };
+
+  const handleGoogleError = () => {
+    setLoginError("Google sign-in failed");
+    toast.error("Google sign-in failed");
+  };
 
   return (
     <>
@@ -84,7 +100,11 @@ const LoginForm: React.FC = () => {
           {loginError && (
             <p className={styles.error}>
               {loginError}{" "}
-              <Link to="/register" className={styles2.plainLink} style={{ marginLeft: 8 }}>
+              <Link
+                to="/register"
+                className={styles2.plainLink}
+                style={{ marginLeft: 8 }}
+              >
                 Create Account
               </Link>
             </p>
@@ -151,20 +171,9 @@ const LoginForm: React.FC = () => {
             >
               <FaFacebookF /> Facebook
             </button>
-            {/* <button
-              type="button"
-              onClick={() => googleLogin()}
-              className={`${styles.socialBtn} ${styles.google}`}
-            >
-              <FcGoogle /> Google
-            </button> */}
-            <GoogleLogin
-              onSuccess={(credentialResponse) => googleLogin(credentialResponse.credential ?? "")}
-              onError={() => {
-                setLoginError("Google sign-in failed");
-                toast.error("Google sign-in failed");
-              }}
-            />
+
+            <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleError} />
+
             <button
               type="button"
               onClick={handleMicrosoftLogin}
