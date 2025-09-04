@@ -4,7 +4,7 @@ import { FaStar } from "react-icons/fa";
 //import type { AppDispatch } from "../store/index";
 //import { patchMentorRating } from '../store/slices/mentorSlice';
 import type { Mentor } from "../Types/Mentor";
-import styles from "../Styles/MentorReviews.module.css";
+import styles from "../Components/ComponentStyles/MentorReviews.module.css";
 
 interface Props {
   mentor: Mentor;
