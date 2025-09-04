@@ -16,22 +16,44 @@ const CourseSidebar: React.FC<{ course: Course }> = ({ course }) => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
 
   const handleAddToCart = () => {
-    const alreadyInCart = cartItems.some((item) => item.id === course.id);
+    const alreadyInCart = cartItems.some((item) => item.id === course._id);
 
     if (alreadyInCart) {
       toast.info("✅ This course is already in your cart.");
     } else {
       // The `addToCart` action needs to be defined in your cartSlice
-      dispatch(addToCart(course));
+      dispatch(
+        addToCart({
+          id: course._id,
+          title: course.title,
+          price: Number(course.discountedPrice),
+          image: course.thumbnail,
+          instructor: course.instructor,
+          rating: course.rating,
+          lectures: course.lectures,
+          level: course.level,
+        })
+      );
       toast.success("🎉 Course added to cart!");
     }
   };
 
   const handleBuyNow = () => {
-    const alreadyInCart = cartItems.some((item) => item.id === course.id);
+    const alreadyInCart = cartItems.some((item) => item.id === course._id);
 
     if (!alreadyInCart) {
-      dispatch(addToCart(course));
+      dispatch(
+        addToCart({
+          id: course._id,
+          title: course.title,
+          price: Number(course.discountedPrice),
+          image: course.thumbnail,
+          instructor: course.instructor,
+          rating: course.rating,
+          lectures: course.lectures,
+          level: course.level,
+        })
+      );
     }
     navigate("/cart");
   };
@@ -49,10 +71,14 @@ const CourseSidebar: React.FC<{ course: Course }> = ({ course }) => {
         {/* Price Section */}
         <div className={styles.priceSection}>
           <div className={styles.priceContainer}>
-            <span className={styles.currentPrice}>${course.price}</span>
-            <span className={styles.originalPrice}>${course.originalPrice}</span>
+            <span className={styles.currentPrice}>
+              ${course.discountedPrice}
+            </span>
+            <span className={styles.originalPrice}>${course.price}</span>
           </div>
-          <span className={styles.discountBadge}>{course.discount}% Off</span>
+          <span className={styles.discountBadge}>
+            {course.discountPercentage}% Off
+          </span>
         </div>
 
         {/* Action Buttons */}
@@ -69,19 +95,39 @@ const CourseSidebar: React.FC<{ course: Course }> = ({ course }) => {
             <span className={styles.shareLabel}>Share</span>
             <div className={styles.socialIcons}>
               <div className={styles.Icons}>
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <FaFacebook className="icon" />
                 </a>
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://github.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <FaGithub className="icon" />
                 </a>
-                <a href="https://google.com" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://google.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <FcGoogle className="icon" />
                 </a>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <FaXTwitter className="icon" />
                 </a>
-                <a href="https://microsoft.com" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://microsoft.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <FaMicrosoft className="icon" />
                 </a>
               </div>

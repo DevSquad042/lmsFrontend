@@ -1,5 +1,5 @@
-import type { Mentor } from '../Types/Mentor';
-import mentorImg from '../assets/Images/mentor.jpg';
+import type { Mentor } from "../Types/Mentor";
+import mentorImg from "../assets/Images/mentor.jpg";
 
 /**
  * ISSUES FIXED:
@@ -9,53 +9,59 @@ import mentorImg from '../assets/Images/mentor.jpg';
  */
 export const mentors: Mentor[] = [
   {
-    id: 'mentor-1',
-    name: 'Ronald Richards',
-    role: 'UI/UX Designer',
+    id: "mentor-1",
+    firstName: "Ronald",
+    lastName: "Richards",
+    profession: "UI/UX Designer",
     rating: 4.9,
-    students: 2400,
-    image: mentorImg
+    studentsCount: 2400,
+    image: mentorImg,
   },
   {
-    id: 'mentor-2',
-    name: 'Sarah Johnson',
-    role: 'Frontend Developer',
-    rating: 4.8,
-    students: 1900,
-    image: mentorImg
-  },
-  {
-    id: 'mentor-3',
-    name: 'Michael Chen',
-    role: 'Full Stack Developer',
-    rating: 4.7,
-    students: 3200,
-    image: mentorImg
-  },
-  {
-    id: 'mentor-4',
-    name: 'Emily Davis',
-    role: 'Product Designer',
+    id: "mentor-2",
+    firstName: "Ronald",
+    lastName: "Richards",
+    profession: "UI/UX Designer",
     rating: 4.9,
-    students: 2100,
-    image: mentorImg
+    studentsCount: 2400,
+    image: mentorImg,
   },
   {
-    id: 'mentor-5',
-    name: 'Alex Thompson',
-    role: 'Mobile Developer',
-    rating: 4.6,
-    students: 1700,
-    image: mentorImg
+    id: "mentor-3",
+    firstName: "Ronald",
+    lastName: "Richards",
+    profession: "UI/UX Designer",
+    rating: 4.9,
+    studentsCount: 2400,
+    image: mentorImg,
   },
   {
-    id: 'mentor-6',
-    name: 'Lisa Wang',
-    role: 'Data Scientist',
-    rating: 4.8,
-    students: 2800,
-    image: mentorImg
-  }
+    id: "mentor-4",
+    firstName: "Ronald",
+    lastName: "Richards",
+    profession: "UI/UX Designer",
+    rating: 4.9,
+    studentsCount: 2400,
+    image: mentorImg,
+  },
+  {
+    id: "mentor-5",
+    firstName: "Ronald",
+    lastName: "Richards",
+    profession: "UI/UX Designer",
+    rating: 4.9,
+    studentsCount: 2400,
+    image: mentorImg,
+  },
+  {
+    id: "mentor-6",
+    firstName: "Ronald",
+    lastName: "Richards",
+    profession: "UI/UX Designer",
+    rating: 4.9,
+    studentsCount: 2400,
+    image: mentorImg,
+  },
 ];
 
 export default mentors;

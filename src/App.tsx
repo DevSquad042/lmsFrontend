@@ -1,7 +1,7 @@
-
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Routes, Route } from "react-router-dom";
+//import SearchResultsPage from "./Components/SearchResultPage";
 
 // ✅ Pages and Components
 import Home from "./Pages/Home";
@@ -9,7 +9,6 @@ import LoginForm from "./Components/Forms/LoginForm";
 import Register from "./Components/Forms/RegisterForm";
 import CategoryPage from "./Pages/CategoryPage";
 import CheckoutPage from "./Pages/Checkout";
-import CourseDetailPage from "./Pages/CourseDetailsPage";
 import CoursesPages from "./Pages/CoursesPage";
 import InstructorDetailPage from "./Pages/InstructorsDetailsPage";
 import MessaagesPage from "./Pages/MessagesPage";
@@ -32,10 +31,8 @@ import ProtectedRoute from "./Components/ProtectedRoute";
 
 // ✅ Redux Slice
 
-import {  setUser } from "./store/slices/authSlice";
-
-
-
+import { setUser } from "./store/slices/authSlice";
+//import { selectSearchResults } from "./store/slices/coursesSlice";
 
 function App() {
   const dispatch = useDispatch();
@@ -45,11 +42,9 @@ function App() {
     const userData = localStorage.getItem("user");
 
     if (token && userData) {
-
       dispatch(setUser(JSON.parse(userData)));
-
     }
-  }, [dispatch]); 
+  }, [dispatch]);
 
   return (
     <>
@@ -59,8 +54,9 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/categories" element={<CategoryPage />} />
-        <Route path="/courses/:id" element={<CourseDetailPage />} />
+        {/* <Route path="/courses/:id" element={<CourseDetailPage />} /> */}
         <Route path="/teacher/:id" element={<InstructorDetailPage />} />
+        {/* <Route path="/search" element={<SearchResultsPage />} /> */}
 
         {/* Protected Routes */}
         <Route
@@ -103,7 +99,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-      
+
         <Route
           path="/profile2"
           element={
@@ -113,7 +109,7 @@ function App() {
           }
         />
 
-          <Route
+        <Route
           path="/profile2/:id"
           element={
             <ProtectedRoute>
@@ -121,7 +117,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        
+
         <Route
           path="/profile3"
           element={
@@ -160,16 +156,13 @@ function App() {
       </Routes>
 
       {/* ✅ Toast container */}
-      <ToastContainer position="top-right" autoClose={2000} pauseOnHover={false} />
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        pauseOnHover={false}
+      />
     </>
   );
 }
 
 export default App;
-
-
-
-
-
-
-

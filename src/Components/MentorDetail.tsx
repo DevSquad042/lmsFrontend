@@ -1,7 +1,7 @@
-import React from 'react';
-import { FaStar } from 'react-icons/fa';
-import type { Mentor } from '../Types/Mentor';
-import styles from './ComponentStyles/MentorDetails.module.css';
+import React from "react";
+import { FaStar } from "react-icons/fa";
+import type { Mentor } from "../Types/Mentor";
+import styles from "./ComponentStyles/MentorDetails.module.css";
 
 interface Props {
   mentor: Mentor;
@@ -21,17 +21,28 @@ const MentorDetails: React.FC<Props> = ({ mentor }) => {
       </div>
       <div className={styles.infoWrapper}>
         <h1 className={styles.name}>{mentor.name}</h1>
-        <p className={styles.role}>{mentor.role}</p>
+        <p className={styles.role}>{mentor.profession}</p>
         <div className={styles.rating}>
           <FaStar className={styles.starIcon} />
           <span className={styles.ratingValue}>{safeRating.toFixed(1)}</span>
         </div>
         <div className={styles.reviewCount}>
-          <span className={styles.reviewText}>{mentor.reviews.length} reviews</span>
+          <span className={styles.reviewText}>
+            {mentor.studentsCount} reviews
+          </span>
         </div>
         <p className={styles.bio}>{mentor.bio}</p>
         <div className={styles.portfolio}>
-          <p>Portfolio: <a href={mentor.portfolio} target="_blank" rel="noopener noreferrer">{mentor.portfolio}</a></p>
+          <p>
+            Portfolio:{" "}
+            <a
+              href={mentor.portfolio}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {mentor.portfolio}
+            </a>
+          </p>
         </div>
       </div>
     </div>
