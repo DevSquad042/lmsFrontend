@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "../store";
+import type { RootState, AppDispatch } from "../store";
 import { addReview } from "../store/slices/reviewsSlice";
 import { StarIcon } from "./StarIcon";
 
@@ -73,7 +73,7 @@ const ReviewSection: React.FC = () => {
       <ul>
         {reviews.map((r) => (
           <li key={r.userId} style={{ marginBottom: "10px" }}>
-            <strong>{r.userName}</strong> - {r.rating}⭐
+            <strong>User {r.userId}</strong> - {r.rating}⭐
             <p>{r.comment}</p>
           </li>
         ))}

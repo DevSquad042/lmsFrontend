@@ -21,8 +21,11 @@ export async function postReview(courseId: string, payload: { user: string; rati
       headers: { "Content-Type": "application/json" },
     });
     return data;
-  } catch (err: any) {
-    throw new Error(err.response?.data?.message || "Failed to post review");
+  } catch (err) {
+    if (err instanceof Error) {
+      throw new Error("Error posting review:" + err.message);
+    }
+   else throw new Error("Failed to post review");
   }
 }
 

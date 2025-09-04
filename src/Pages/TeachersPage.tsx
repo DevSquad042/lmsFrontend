@@ -1,71 +1,60 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+// import { useSelector } from "react-redux";
 import Header2 from "../Components/shared/Header2";
 import ProfileSidebar from "../Components/shared/ProfileSidebar";
 import Footer from "../Components/Layout/Footer";
 import Pagination from "../Components/Pagination";
 import Filter2 from "../Components/Filters/Filter2";
 import MentorCard from "../Components/cards/MentorCard";
-import "../Styles/TeachersPage.css";
 import type { Mentor } from "../Types/Mentor";
+import "../Styles/TeachersPage.css";
+// import type { RootState } from "../store/store";
 
+// ---------- Component ----------
 const TeachersPage: React.FC = () => {
   const [mentors, setMentors] = useState<Mentor[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 6;
+
+  // const paidCourses = useSelector(
+  //   (state: RootState) => state.auth.user?.paidCourses || []
+  // );
 
   useEffect(() => {
     const fetchMentors = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:3000/api/instructors", {
-          headers: {
-            Authorization: token ? `Bearer ${token}` : '',
-          },
-        });
-        console.log("API Response:", res.data); // Debug raw data
+        const res = await axios.get("https://byway-hoce.onrender.com/api/instructors");
 
-        let data = [];
-        if (Array.isArray(res.data)) {
-          data = res.data;
-        } else if (res.data && typeof res.data === 'object') {
-          // Handle different response structures
-          if (res.data.data && Array.isArray(res.data.data)) {
-            data = res.data.data;
-          } else if (res.data.instructors && Array.isArray(res.data.instructors)) {
-            data = res.data.instructors;
-          } else if (res.data.items && Array.isArray(res.data.items)) {
-            data = res.data.items;
-          }
-        }
+        console.log("API Response:", res.data);
 
-        console.log("Extracted data array:", data);
+        // handle if response is wrapped inside "data"
+        const data = Array.isArray(res.data) ? res.data : res.data.data || [];
 
-        const transformedMentors = data.map((instructor: any) => {
-          console.log("Processing instructor:", instructor); // Debug each instructor
+        const transformedMentors: Mentor[] = data.map((instructor: any) => {
+          console.log("Processing instructor:", instructor);
+
           return {
-            id: instructor._id || instructor.id,
-            firstName: instructor.firstName || instructor.firstName || "",
-            lastName: instructor.lastName || instructor.lastName || "",
-            email: instructor.email || "",
-            userName: instructor.userName || instructor.username || "",
-            createdAt: instructor.createdAt || new Date().toISOString(),
-            updatedAt: instructor.updatedAt || new Date().toISOString(),
-            __v: instructor.__v || 0,
-            name: `${instructor.firstName || ""} ${instructor.lastName || ""}`.trim() || instructor.name || 'Unknown Instructor',
-            rating: instructor.rating || 0,
-            reviews: instructor.reviews || [],
-            bio: instructor.bio || instructor.role || "Instructor",
-            portfolio: instructor.portfolio || "",
-            image: instructor.image || instructor.profilePicture || instructor.avatar || "",
-          } as Mentor;
+            id: instructor._id,
+            name: `${instructor.firstName || ""} ${instructor.lastName || ""}`.trim(),
+            profession: instructor.role || "Instructor",
+            rating: instructor.rating ?? 0,
+            studentsCount: instructor.studentsCount ?? 0,
+            image: instructor.image || "",
+            firstName: instructor.firstName,
+            lastName: instructor.lastName,
+            email: instructor.email,
+            createdAt: instructor.createdAt,
+            updatedAt: instructor.updatedAt,
+            __v: instructor.__v,
+            userName: instructor.userName,
+          };
         });
 
-        console.log("Transformed Mentors:", transformedMentors); // Debug transformed data
         setMentors(transformedMentors);
       } catch (error) {
         console.error("Error fetching mentors:", error);
@@ -78,13 +67,14 @@ const TeachersPage: React.FC = () => {
     fetchMentors();
   }, []);
 
-  const searchedMentors = mentors.filter((mentor) =>
-    (mentor.name?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false) ||
-    (mentor.bio?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false) ||
-    (`${mentor.firstName} ${mentor.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()))
+  const searchedMentors = mentors.filter(
+    (mentor) =>
+      (mentor.name?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false) ||
+      (mentor.profession?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
   );
 
   const totalPages = Math.ceil(searchedMentors.length / itemsPerPage);
+
   const paginatedMentors = searchedMentors.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -104,7 +94,7 @@ const TeachersPage: React.FC = () => {
             searchQuery={searchQuery}
             setSearchQuery={(query: string) => {
               setSearchQuery(query);
-              setCurrentPage(1);
+              setCurrentPage(1); 
             }}
           />
 
@@ -115,10 +105,7 @@ const TeachersPage: React.FC = () => {
           ) : (
             <div className="teachers-div">
               {paginatedMentors.map((mentor) => (
-                <MentorCard
-                  key={mentor.id}
-                  mentor={mentor}
-                />
+                <MentorCard key={mentor.id} mentor={mentor} />
               ))}
             </div>
           )}

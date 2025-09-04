@@ -1,12 +1,13 @@
-// src/Types/Course.ts
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 
 export interface Section {
-  [x: string]: any;
   title: string;
-  videoFile: string;
-  videoUrl: string;
-  pdf: string;
-  _id: string;
+        videoFile: string;
+        videoUrl: string;
+        pdf: string;
+        _id: string;
+        isPreview: boolean;
 }
 
 export type CourseLevel = 'Beginner' | 'Intermediate' | 'Advanced';
@@ -21,6 +22,7 @@ export interface Review {
 }
 
 export interface Course {
+  id: any;
   _id: string;
   title: string;
   description: string;

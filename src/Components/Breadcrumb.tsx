@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import styles from "./ComponentStyles/Breadcrumb.module.css";
 
 interface BreadcrumbLink {
-  label: string;
+  label?: string;
   path: string;
 }
 

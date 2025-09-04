@@ -2,8 +2,9 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
 
 /** ===== Types ===== */
-interface User {
+export interface User {
   id: string;
+  _id?: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -20,11 +21,20 @@ interface User {
   profilePicture?: string;
 }
 
-interface AuthState {
+export interface AuthState {
+  userId: string;
   user: User | null;
   token: string | null;
   loading: boolean;
   error: string | null;
+}
+
+interface AuthResponse {
+  user: User;
+  token?: string;
+  accessToken?: string;
+  message?: string;
+  error?: string;
 }
 
 /** ===== Initial State (rehydrate from localStorage) ===== */
@@ -32,10 +42,11 @@ const savedUser = localStorage.getItem("user");
 const savedToken = localStorage.getItem("token");
 
 const initialState: AuthState = {
-  user: savedUser ? JSON.parse(savedUser) : null,
+  user: savedUser ? (JSON.parse(savedUser) as User) : null,
   token: savedToken || null,
   loading: false,
   error: null,
+  userId: ""
 };
 
 /** ===== Helpers ===== */
@@ -64,7 +75,7 @@ export const loginUser = createAsyncThunk<
     });
 
     const text = await res.text();
-    let data: any;
+    let data: AuthResponse;
     try {
       data = JSON.parse(text);
     } catch {
@@ -77,13 +88,33 @@ export const loginUser = createAsyncThunk<
     if (!data.user) return rejectWithValue("No user data in response");
     if (!data.token && !data.accessToken) return rejectWithValue("No token or accessToken in response");
 
-    const token: string = data.token || data.accessToken;
+    const token: string = data.token || data.accessToken!;
     if (!data.user.paidCourses) data.user.paidCourses = [];
 
-    localStorage.setItem("user", JSON.stringify(data.user));
+    // Transform backend user object to match frontend User interface
+    const transformedUser: User = {
+      id: data.user._id || data.user.id,
+      _id: data.user._id,
+      firstName: data.user.firstName,
+      lastName: data.user.lastName,
+      email: data.user.email,
+      userName: data.user.userName,
+      role: data.user.role || "student",
+      paidCourses: data.user.paidCourses || [],
+      headline: data.user.headline,
+      description: data.user.description,
+      linkedin: data.user.linkedin,
+      youtube: data.user.youtube,
+      facebook: data.user.facebook,
+      website: data.user.website,
+      x: data.user.x,
+      profilePicture: data.user.profilePicture,
+    };
+
+    localStorage.setItem("user", JSON.stringify(transformedUser));
     localStorage.setItem("token", token);
 
-    return { user: data.user as User, token };
+    return { user: transformedUser, token };
   } catch (err: any) {
     return rejectWithValue(err.message || "Login failed");
   }
@@ -103,7 +134,7 @@ export const registerUser = createAsyncThunk<
     });
 
     const text = await res.text();
-    let data: any;
+    let data: AuthResponse;
     try {
       data = JSON.parse(text);
     } catch {
@@ -142,7 +173,7 @@ export const registerUser = createAsyncThunk<
     if (!data.user && res.ok) {
       // Create a minimal user object from the payload
       const user: User = {
-        id: data.id || payload.email, // Use email as temporary ID if no ID provided
+        id: payload.email, // Use email as temporary ID
         firstName: payload.firstName,
         lastName: payload.lastName,
         email: payload.email,
@@ -174,7 +205,7 @@ export const registerUser = createAsyncThunk<
       profilePicture: data.user.profilePicture,
     };
 
-    const token: string | undefined = data.token || data.accessToken;
+    const token: string | undefined = data.token || data.accessToken || undefined;
 
     // Store data if token is available
     if (token) {
@@ -195,14 +226,15 @@ export const googleLogin = createAsyncThunk<
   { rejectValue: string }
 >("auth/googleLogin", async (credential, { rejectWithValue }) => {
   try {
+    const payload = { token: credential };
     const res = await fetch(`${API_BASE}/auth/google`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token: credential }),
+      body: JSON.stringify(payload),
     });
 
     const text = await res.text();
-    let data: any;
+    let data: AuthResponse;
     try {
       data = JSON.parse(text);
     } catch {
@@ -215,60 +247,92 @@ export const googleLogin = createAsyncThunk<
     if (!data.user) return rejectWithValue("No user data in response");
     if (!data.token && !data.accessToken) return rejectWithValue("No token or accessToken in response");
 
-    const token: string = data.token || data.accessToken;
+    const token: string = data.token || data.accessToken!;
     if (!data.user.paidCourses) data.user.paidCourses = [];
 
-    localStorage.setItem("user", JSON.stringify(data.user));
+    // Transform backend user object to match frontend User interface
+    const transformedUser: User = {
+      id: data.user._id || data.user.id,
+      _id: data.user._id,
+      firstName: data.user.firstName,
+      lastName: data.user.lastName,
+      email: data.user.email,
+      userName: data.user.userName,
+      role: data.user.role || "student",
+      paidCourses: data.user.paidCourses || [],
+      headline: data.user.headline,
+      description: data.user.description,
+      linkedin: data.user.linkedin,
+      youtube: data.user.youtube,
+      facebook: data.user.facebook,
+      website: data.user.website,
+      x: data.user.x,
+      profilePicture: data.user.profilePicture,
+    };
+
+    localStorage.setItem("user", JSON.stringify(transformedUser));
     localStorage.setItem("token", token);
 
-    return { user: data.user as User, token };
+    return { user: transformedUser, token };
   } catch (err: any) {
     return rejectWithValue(err.message || "Google login failed");
   }
 });
 
-// Fetch paid courses separately
+// Fetch paid courses
 export const fetchPaidCourses = createAsyncThunk<string[], string, { rejectValue: string }>(
   "auth/fetchPaidCourses",
   async (userId, { rejectWithValue }) => {
     try {
       const res = await fetch(`${API_BASE}/users/${userId}/courses`);
       const text = await res.text();
-      let data: any;
+
+      let data: { paidCourses?: string[] };
       try {
         data = JSON.parse(text);
       } catch {
         return rejectWithValue(`Invalid JSON response: ${text}`);
       }
 
-      return (data.paidCourses as string[]) || [];
+      return data.paidCourses || [];
     } catch {
       return rejectWithValue("Failed to fetch paid courses");
     }
   }
 );
 
-// Logout (hits API but always clears local state even if API fails)
+// Logout
 export const logoutUser = createAsyncThunk<void, void, { rejectValue: string }>(
   "auth/logoutUser",
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token") || "";
-      console.log("Token:", token);
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
       const res = await fetch(`${API_BASE}/auth/logout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          Authorization: `Bearer ${token}`,
         },
       });
 
-      if (!res.ok) {
-        const text = await res.text();
-        return rejectWithValue(`Logout failed: ${text}`);
+      const text = await res.text();
+      let data: { message?: string };
+      try {
+        data = JSON.parse(text);
+      } catch {
+        return rejectWithValue(`Invalid JSON response: ${text}`);
       }
+
+      if (!res.ok) {
+        return rejectWithValue(data.message || `Logout failed with status ${res.status}`);
+      }
+
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
     } catch (err: any) {
-      return rejectWithValue(err.message || "Logout request failed");
+      return rejectWithValue(err.message || "Logout failed");
     }
   }
 );
@@ -278,7 +342,6 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    // Optional: local-only logout (force clear without hitting API)
     logout(state) {
       state.user = null;
       state.token = null;
@@ -299,87 +362,71 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // login
+      // Login
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(
-        loginUser.fulfilled,
-        (state, action: PayloadAction<{ user: User; token: string }>) => {
-          state.loading = false;
-          state.user = action.payload.user;
-          state.token = action.payload.token;
-        }
-      )
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+      })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = (action.payload as string) || "Login failed";
+        state.error = action.payload || "Login failed";
       })
-
-      // register
+      // Register
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(
-        registerUser.fulfilled,
-        (state, action: PayloadAction<{ user: User; token?: string }>) => {
-          state.loading = false;
-          state.user = action.payload.user;
-          if (action.payload.token) {
-            state.token = action.payload.token;
-          }
-        }
-      )
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.token = action.payload.token || null;
+      })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = (action.payload as string) || "Registration failed";
+        state.error = action.payload || "Registration failed";
       })
-
-      // google login
+      // Google Login
       .addCase(googleLogin.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(
-        googleLogin.fulfilled,
-        (state, action: PayloadAction<{ user: User; token: string }>) => {
-          state.loading = false;
-          state.user = action.payload.user;
-          state.token = action.payload.token;
-        }
-      )
+      .addCase(googleLogin.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+      })
       .addCase(googleLogin.rejected, (state, action) => {
         state.loading = false;
-        state.error = (action.payload as string) || "Google login failed";
+        state.error = action.payload || "Google login failed";
       })
-
-      // fetch paid courses
-      .addCase(fetchPaidCourses.fulfilled, (state, action: PayloadAction<string[]>) => {
+      // Fetch Paid Courses
+      .addCase(fetchPaidCourses.fulfilled, (state, action) => {
         if (state.user) {
           state.user.paidCourses = action.payload;
           localStorage.setItem("user", JSON.stringify(state.user));
         }
       })
-
-      // logout via API
+      // Logout
+      .addCase(logoutUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(logoutUser.fulfilled, (state) => {
-        console.log("Logout fulfilled, clearing state");
+        state.loading = false;
         state.user = null;
         state.token = null;
         state.error = null;
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
       })
       .addCase(logoutUser.rejected, (state, action) => {
-        // Even if API fails, log out locally
-        console.log("Logout rejected, error:", action.payload);
+        state.loading = false;
         state.user = null;
         state.token = null;
-        state.error = action.payload as string;
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
+        state.error = action.payload || "Logout failed";
       });
   },
 });

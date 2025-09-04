@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../store/slices/authSlice";
 import type { AppDispatch, RootState } from "../store";
 
-// Define props interface to include optional onLogoutSuccess callback
 interface LogoutButtonProps {
   onLogoutSuccess?: () => void;
 }

@@ -1,37 +1,72 @@
+import React from 'react';
 import './SharedStyles/Header2.css';
 import { IoMdHeartEmpty } from "react-icons/io";
 import { FaShoppingCart, FaSearch } from 'react-icons/fa';
 import { IoIosNotificationsOutline } from "react-icons/io";
 import Logo1 from '../../assets/logo/logo copy.png';
 import { Link, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from "react-redux";
-import type { AppDispatch } from "../../store/store";
-import { useState } from 'react';
+import { useSelector } from "react-redux";
+import { useState, useEffect } from 'react';
+import { toast } from "react-toastify";
 import type { RootState } from "../../store/store";
-import { searchCourses } from '../../store/slices/courseSlice';
 import LogoutButton from '../../Components/Logout';
-import { toast } from 'react-toastify';
+
+interface Course {
+  _id: string;
+  title: string;
+  description: string;
+  price: number;
+  thumbnail: string;
+}
 
 const Header2: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<Course[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [mobileSearchQuery, setMobileSearchQuery] = useState('');
-  const [isSearching, setIsSearching] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
-  // Close dropdown after logout to improve UX
   const handleLogoutSuccess = () => {
-    setDropdownOpen(false); // Close dropdown after logout
+     setDropdownOpen(false);
+  };
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(async () => {
+      if (searchQuery.trim()) {
+        try {
+          setIsLoading(true);
+          const response = await fetch(`https://byway-hoce.onrender.com/api/search?query=${encodeURIComponent(searchQuery)}`);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          setSearchResults(data.results || []);
+        } catch (error) {
+          console.error('Error fetching search results:', error);
+          setSearchResults([]);
+        } finally {
+          setIsLoading(false);
+        }
+      } else {
+        setSearchResults([]);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
   };
 
   // Handle search functionality
-  const handleSearch = async (e: React.FormEvent) => {
+  const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!searchQuery.trim()) {
@@ -39,32 +74,20 @@ const Header2: React.FC = () => {
       return;
     }
 
-    setIsSearching(true);
+    // Navigate to courses page with search results
+    navigate('/courses', {
+      state: {
+        searchQuery: searchQuery.trim(),
+        fromSearch: true
+      }
+    });
 
-    try {
-      // Dispatch search action
-      await dispatch(searchCourses(searchQuery.trim())).unwrap();
-
-      // Navigate to courses page with search results
-      navigate('/courses', {
-        state: {
-          searchQuery: searchQuery.trim(),
-          fromSearch: true
-        }
-      });
-
-      // Clear search input
-      setSearchQuery('');
-    } catch (error: any) {
-      console.error('Search failed:', error);
-      toast.error(error.message || 'Search failed. Please try again.');
-    } finally {
-      setIsSearching(false);
-    }
+    // Clear search input
+    setSearchQuery('');
   };
 
   // Handle mobile search functionality
-  const handleMobileSearch = async (e: React.FormEvent) => {
+  const handleMobileSearch = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!mobileSearchQuery.trim()) {
@@ -72,41 +95,23 @@ const Header2: React.FC = () => {
       return;
     }
 
-    setIsSearching(true);
     setMobileSearchOpen(false);
 
-    try {
-      // Dispatch search action
-      await dispatch(searchCourses(mobileSearchQuery.trim())).unwrap();
+    // Navigate to courses page with search results
+    navigate('/courses', {
+      state: {
+        searchQuery: mobileSearchQuery.trim(),
+        fromSearch: true
+      }
+    });
 
-      // Navigate to courses page with search results
-      navigate('/courses', {
-        state: {
-          searchQuery: mobileSearchQuery.trim(),
-          fromSearch: true
-        }
-      });
-
-      // Clear search input
-      setMobileSearchQuery('');
-    } catch (error: any) {
-      console.error('Search failed:', error);
-      toast.error(error.message || 'Search failed. Please try again.');
-    } finally {
-      setIsSearching(false);
-    }
+    // Clear search input
+    setMobileSearchQuery('');
   };
 
   // Toggle mobile search overlay
   const toggleMobileSearch = () => {
     setMobileSearchOpen(!mobileSearchOpen);
-  };
-
-  // Handle Enter key press in search input
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSearch(e);
-    }
   };
 
   return (
@@ -128,10 +133,34 @@ const Header2: React.FC = () => {
           placeholder="Search courses"
           className="search-input4"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyPress={handleKeyPress}
-          disabled={isSearching}
+          onChange={handleSearchChange}
         />
+        {searchResults.length > 0 && (
+          <div className="search-results">
+            {isLoading ? (
+              <div className="search-loading">Loading...</div>
+            ) : (
+              searchResults.map((course) => (
+                <Link
+                  key={course._id}
+                  to={`/course/${course._id}`}
+                  className="search-result-item"
+                >
+                  <img
+                    src={course.thumbnail}
+                    alt={course.title}
+                    className="search-result-thumbnail"
+                  />
+                  <div className="search-result-info">
+                    <h3>{course.title}</h3>
+                    <p>{course.description.substring(0, 100)}...</p>
+                    <p className="search-result-price">${course.price}</p>
+                  </div>
+                </Link>
+              ))
+            )}
+          </div>
+        )}
       </form>
 
       <div className="right-header2">
@@ -168,7 +197,7 @@ const Header2: React.FC = () => {
             <div className="user-dropdown">
               <Link to="/">Home</Link>
               <Link to="/profile1">Settings</Link>
-              <LogoutButton onLogoutSuccess={handleLogoutSuccess} /> {/* Replace Link with LogoutButton */}
+              <LogoutButton onLogoutSuccess={handleLogoutSuccess} />
             </div>
           )}
         </div>
@@ -185,15 +214,14 @@ const Header2: React.FC = () => {
                 className="mobile-search-input"
                 value={mobileSearchQuery}
                 onChange={(e) => setMobileSearchQuery(e.target.value)}
-                disabled={isSearching}
                 autoFocus
               />
               <button
                 type="submit"
                 className="mobile-search-submit"
-                disabled={isSearching || !mobileSearchQuery.trim()}
+                disabled={!mobileSearchQuery.trim()}
               >
-                {isSearching ? 'Searching...' : 'Search'}
+                Search
               </button>
             </form>
           </div>
