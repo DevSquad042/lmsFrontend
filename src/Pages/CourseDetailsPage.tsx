@@ -14,7 +14,7 @@ import styles from "../Styles/CourseDetailsPage.module.css";
 import Header2 from "../Components/shared/Header2";
 import Footer from "../Components/Layout/Footer";
 
-const CoursePage: React.FC = () => {
+const CourseDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const { data :selectedCourse, loading, error } = useSelector(
@@ -72,4 +72,4 @@ const CoursePage: React.FC = () => {
   );
 };
 
-export default CoursePage;
+export default CourseDetailsPage;

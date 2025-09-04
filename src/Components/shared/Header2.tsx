@@ -5,20 +5,60 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import Logo1 from '../../assets/logo/logo copy.png';
 import { Link } from 'react-router-dom';
 import { useSelector } from "react-redux";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { RootState } from "../../store/store";
 import LogoutButton from '../../Components/Logout';
+
+interface Course {
+  _id: string;
+  title: string;
+  description: string;
+  price: number;
+  thumbnail: string;
+}
 
 const Header2: React.FC = () => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<Course[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
-  // Close dropdown after logout to improve UX
   const handleLogoutSuccess = () => {
-    setDropdownOpen(false); // Close dropdown after logout
+    setDropdownOpen(false);
+  };
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (searchQuery.trim()) {
+        fetchCourses();
+      } else {
+        setSearchResults([]);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery]);
+
+  const fetchCourses = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`https://byway-hoce.onrender.com/api/search?query=${encodeURIComponent(searchQuery)}`);
+      const data = await response.json();
+      setSearchResults(data.results || []);
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+      setSearchResults([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
   };
 
   return (
@@ -36,7 +76,35 @@ const Header2: React.FC = () => {
           type="text"
           placeholder="Search courses"
           className="search-input4"
+          value={searchQuery}
+          onChange={handleSearchChange}
         />
+        {searchResults.length > 0 && (
+          <div className="search-results">
+            {isLoading ? (
+              <div className="search-loading">Loading...</div>
+            ) : (
+              searchResults.map((course) => (
+                <Link
+                  key={course._id}
+                  to={`/course/${course._id}`}
+                  className="search-result-item"
+                >
+                  <img
+                    src={course.thumbnail}
+                    alt={course.title}
+                    className="search-result-thumbnail"
+                  />
+                  <div className="search-result-info">
+                    <h3>{course.title}</h3>
+                    <p>{course.description.substring(0, 100)}...</p>
+                    <p className="search-result-price">${course.price}</p>
+                  </div>
+                </Link>
+              ))
+            )}
+          </div>
+        )}
       </div>
 
       <div className="right-header2">
@@ -65,7 +133,7 @@ const Header2: React.FC = () => {
             <div className="user-dropdown">
               <Link to="/">Home</Link>
               <Link to="/profile1">Settings</Link>
-              <LogoutButton onLogoutSuccess={handleLogoutSuccess} /> {/* Replace Link with LogoutButton */}
+              <LogoutButton onLogoutSuccess={handleLogoutSuccess} />
             </div>
           )}
         </div>

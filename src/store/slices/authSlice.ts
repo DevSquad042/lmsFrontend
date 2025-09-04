@@ -21,6 +21,7 @@ export interface User {
 }
 
 export interface AuthState {
+  userId: string;
   user: User | null;
   token: string | null;
   loading: boolean;
@@ -43,6 +44,7 @@ const initialState: AuthState = {
   token: savedToken || null,
   loading: false,
   error: null,
+  userId: ""
 };
 
 /** ===== Helpers ===== */

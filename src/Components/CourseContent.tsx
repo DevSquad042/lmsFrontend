@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { FaChevronDown, FaPlayCircle } from "react-icons/fa";
 import styles from "./ComponentStyles/CourseContent.module.css";
 
-// Define types more explicitly (if not already in ../Types/Course)
 export interface Section {
   title: string;
   isPreview: boolean;

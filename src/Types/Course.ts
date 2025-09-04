@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 
 export interface Section {
@@ -20,6 +21,7 @@ export interface Review {
 }
 
 export interface Course {
+  id: any;
   _id: string;
   title: string;
   description: string;

@@ -110,7 +110,7 @@ const TeachersPage: React.FC = () => {
             searchQuery={searchQuery}
             setSearchQuery={(query: string) => {
               setSearchQuery(query);
-              setCurrentPage(1); // reset pagination on new search
+              setCurrentPage(1); 
             }}
           />
 

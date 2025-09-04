@@ -1,102 +1,110 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Footer from "../Components/Layout/Footer";
+// pages/CoursePage.tsx
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import type { RootState, AppDispatch } from "../store";
+import { fetchCourseById } from "../store/slices/coursesSlice";
+import CourseDetails from "../Components/CourseHero";
+import CourseSidebar from "../Components/CourseSidebar";
+import Reviews from "../Components/Rating";
+import CourseContent from "../Components/CourseContent";
+import RelatedCourses from "../Components/RelatedCourses";
+import TestimonialCard from "../Components/TestimonialsSection";
+import Breadcrumb from "../Components/Breadcrumb";
+import styles from "../Styles/CourseDetailsPage.module.css";
 import Header2 from "../Components/shared/Header2";
-import ProfileSidebar from "../Components/shared/ProfileSidebar";
-import Pagination from "../Components/Pagination";
-import CourseCard from "../Components/cards/CourseCard";
-import "../Styles/CoursesPage.css";
-import type { Course } from "../Types/Course";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Footer from "../Components/Layout/Footer";
 
-const CoursesPages = () => {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
+const CoursePage: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const dispatch = useDispatch<AppDispatch>();
 
-  // Fetch all courses
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        // Retrieve token from localStorage (or your preferred storage)
-        const token = localStorage.getItem("authToken"); // Adjust key based on your app
-
-        if (!token) {
-          toast.error("You are not authenticated. Please log in.");
-          setLoading(false);
-          return;
-        }
-
-        // Make API request with Authorization header
-        const response = await axios.get(
-          "https://byway-hoce.onrender.com/api/enrollments",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Include token in header
-            },
-          }
-        );
-
-        setCourses(response.data);
-        setLoading(false);
-      } catch (err: any) {
-        console.error("Error fetching courses:", err);
-        toast.error(
-          err.response?.data?.message || "Failed to load courses."
-        );
-        setLoading(false);
-      }
-    };
-
-    fetchCourses();
-  }, []);
-
-  // Pagination logic
-  const totalPages = Math.ceil(courses.length / itemsPerPage);
-  const paginatedCourses = courses.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+  const { data: courses, loading, error } = useSelector(
+    (state: RootState) => state.courses
   );
+  const currentCourse = courses.find((c) => c._id === id);
+
+  // Fetch on mount/param change if we don't already have the course
+  useEffect(() => {
+    if (id && !currentCourse && loading !== "pending") {
+      dispatch(fetchCourseById(id));
+    }
+  }, [dispatch, id, currentCourse, loading]);
+
+  // Loading state
+  if (loading === "pending" || (loading === "idle" && !currentCourse)) {
+    return (
+      <>
+        <Header2 />
+        <main className={styles.main}>
+          <p>Loading course…</p>
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <>
+        <Header2 />
+        <main className={styles.main}>
+          <p>Error: {error}</p>
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+  // Not found state (after API finished successfully but course still missing)
+  if (!currentCourse && loading === "succeeded") {
+    return (
+      <>
+        <Header2 />
+        <main className={styles.main}>
+          <p>No course found.</p>
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+  // Safe to render course
+  const breadcrumbLinks = [
+    { label: "Home", path: "/" },
+    { label: "Categories", path: "/categories" },
+    { label: currentCourse!.title, path: `/courses/${currentCourse!._id}` },
+  ];
 
   return (
-    <div className="courses-wrapper">
+    <>
       <Header2 />
-      <section className="courses-section">
-        <aside className="sidebar-container">
-          <ProfileSidebar />
-        </aside>
+      <main className={styles.main}>
+        <Breadcrumb links={breadcrumbLinks} />
+        <div className={styles.coursePage}>
+          <div className={styles.mainContent}>
+            <CourseDetails course={currentCourse!} />
+            <CourseContent course={currentCourse!} />
+          </div>
 
-        <main className="main-content">
-          <h2 className="courses-title">All Courses ({courses.length})</h2>
+          <div className={styles.sidebar}>
+            <CourseSidebar course={currentCourse!} />
+          </div>
 
-          {loading ? (
-            <p>Loading courses...</p>
-          ) : courses.length === 0 ? (
-            <p>No courses available at the moment.</p>
-          ) : (
-            <>
-              <div className="courses-grid">
-                {paginatedCourses.map((course) => (
-                  <CourseCard key={course._id} course={course} />
-                ))}
-              </div>
-
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={(page: number) => setCurrentPage(page)}
-              />
-            </>
-          )}
-        </main>
-      </section>
+          <div className={styles.review}>
+            <Reviews
+              course={currentCourse!}
+              onReviewAdded={() => id && dispatch(fetchCourseById(id))}
+            />
+            <TestimonialCard />
+            <RelatedCourses />
+          </div>
+        </div>
+      </main>
       <Footer />
-      <ToastContainer />
-    </div>
+    </>
   );
 };
 
-export default CoursesPages;
+export default CoursePage;
