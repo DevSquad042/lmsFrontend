@@ -61,10 +61,94 @@
 .page-number.active {
   border-bottom: 2px solid #333;
 }
-
 .arrow {
   cursor: pointer;
   font-size: 20px;
 }
 
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .review-page-layout {
+    flex-direction: column;
+  }
+
+  .review-main {
+    padding: 20px 15px;
+    margin-top: 20px;
+  }
+
+  .review-card {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+
+  .review-header {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .course-name {
+    font-size: 16px;
+  }
+
+  .review-rating {
+    font-size: 16px;
+  }
+
+  .review-text {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .pagination-bar {
+    padding: 15px 0;
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  .page-number {
+    padding: 5px 10px;
+  }
+
+  .arrow {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .review-main {
+    padding: 15px 10px;
+  }
+
+  .review-card {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .course-name {
+    font-size: 14px;
+  }
+
+  .review-rating {
+    font-size: 14px;
+  }
+
+  .review-text {
+    font-size: 13px;
+  }
+
+  .pagination-bar {
+    gap: 6px;
+    font-size: 13px;
+  }
+
+  .page-number {
+    padding: 4px 8px;
+  }
+
+  .arrow {
+    font-size: 16px;
+  }
+}
 

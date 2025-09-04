@@ -78,3 +78,58 @@
   text-decoration: none;
   color: inherit;
 }
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .card {
+    width: 180px;
+    padding: 12px;
+  }
+
+  .imageContainer {
+    height: 120px;
+    margin-bottom: 10px;
+  }
+
+  .name {
+    font-size: 0.9rem;
+  }
+
+  .role {
+    font-size: 0.8rem;
+  }
+
+  .stats {
+    font-size: 0.8rem;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    width: 160px;
+    padding: 10px;
+  }
+
+  .imageContainer {
+    height: 100px;
+    margin-bottom: 8px;
+  }
+
+  .name {
+    font-size: 0.85rem;
+  }
+
+  .role {
+    font-size: 0.75rem;
+  }
+
+  .stats {
+    font-size: 0.75rem;
+    gap: 6px;
+  }
+
+  .divider {
+    margin: 6px 0;
+  }
+}

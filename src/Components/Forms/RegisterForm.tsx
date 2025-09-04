@@ -37,6 +37,7 @@ const Register: React.FC = () => {
 
   const [errors, setErrors] = useState<Partial<FormValues>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -123,7 +124,9 @@ const Register: React.FC = () => {
 
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
+  if (submitting || submitted) return; // Prevent double submission
   if (validate()) {
+    setSubmitting(true);
     const payload = {
       firstName: values.firstName,
       lastName: values.lastName,
@@ -139,7 +142,11 @@ const handleSubmit = async (e: React.FormEvent) => {
       if (res && typeof res === "object" && "user" in res) {
         // Check if the response contains error information despite having a user
         if (res.user && typeof res.user === 'object' && 'error' in res.user) {
-          throw new Error(res.user.error as string);
+          const userError = (res.user.error as string).toLowerCase();
+          // Don't throw if the error message indicates success
+          if (!userError.includes("success") && !userError.includes("registered successfully") && !userError.includes("user registered")) {
+            throw new Error(res.user.error as string);
+          }
         }
 
         setSubmitted(true);
@@ -173,7 +180,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       if (typeof err === "string") {
         const errorStr = err.toLowerCase();
 
-        if (errorStr.includes("409") || errorStr.includes("already") || errorStr.includes("exists") || errorStr.includes("duplicate") || errorStr.includes("taken") || errorStr.includes("registered") || errorStr.includes("conflict") || errorStr.includes("email") || errorStr.includes("in use")) {
+        if (errorStr.includes("409") || errorStr.includes("already") || errorStr.includes("exists") || errorStr.includes("duplicate") || errorStr.includes("taken") || (errorStr.includes("registered") && !errorStr.includes("success")) || errorStr.includes("conflict") || errorStr.includes("email") || errorStr.includes("in use")) {
           errorMessage = "This email is already registered. Please use a different email or try logging in.";
           toastMessage = "Email already registered. Please use a different email or log in. ❌";
         } else if (errorStr.includes("400")) {
@@ -212,6 +219,8 @@ const handleSubmit = async (e: React.FormEvent) => {
         email: errorMessage,
       }));
       toast.error(toastMessage);
+    } finally {
+      setSubmitting(false);
     }
   }
 };
@@ -334,8 +343,9 @@ const handleSubmit = async (e: React.FormEvent) => {
 
             <div>
               <Button
-                label="Create Account →"
+                label={submitting ? "Creating Account..." : "Create Account →"}
                 className={styles.signUpBtn}
+                disabled={submitting}
                 onClick={() =>
                   handleSubmit(new Event("submit") as unknown as React.FormEvent)
                 }

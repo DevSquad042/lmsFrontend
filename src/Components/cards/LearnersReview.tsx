@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Star } from 'lucide-react';
+import type { AppDispatch, RootState } from '../../store';
+import { fetchReviews, fetchAverage } from '../../store/slices/reviewsSlice';
 
 interface Review {
   id: string;
@@ -16,35 +19,55 @@ interface RatingDistribution {
 }
 
 const LearnerReviews: React.FC = () => {
-  const overallRating = 154.0;
-  const totalReviews = 1000;
+  const dispatch = useDispatch<AppDispatch>();
+  const { data: reviewsData, average: averageRating, loading } = useSelector((state: any) => state.reviews);
 
-  const ratingDistribution: RatingDistribution[] = [
-    { stars: 5, percentage: 80 },
-    { stars: 4, percentage: 10 },
-    { stars: 3, percentage: 5 },
-    { stars: 2, percentage: 3 },
-    { stars: 1, percentage: 2 },
-  ];
-
-  const reviews: Review[] = [
-    {
-      id: '1',
-      name: 'John Doe',
-      avatar: '/api/placeholder/40/40',
-      rating: 5,
-      date: 'August 15th, 2025',
-      content: 'I was initially apprehensive, having no prior design experience. But the instructor, John Doe, did an amazing job of breaking down complex concepts into easily digestible modules. The video lectures were engaging, and the real-world examples really helped solidify my understanding.'
-    },
-    {
-      id: '2',
-      name: 'Jane Smith',
-      avatar: '/api/placeholder/40/40',
-      rating: 4,
-      date: 'August 15th, 2025',
-      content: 'The course was well-structured and provided a solid foundation in design principles. I particularly enjoyed the hands-on projects that allowed me to apply what I learned.'
+  // Transform API data to component format - handle both response structures
+  let reviewsArray = [];
+  if (Array.isArray(reviewsData)) {
+    // Direct array response (for course/instructor reviews)
+    reviewsArray = reviewsData;
+  } else if (reviewsData && typeof reviewsData === 'object') {
+    // Handle different response structures
+    if (reviewsData.data && reviewsData.data.reviews && Array.isArray(reviewsData.data.reviews)) {
+      // User reviews structure: { data: { reviews: [...] } }
+      reviewsArray = reviewsData.data.reviews;
+    } else if (reviewsData.data && Array.isArray(reviewsData.data)) {
+      // Alternative structure
+      reviewsArray = reviewsData.data;
+    } else if (reviewsData.reviews && Array.isArray(reviewsData.reviews)) {
+      reviewsArray = reviewsData.reviews;
+    } else if (reviewsData.items && Array.isArray(reviewsData.items)) {
+      reviewsArray = reviewsData.items;
     }
-  ];
+  }
+
+  // Transform API data to component format
+  const reviews: Review[] = reviewsArray.map((review: any) => ({
+    id: review._id || review.id,
+    name: review.userId?.userName || review.userId?.email || review.userId || 'Anonymous',
+    avatar: '/api/placeholder/40/40',
+    rating: review.rating,
+    date: review.createdAt ? new Date(review.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+    content: review.comment
+  }));
+
+  const totalReviews = reviewsArray.length;
+  const overallRating = averageRating || 0;
+
+  // Calculate rating distribution from actual data
+  const ratingDistribution: RatingDistribution[] = [5, 4, 3, 2, 1].map(stars => {
+    const count = reviewsArray.filter((review: any) => review.rating === stars).length;
+    const percentage = totalReviews > 0 ? Math.round((count / totalReviews) * 100) : 0;
+    return { stars, percentage };
+  });
+
+  useEffect(() => {
+    // Fetch reviews and average rating for a specific target (e.g., course or instructor)
+    // You might want to pass the targetId and type as props to this component
+    dispatch(fetchReviews({ targetId: 'course-123', type: 'Course' }));
+    dispatch(fetchAverage({ targetId: 'course-123', type: 'Course' }));
+  }, [dispatch]);
 
   const renderStars = (rating: number, size: 'sm' | 'md' = 'sm') => {
     const sizeClass = size === 'md' ? 'w-5 h-5' : 'w-4 h-4';
@@ -85,6 +108,17 @@ const LearnerReviews: React.FC = () => {
       </div>
     );
   };
+
+  if (loading) {
+    return (
+      <div className="max-w-6xl mx-auto p-6 bg-white">
+        <h2 className="text-2xl font-bold mb-6">Learner Reviews</h2>
+        <div className="flex justify-center items-center py-8">
+          <div className="text-gray-500">Loading reviews...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white">

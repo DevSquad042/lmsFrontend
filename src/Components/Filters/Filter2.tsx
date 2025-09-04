@@ -9,9 +9,20 @@ interface Filter2Props {
   count?: string | number;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+  sortBy?: string;
+  onSortChange?: (sort: string) => void;
+  onFilterClick?: () => void;
 }
 
-const Filter2: React.FC<Filter2Props> = ({ title, count, searchQuery, setSearchQuery }) => {
+const Filter2: React.FC<Filter2Props> = ({
+  title,
+  count,
+  searchQuery,
+  setSearchQuery,
+  sortBy = "Relevance",
+  onSortChange,
+  onFilterClick
+}) => {
   return (
     <div className="filter-container">
       {/* Title */}
@@ -38,11 +49,11 @@ const Filter2: React.FC<Filter2Props> = ({ title, count, searchQuery, setSearchQ
         <div className="filter-left">
           <div className="filter-sort">
             <span className="span1">Sort By</span>
-            <button className="sort-btn">
-              <span>Relevance</span> <SlArrowDown />
+            <button className="sort-btn" onClick={() => onSortChange && onSortChange(sortBy === "Relevance" ? "Rating" : sortBy === "Rating" ? "Title" : sortBy === "Title" ? "Newest" : "Relevance")}>
+              <span>{sortBy}</span> <SlArrowDown />
             </button>
           </div>
-          <button className="filter-btn">
+          <button className="filter-btn" onClick={onFilterClick}>
             <IoFilter /> Filter
           </button>
         </div>

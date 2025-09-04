@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // src/store/slices/courseSlice.ts
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import type { Course } from '../../Types/Course';
 import type { RootState } from '../../store/index';
@@ -24,32 +22,122 @@ const defaultThumbnail = 'https://images.unsplash.com/photo-1610500796385-3ffc1a
 export const fetchCourses = createAsyncThunk<Course[]>(
   'courses/fetchCourses',
   async () => {
-    const response = await axios.get<Course[]>('https://byway-hoce.onrender.com/api/courses');
-    return response.data.map((course) => ({
-      ...course,
-      thumbnail: course.thumbnail
-        ? course.thumbnail.startsWith('http')
-          ? course.thumbnail
-          : `${baseUrl}/images/${course.thumbnail}` 
-        : defaultThumbnail,
-    }));
+    try {
+      // Try local backend first
+      const token = localStorage.getItem('token');
+      const response = await axios.get<Course[]>(
+        `${baseUrl}/api/courses`,
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        }
+      );
+      return response.data.map((course) => ({
+        ...course,
+        thumbnail: course.thumbnail
+          ? course.thumbnail.startsWith('http')
+            ? course.thumbnail
+            : `${baseUrl}/images/${course.thumbnail}`
+          : defaultThumbnail,
+      }));
+    } catch (error) {
+      console.log('Local API failed, falling back to external API');
+      // Fallback to external API
+      const response = await axios.get<Course[]>('https://byway-hoce.onrender.com/api/courses');
+      return response.data.map((course) => ({
+        ...course,
+        thumbnail: course.thumbnail
+          ? course.thumbnail.startsWith('http')
+            ? course.thumbnail
+            : `${baseUrl}/images/${course.thumbnail}`
+          : defaultThumbnail,
+      }));
+    }
   }
 );
 
 export const fetchCoursesByCategory = createAsyncThunk<Course[], string>(
   'courses/fetchByCategory',
   async (category) => {
-    const response = await axios.get<Course[]>(
-      `https://byway-hoce.onrender.com/api/courses?category=${category}`
-    );
-    return response.data.map((course) => ({
-      ...course,
-      thumbnail: course.thumbnail
-        ? course.thumbnail.startsWith('http')
-          ? course.thumbnail
-          : `${baseUrl}/images/${course.thumbnail}` // Prepend base URL for images
-        : defaultThumbnail,
-    }));
+    try {
+      // Try local backend first
+      const token = localStorage.getItem('token');
+      const response = await axios.get<Course[]>(
+        `${baseUrl}/api/courses?category=${category}`,
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        }
+      );
+      return response.data.map((course) => ({
+        ...course,
+        thumbnail: course.thumbnail
+          ? course.thumbnail.startsWith('http')
+            ? course.thumbnail
+            : `${baseUrl}/images/${course.thumbnail}`
+          : defaultThumbnail,
+      }));
+    } catch (error) {
+      console.log('Local API failed, falling back to external API');
+      // Fallback to external API
+      const response = await axios.get<Course[]>(
+        `https://byway-hoce.onrender.com/api/courses?category=${category}`
+      );
+      return response.data.map((course) => ({
+        ...course,
+        thumbnail: course.thumbnail
+          ? course.thumbnail.startsWith('http')
+            ? course.thumbnail
+            : `${baseUrl}/images/${course.thumbnail}`
+          : defaultThumbnail,
+      }));
+    }
+  }
+);
+
+export const searchCourses = createAsyncThunk<Course[], string>(
+  'courses/searchCourses',
+  async (query) => {
+    if (!query || query.trim() === '') {
+      throw new Error('Search query cannot be empty');
+    }
+
+    try {
+      // Try local backend first
+      const token = localStorage.getItem('token');
+      console.log('Making search request to:', `${baseUrl}/api/courses/search`);
+      console.log('Search query:', query.trim());
+
+      const response = await axios.get<Course[]>(
+        `${baseUrl}/api/courses/search`,
+        {
+          params: { q: query.trim() },
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        }
+      );
+
+      console.log('Search response received:', response.data);
+      return response.data.map((course) => ({
+        ...course,
+        thumbnail: course.thumbnail
+          ? course.thumbnail.startsWith('http')
+            ? course.thumbnail
+            : `${baseUrl}/images/${course.thumbnail}`
+          : defaultThumbnail,
+      }));
+    } catch (error) {
+      console.log('Local search API failed, falling back to external API');
+      // Fallback to external API
+      const response = await axios.get<Course[]>(
+        `https://byway-hoce.onrender.com/api/courses?search=${encodeURIComponent(query.trim())}`
+      );
+      return response.data.map((course) => ({
+        ...course,
+        thumbnail: course.thumbnail
+          ? course.thumbnail.startsWith('http')
+            ? course.thumbnail
+            : `${baseUrl}/images/${course.thumbnail}`
+          : defaultThumbnail,
+      }));
+    }
   }
 );
 
@@ -82,6 +170,18 @@ const courseSlice = createSlice({
       .addCase(fetchCoursesByCategory.rejected, (state, action) => {
         state.loading = 'failed';
         state.error = action.error.message || 'Failed to fetch courses by category.';
+      })
+      .addCase(searchCourses.pending, (state) => {
+        state.loading = 'pending';
+        state.error = null;
+      })
+      .addCase(searchCourses.fulfilled, (state, action) => {
+        state.data = action.payload;
+        state.loading = 'succeeded';
+      })
+      .addCase(searchCourses.rejected, (state, action) => {
+        state.loading = 'failed';
+        state.error = action.error.message || 'Failed to search courses.';
       });
   },
 });

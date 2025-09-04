@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../store";
-import { addReview } from "../reviewsSlice";
+import { addReview } from "../store/slices/reviewsSlice";
 import { StarIcon } from "./StarIcon";
 
 const ReviewSection: React.FC = () => {
@@ -16,8 +16,8 @@ const ReviewSection: React.FC = () => {
     dispatch(
       addReview({
         userId: Date.now().toString(),
-        userName: "Demo User",
-        courseId: "course-123",
+        targetId: "course-123",
+        type: "Course",
         rating,
         comment
       })

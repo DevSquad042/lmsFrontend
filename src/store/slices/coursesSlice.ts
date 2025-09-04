@@ -1,14 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-
-// Define your Course type (extend with the fields you need)
-export interface Course {
-  id: string;
-  title: string;
-  description: string;
-  thumbnail: string,
-  // …other fields…
-}
+import type { Course } from '../../Types/Course';
 
 interface CourseState {
   selectedCourse: Course | null;
@@ -30,7 +22,12 @@ export const fetchCourseById = createAsyncThunk<
   'course/fetchById',
   async (courseId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/api/courses/${courseId}`);
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`http://localhost:3000/api/courses/${courseId}`, {
+        headers: {
+          Authorization: `Bearer ${token}` ? `Bearer ${token}` : '',
+        },
+      });
       return response.data as Course;
     } catch (err) {
         let message;
@@ -41,7 +38,7 @@ export const fetchCourseById = createAsyncThunk<
       } else {
         message = 'An unknown error occurred';
       }
-   
+
       return rejectWithValue(message);
     }
   }

@@ -17,10 +17,10 @@ import Footer from "../Components/Layout/Footer";
 const CoursePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const { data :selectedCourse, loading, error } = useSelector(
-    (state: RootState) => state.courses
+  const { selectedCourse, loading, error } = useSelector(
+    (state: RootState) => state.course
   );
-  const currentCourse = selectedCourse.find(course => course._id === id);
+  const currentCourse = selectedCourse;
 
   const fetchData = useCallback(() => {
     if (id) {
@@ -32,7 +32,7 @@ const CoursePage: React.FC = () => {
     fetchData();
   }, [fetchData, id]);
 
-  if (loading === "pending") return <p>Loading course...</p>;
+  if (loading) return <p>Loading course...</p>;
   if (error) return <p>Error: {error}</p>;
   if (!currentCourse) return <p>No course found.</p>;
 

@@ -37,14 +37,23 @@ const getAuthHeader = () => {
 // 👉 GET all reviews (requires targetId + type)
 export const fetchReviews = createAsyncThunk(
   "reviews/fetchReviews",
-  async ({ targetId, type }: { targetId: string; type: "Course" | "instructor" }) => {
-    const res = await axios.get(
-      `http://localhost:3000/api/review/getReviews/${targetId}`,
-      {
-        params: { targetId, type },
-        ...getAuthHeader(),
-      }
-    );
+  async ({ targetId, type }: { targetId: string; type: "Course" | "instructor" | "user"}) => {
+    let url: string;
+    let params: any = {};
+
+    if (type === 'user') {
+      // Use new endpoint structure for user reviews
+      url = `http://localhost:3000/api/review/getReviews/userReviews/${targetId}`;
+    } else {
+      // Keep old structure for Course and instructor
+      url = `http://localhost:3000/api/review/getReviews/${targetId}`;
+      params = { targetId, type };
+    }
+
+    const res = await axios.get(url, {
+      params,
+      ...getAuthHeader(),
+    });
     return res.data as Review[];
   }
 );
@@ -65,11 +74,12 @@ export const addReview = createAsyncThunk(
     rating: number;
     comment: string;
   }) => {
+    const typePath = type.toLowerCase();
     const res = await axios.post(
       `http://localhost:3000/api/review/addReview/${userId}/${targetId}`,
       { rating, comment }, // body only
       {
-        params: { type },   // ✅ send type as query parameter
+        params: { type },
         ...getAuthHeader(),
       }
     );
@@ -82,7 +92,7 @@ export const fetchAverage = createAsyncThunk(
   "reviews/fetchAverage",
   async ({ targetId, type }: { targetId: string; type: "Course" | "instructor" }) => {
     const res = await axios.get(
-      `http://localhost:3000/api/review/${targetId}/average`,
+      `http://localhost:3000/api/review/average/${targetId}`,
       {
         params: { type },
         ...getAuthHeader(),

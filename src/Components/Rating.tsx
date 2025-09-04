@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store/index";
 import type { Course, Review } from "../Types/Course";
 import { FaStar } from "react-icons/fa";
-import { addReview } from "../store/slices/reviewsSlice";
+import { addReview, fetchReviews, fetchAverage } from "../store/slices/reviewsSlice";
 import styles from "./ComponentStyles/Rating.module.css";
 
 const Reviews: React.FC<{
@@ -19,13 +19,47 @@ const Reviews: React.FC<{
     useSelector((state: RootState) => state.auth.user?.id) ||
     localStorage.getItem("userId");
 
-  const reviews: Review[] = course.reviews || [];
+  const { data: reviewsData, average: averageRating, loading } = useSelector((state: any) => state.reviews);
 
-  // ✅ Calculate average rating from reviews
-  const averageRating =
-    reviews.length > 0
-      ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
-      : 0;
+  // Transform API data to component format - handle both response structures
+  let reviewsArray = [];
+  if (Array.isArray(reviewsData)) {
+    // Direct array response (for course/instructor reviews)
+    reviewsArray = reviewsData;
+  } else if (reviewsData && typeof reviewsData === 'object') {
+    // Handle different response structures
+    if (reviewsData.data && reviewsData.data.reviews && Array.isArray(reviewsData.data.reviews)) {
+      // User reviews structure: { data: { reviews: [...] } }
+      reviewsArray = reviewsData.data.reviews;
+    } else if (reviewsData.data && Array.isArray(reviewsData.data)) {
+      // Alternative structure
+      reviewsArray = reviewsData.data;
+    } else if (reviewsData.reviews && Array.isArray(reviewsData.reviews)) {
+      reviewsArray = reviewsData.reviews;
+    } else if (reviewsData.items && Array.isArray(reviewsData.items)) {
+      reviewsArray = reviewsData.items;
+    }
+  }
+
+  const reviews: Review[] = reviewsArray.map((review: any) => ({
+    id: review._id || review.id,
+    userId: review.userId?.userName || review.userId?.email || review.userId || 'Anonymous',
+    rating: review.rating,
+    comment: review.comment,
+    date: review.createdAt || new Date().toISOString(),
+    avatar: "/default-avatar.png"
+  }));
+
+  useEffect(() => {
+    // Fetch reviews for this course
+    dispatch(fetchReviews({ targetId: course._id, type: 'Course' }));
+    dispatch(fetchAverage({ targetId: course._id, type: 'Course' }));
+  }, [dispatch, course._id]);
+
+  // ✅ Use average rating from Redux state, fallback to calculation
+  const displayAverageRating = averageRating || (reviews.length > 0
+    ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
+    : 0);
 
   const handleSubmit = async () => {
     if (!rating || !userId) {
@@ -60,13 +94,13 @@ const Reviews: React.FC<{
       {/* Average */}
       <div className={styles.averageBox}>
         <h3>
-          {averageRating ? `${averageRating.toFixed(1)} / 5` : "No rating yet"}
+          {displayAverageRating ? `${displayAverageRating.toFixed(1)} / 5` : "No rating yet"}
         </h3>
         <div className={styles.stars}>
           {[1, 2, 3, 4, 5].map((s) => (
             <FaStar
               key={s}
-              color={s <= Math.round(averageRating) ? "#FFC107" : "#ccc"}
+              color={s <= Math.round(displayAverageRating) ? "#FFC107" : "#ccc"}
             />
           ))}
         </div>

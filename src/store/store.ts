@@ -13,6 +13,8 @@ import cartReducer, {
 } from "./slices/cartSlice";
 import profileReducer from "./slices/ProfileSlice"; // ✅ NEW
 import mentorReducer from "./slices/mentorSlice";
+import reviewsReducer from "./slices/reviewsSlice"; // ✅ NEW
+import courseReducer from "./slices/coursesSlice"; // ✅ NEW
 
 // ✅ Custom middleware with action matching
 type ReduxAction = { type: string; [key: string]: unknown };
@@ -58,6 +60,8 @@ const store = configureStore({
     cart: cartReducer,
     profile: profileReducer, // ✅ NEW
     instructors: mentorReducer,
+    reviews: reviewsReducer, // ✅ NEW
+    course: courseReducer, // ✅ NEW
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(toastMiddleware),

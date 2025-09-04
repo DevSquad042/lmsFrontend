@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
 import Header2 from "../Components/shared/Header2";
 import ProfileSidebar from "../Components/shared/ProfileSidebar";
 import Footer from "../Components/Layout/Footer";
@@ -9,16 +8,7 @@ import Pagination from "../Components/Pagination";
 import Filter2 from "../Components/Filters/Filter2";
 import MentorCard from "../Components/cards/MentorCard";
 import "../Styles/TeachersPage.css";
-import type { RootState } from "../store/store";
-
-export interface Mentor {
-  id: string;
-  name: string;
-  role: string;
-  rating: number;
-  students: number;
-  image: string;
-}
+import type { Mentor } from "../Types/Mentor";
 
 const TeachersPage: React.FC = () => {
   const [mentors, setMentors] = useState<Mentor[]>([]);
@@ -27,28 +17,54 @@ const TeachersPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  const paidCourses = useSelector(
-    (state: RootState) => state.auth.user?.paidCourses || []
-  );
-
   useEffect(() => {
     const fetchMentors = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("http://localhost:3000/api/instructors");
+        const token = localStorage.getItem("token");
+        const res = await axios.get("http://localhost:3000/api/instructors", {
+          headers: {
+            Authorization: token ? `Bearer ${token}` : '',
+          },
+        });
         console.log("API Response:", res.data); // Debug raw data
-        const data = Array.isArray(res.data) ? res.data : res.data.data || [];
+
+        let data = [];
+        if (Array.isArray(res.data)) {
+          data = res.data;
+        } else if (res.data && typeof res.data === 'object') {
+          // Handle different response structures
+          if (res.data.data && Array.isArray(res.data.data)) {
+            data = res.data.data;
+          } else if (res.data.instructors && Array.isArray(res.data.instructors)) {
+            data = res.data.instructors;
+          } else if (res.data.items && Array.isArray(res.data.items)) {
+            data = res.data.items;
+          }
+        }
+
+        console.log("Extracted data array:", data);
+
         const transformedMentors = data.map((instructor: any) => {
           console.log("Processing instructor:", instructor); // Debug each instructor
           return {
-            id: instructor._id,
-            name: `${instructor.firstName || ""} ${instructor.lastName || ""}`.trim(),
-            role: instructor.role || "Instructor",
-            rating: 0,
-            students: 0,
-            image: "",
+            id: instructor._id || instructor.id,
+            firstName: instructor.firstName || instructor.firstName || "",
+            lastName: instructor.lastName || instructor.lastName || "",
+            email: instructor.email || "",
+            userName: instructor.userName || instructor.username || "",
+            createdAt: instructor.createdAt || new Date().toISOString(),
+            updatedAt: instructor.updatedAt || new Date().toISOString(),
+            __v: instructor.__v || 0,
+            name: `${instructor.firstName || ""} ${instructor.lastName || ""}`.trim() || instructor.name || 'Unknown Instructor',
+            rating: instructor.rating || 0,
+            reviews: instructor.reviews || [],
+            bio: instructor.bio || instructor.role || "Instructor",
+            portfolio: instructor.portfolio || "",
+            image: instructor.image || instructor.profilePicture || instructor.avatar || "",
           } as Mentor;
         });
+
         console.log("Transformed Mentors:", transformedMentors); // Debug transformed data
         setMentors(transformedMentors);
       } catch (error) {
@@ -63,8 +79,9 @@ const TeachersPage: React.FC = () => {
   }, []);
 
   const searchedMentors = mentors.filter((mentor) =>
-    mentor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    mentor.role.toLowerCase().includes(searchQuery.toLowerCase())
+    (mentor.name?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false) ||
+    (mentor.bio?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false) ||
+    (`${mentor.firstName} ${mentor.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   const totalPages = Math.ceil(searchedMentors.length / itemsPerPage);
@@ -101,7 +118,6 @@ const TeachersPage: React.FC = () => {
                 <MentorCard
                   key={mentor.id}
                   mentor={mentor}
-                  showRating={false}
                 />
               ))}
             </div>

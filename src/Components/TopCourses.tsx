@@ -12,6 +12,8 @@ const TopCourses: React.FC = () => {
     (state: RootState) => state.courses
   );
 
+  // Removed carousel state - focusing on ultra-responsive grid
+
   useEffect(() => {
     if (!courses || courses.length === 0) {
       dispatch(fetchCourses());
@@ -19,6 +21,8 @@ const TopCourses: React.FC = () => {
   }, [dispatch, courses]);
 
   const topCourses = courses ? courses.slice(0, 4) : [];
+
+  // Removed all carousel functionality - focusing on ultra-responsive grid
 
   const handleScrollTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -35,15 +39,16 @@ const TopCourses: React.FC = () => {
     <section className="top-courses">
       <header className="top-courses-header">
         <h2 className="top-courses-title">Top Courses</h2>
-        <Link 
-          to="/courses" 
+        <Link
+          to="/courses"
           className="top-courses-see-all"
           onClick={handleScrollTop}
         >
           See All
         </Link>
       </header>
-      
+
+      {/* Responsive Grid View */}
       <div className="top-courses-grid">
         {topCourses.length === 0 ? (
           <p>No top courses available.</p>

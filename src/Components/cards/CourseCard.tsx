@@ -27,19 +27,24 @@ const CourseCard: React.FC<{ course: Course }> = ({ course }) => {
         />
         <div className={styles.content}>
           <h3 className={styles.title}>{course.title}</h3>
-          <p className={styles.instructor}>{course.instructor}</p>
+          <p className={styles.instructor}>By {course.instructor}</p>
+
+          {/* Progress Bar */}
+          <div className={styles.progressBar}>
+            <div className={styles.progressFill}></div>
+          </div>
+
           <div className={styles.rating}>
             <div className={styles.stars}>
               {[...Array(5)].map((_, i) => (
                 <FaStar
                   key={i}
-                  color={i < Math.round(safeRating) ? "#ffc107" : "#ccc"}
+                  className={i < Math.round(safeRating) ? styles.starFilled : styles.starEmpty}
                 />
               ))}
             </div>
-            <span className={styles.ratingText}>{safeRating.toFixed(1)}</span>
+            <span className={styles.ratingText}>({course.reviews?.length || 1200} Ratings)</span>
           </div>
-          <p className={styles.price}>${course.price}</p>
         </div>
       </article>
     </Link>

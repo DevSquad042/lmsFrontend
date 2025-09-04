@@ -125,9 +125,17 @@ export const registerUser = createAsyncThunk<
     }
 
     // Check if response contains error information despite 200 status
-    if (data && (data.error || data.message) && !data.user) {
-      console.log("Thunk: Response contains error despite 200 status:", data.error || data.message);
-      return rejectWithValue(data.error || data.message || "Registration failed");
+    if (data && (data.error || data.message)) {
+      const errorMsg = (data.error || data.message || "").toLowerCase();
+      console.log("Thunk: Response contains error:", data.error || data.message);
+
+      // Check if the error message actually indicates success
+      if (errorMsg.includes("success") || errorMsg.includes("registered successfully") || errorMsg.includes("user registered")) {
+        console.log("Thunk: Treating error message as success");
+        // Don't reject, proceed with the user data
+      } else {
+        return rejectWithValue(data.error || data.message || "Registration failed");
+      }
     }
 
     // Handle case where server doesn't return user data but registration is successful
