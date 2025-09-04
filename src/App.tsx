@@ -1,7 +1,8 @@
+
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Routes, Route } from "react-router-dom";
-//import SearchResultsPage from "./Components/SearchResultPage";
+
 
 // ✅ Pages and Components
 import Home from "./Pages/Home";
@@ -9,7 +10,7 @@ import LoginForm from "./Components/Forms/LoginForm";
 import Register from "./Components/Forms/RegisterForm";
 import CategoryPage from "./Pages/CategoryPage";
 import CheckoutPage from "./Pages/Checkout";
-import CourseDetailPage from "./Pages/CourseDetailsPage";
+ import CourseDetailPage from "./Pages/CourseDetailsPage";
 import CoursesPages from "./Pages/CoursesPage";
 import InstructorDetailPage from "./Pages/InstructorsDetailsPage";
 import MessaagesPage from "./Pages/MessagesPage";
@@ -33,7 +34,7 @@ import ProtectedRoute from "./Components/ProtectedRoute";
 // ✅ Redux Slice
 
 import { setUser } from "./store/slices/authSlice";
-//import { selectSearchResults } from "./store/slices/coursesSlice";
+
 
 function App() {
   const dispatch = useDispatch();
@@ -57,7 +58,7 @@ function App() {
         <Route path="/categories" element={<CategoryPage />} />
         <Route path="/courses/:id" element={<CourseDetailPage />} />
         <Route path="/teacher/:id" element={<InstructorDetailPage />} />
-        {/* <Route path="/search" element={<SearchResultsPage />} /> */}
+         {/* <Route path="/search" element={<SearchResultsPage />} /> */}
 
         {/* Protected Routes */}
         <Route
@@ -152,7 +153,7 @@ function App() {
           }
         />
 
-        {/* Catch-all route */}
+      
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
 
