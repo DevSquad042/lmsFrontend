@@ -2,7 +2,7 @@ import './ComponentStyles/Hero.css';
 
 import Button from './shared/Buttons';
 
-import Main from '../assets/Images/Group 469323.png';
+import Main from '../assets/Images/herooooo.svg';
 
 function Hero() {
   return (

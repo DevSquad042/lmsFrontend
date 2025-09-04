@@ -2,10 +2,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4rem 6rem;
+  padding: 4rem 3rem;
   position: relative;
   background-color: #f9fafb;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter';
+
 }
 
 .hero-text {
@@ -23,9 +24,7 @@
   color: #111827;
 }
 
-.hero-text h1 span {
-  color: #2563EB;
-}
+
 
 .hero-text p {
   font-size: 1.125rem;
@@ -61,6 +60,8 @@
 }
 
 .main-hero-img {
+  width: auto;
+
   max-height: 500px;
   z-index: 2;
 }

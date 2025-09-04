@@ -1,4 +1,5 @@
 .header2 {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -8,7 +9,7 @@
   font-family: 'Segoe UI', sans-serif;
   position: sticky;
   top: 0;
-  z-index: 1000;
+
 }
 
 .header-left2 {
