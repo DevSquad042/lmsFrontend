@@ -55,7 +55,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/categories" element={<CategoryPage />} />
-        {/* <Route path="/courses/:id" element={<CourseDetailPage />} /> */}
+        <Route path="/courses/:id" element={<CourseDetailPage />} />
         <Route path="/teacher/:id" element={<InstructorDetailPage />} />
         {/* <Route path="/search" element={<SearchResultsPage />} /> */}
 
