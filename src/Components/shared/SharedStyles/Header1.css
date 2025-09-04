@@ -9,21 +9,15 @@
   margin: 0px 30px;
 }
 
-.header-left {
+.header-left2 {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
-.header-logo {
-  width:50px;
+.header-logo2 {
+  width: 50px;
   height: 32px;
-}
-
-.header-brand {
-  font-weight: bold;
-  font-size: 18px;
-  color: #2c3e50;
 }
 
 .header-link {
@@ -42,6 +36,7 @@
   border-radius: 6px;
   margin: 0 24px;
   padding: 6px 12px;
+  position: relative; /* Added for search results positioning */
 }
 
 .search-icon {
@@ -56,10 +51,75 @@
   font-size: 14px;
 }
 
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.search-result-item {
+  display: flex;
+  padding: 10px;
+  text-decoration: none;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.search-result-item:hover {
+  background: #f8f8f8;
+}
+
+.search-result-thumbnail {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  margin-right: 10px;
+}
+
+.search-result-info {
+  flex: 1;
+}
+
+.search-result-info h3 {
+  margin: 0 0 5px;
+  font-size: 16px;
+}
+
+.search-result-info p {
+  margin: 0 0 5px;
+  font-size: 14px;
+  color: #666;
+}
+
+.search-result-price {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.search-loading {
+  padding: 10px;
+  text-align: center;
+  color: #666;
+}
+
 .header-right {
   display: flex;
   align-items: center;
   gap: 16px;
+}
+
+.header-link2 {
+  color: #2c3e50;
+  text-decoration: none;
+  font-size: 14px;
 }
 
 .header-cart {
@@ -88,26 +148,25 @@
   cursor: pointer;
 }
 
-
 @media (max-width: 768px) {
-  .header{
-  
+  .header {
     align-items: flex-start;
     gap: 12px;
     padding: 10px 0px;
   }
 
-.header-search{
-  display: none;
+  .header-search {
+    display: none; /* Hides search bar on mobile as per your original CSS */
+  }
 
-}
-.header-link{
-  display: none;
-}
-.header-link2{
-  display: none;
-}
-  
+  .search-results {
+    display: none; /* Ensure search results are also hidden on mobile */
+  }
+
+  .header-link,
+  .header-link2 {
+    display: none; /* Hides links on mobile as per your original CSS */
+  }
 
   .header-left2 {
     gap: 12px;
@@ -118,21 +177,9 @@
     height: auto;
   }
 
-  .header-link,
-  .header-link2 {
-    font-size: 16px;
-    white-space: nowrap;
-  }
-
-  .icons2 {
+  .header-right {
     gap: 16px;
     display: flex;
     align-items: center;
   }
-
- 
-
- 
 }
-
-
