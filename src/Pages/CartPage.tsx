@@ -10,7 +10,7 @@ import {
 import Header from "../Components/shared/Header2";
 import Footer from "../Components/Layout/Footer";
 import OrderSummaryCard from "../Components/cards/OrderSummaryCard";
-import "../styles/CartPage.css";
+import "../Styles/CartPage.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
