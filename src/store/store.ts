@@ -11,7 +11,7 @@ import cartReducer, {
   removeFromSaveForLater,
 } from "./slices/cartSlice";
 import profileReducer from "./slices/ProfileSlice"; 
-import courseReducer from "./slices/courseSlice"; // ✅ NEW
+import coursesReducer from "./slices/coursesSlice"; // ✅ unified slice (use this, not courseSlice)
 
 // ✅ Custom middleware with action matching
 type ReduxAction = { type: string; [key: string]: unknown };
@@ -56,7 +56,7 @@ const store = configureStore({
     auth: authReducer,
     cart: cartReducer,
     profile: profileReducer,
-    course: courseReducer, // ✅ Added here
+    courses: coursesReducer, // ✅ use unified courses slice
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(toastMiddleware),
@@ -68,12 +68,3 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export default store;
-
-
-
-
-
-
-
-
-
