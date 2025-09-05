@@ -1,30 +1,30 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
-import type { Mentor } from '../../Types/Mentor';
-import type { RootState } from '../../store/index';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
+import type { Mentor } from "../../Types/Mentor";
+import type { RootState } from "../../store";
 
 interface MentorState {
-  data: Mentor[];
-  selectedMentor: Mentor | null;
-  loading: 'idle' | 'pending' | 'succeeded' | 'failed';
+  list: Mentor[];
+  selected: Mentor | null;
+  loading: "idle" | "pending" | "succeeded" | "failed";
   error: string | null;
 }
 
 const initialState: MentorState = {
-  data: [],
-  selectedMentor: null,
-  loading: 'idle',
+  list: [],
+  selected: null,
+  loading: "idle",
   error: null,
 };
 
+const baseUrl = "https://byway-hoce.onrender.com";
+
+// ✅ Fetch all mentors
 export const fetchMentors = createAsyncThunk<Mentor[]>(
-  'mentors/fetchMentors',
+  "mentors/fetchAll",
   async () => {
-    const response = await axios.get(
-      'https://byway-hoce.onrender.com/api/instructors'
-    );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const response = await axios.get(`${baseUrl}/api/instructors`);
     return response.data.map((instructor: any) => ({
       ...instructor,
       id: instructor._id,
@@ -32,57 +32,61 @@ export const fetchMentors = createAsyncThunk<Mentor[]>(
   }
 );
 
+// ✅ Fetch single mentor by ID
 export const fetchMentorById = createAsyncThunk<Mentor, string>(
-  'mentors/fetchMentorById',
+  "mentors/fetchById",
   async (id) => {
-    const response = await axios.get(
-      `https://byway-hoce.onrender.com/api/instructors/${id}`
-    );
+    const response = await axios.get(`${baseUrl}/api/instructors/${id}`);
     return { ...response.data, id: response.data._id } as Mentor;
   }
 );
 
 const mentorSlice = createSlice({
-  name: 'mentors',
+  name: "mentors",
   initialState,
-  reducers: {},
+  reducers: {
+    clearSelectedMentor(state) {
+      state.selected = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
+      // ✅ fetchMentors
       .addCase(fetchMentors.pending, (state) => {
-        state.loading = 'pending';
+        state.loading = "pending";
         state.error = null;
       })
-      .addCase(
-        fetchMentors.fulfilled,
-        (state, action: PayloadAction<Mentor[]>) => {
-          state.data = action.payload;
-          state.loading = 'succeeded';
-        }
-      )
+      .addCase(fetchMentors.fulfilled, (state, action: PayloadAction<Mentor[]>) => {
+        state.list = action.payload;
+        state.loading = "succeeded";
+      })
       .addCase(fetchMentors.rejected, (state, action) => {
-        state.loading = 'failed';
-        state.error = action.error.message || 'Failed to fetch mentors.';
+        state.loading = "failed";
+        state.error = action.error.message || "Failed to fetch mentors.";
       })
+
+      // ✅ fetchMentorById
       .addCase(fetchMentorById.pending, (state) => {
-        state.loading = 'pending';
-        state.selectedMentor = null;
+        state.loading = "pending";
+        state.selected = null;
         state.error = null;
       })
-      .addCase(
-        fetchMentorById.fulfilled,
-        (state, action: PayloadAction<Mentor>) => {
-          state.selectedMentor = action.payload;
-          state.loading = 'succeeded';
-        }
-      )
+      .addCase(fetchMentorById.fulfilled, (state, action: PayloadAction<Mentor>) => {
+        state.selected = action.payload;
+        state.loading = "succeeded";
+      })
       .addCase(fetchMentorById.rejected, (state, action) => {
-        state.loading = 'failed';
-        state.error = action.error.message || 'Failed to fetch mentor details.';
+        state.loading = "failed";
+        state.error = action.error.message || "Failed to fetch mentor details.";
       });
   },
 });
 
-export const selectMentors = (state: RootState) => state.mentors.data;
+export const { clearSelectedMentor } = mentorSlice.actions;
+
+// ✅ Selectors
+export const selectMentors = (state: RootState) => state.mentors.list;
+export const selectSelectedMentor = (state: RootState) => state.mentors.selected;
 export const selectMentorsStatus = (state: RootState) => state.mentors.loading;
 export const selectMentorsError = (state: RootState) => state.mentors.error;
 
