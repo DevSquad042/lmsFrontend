@@ -17,11 +17,10 @@ const CoursesPages = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  // Fetch all courses
+  // Fetch enrolled courses
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        // ✅ Retrieve the token saved by authSlice
         const token = localStorage.getItem("token");
 
         if (!token) {
@@ -30,9 +29,8 @@ const CoursesPages = () => {
           return;
         }
 
-        // Make API request with Authorization header
         const response = await axios.get(
-          "https://byway-hoce.onrender.com/api/enrollments",
+          "https://byway-hoce.onrender.com/api/enrolled-courses",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -40,14 +38,22 @@ const CoursesPages = () => {
           }
         );
 
-        // ✅ Your response has a "courses" array
-        setCourses(response.data.courses || []);
+        // ✅ Handle both possible API response formats
+        let enrolledCourses: Course[] = [];
+
+        if (Array.isArray(response.data)) {
+          // Case 1: array of enrollments with { course }
+          enrolledCourses = response.data.map((enrollment: any) => enrollment.course);
+        } else if (response.data.courses) {
+          // Case 2: object with { courses: [] }
+          enrolledCourses = response.data.courses;
+        }
+
+        setCourses(enrolledCourses || []);
         setLoading(false);
       } catch (err: any) {
         console.error("Error fetching courses:", err);
-        toast.error(
-          err.response?.data?.message || "Failed to load courses."
-        );
+        toast.error(err.response?.data?.message || "Failed to load courses.");
         setLoading(false);
       }
     };
@@ -71,12 +77,14 @@ const CoursesPages = () => {
         </aside>
 
         <main className="main-content">
-          <h2 className="courses-title">All Courses ({courses.length})</h2>
+          <h2 className="courses-title">
+            Enrolled Courses ({courses.length})
+          </h2>
 
           {loading ? (
             <div className="loading-spinner"></div>
           ) : courses.length === 0 ? (
-            <p>No courses available at the moment.</p>
+            <p>You haven’t enrolled in any courses yet.</p>
           ) : (
             <>
               <div className="courses-grid">
