@@ -10,7 +10,7 @@ import Register from "./Components/Forms/RegisterForm";
 import CategoryPage from "./Pages/CategoryPage";
 import CheckoutPage from "./Pages/Checkout";
 import CourseDetailPage from "./Pages/CourseDetailsPage";
-import CoursesPage from "./Pages/CoursesPage";
+// import CoursePage from "./Pages/CoursesPage";
 import InstructorDetailPage from "./Pages/InstructorsDetailsPage";
 import MessaagesPage from "./Pages/MessagesPage";
 import MessagesPage2 from "./Pages/MessagesPage2";

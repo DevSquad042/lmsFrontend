@@ -50,7 +50,6 @@ const initialState: AuthState = {
 };
 
 /** ===== Helpers ===== */
-// const API_BASE = `${import.meta.env.VITE_API_BASE_URL || "http://localhost:3000"}/api`;
 const API_BASE = "http://localhost:3000/api";
 
 /** ===== Thunks ===== */
@@ -174,7 +173,7 @@ export const registerUser = createAsyncThunk<
     if (!data.user && res.ok) {
       // Create a minimal user object from the payload
       const user: User = {
-        id: payload.email, // Use email as temporary ID
+        id: "temp-" + Date.now(), // Temporary ID until proper user data is available
         firstName: payload.firstName,
         lastName: payload.lastName,
         email: payload.email,
@@ -285,13 +284,17 @@ export const fetchPaidCourses = createAsyncThunk<string[], string, { rejectValue
   "auth/fetchPaidCourses",
   async (userId, { rejectWithValue }) => {
     try {
+      console.log("fetchPaidCourses - userId:", userId);
       const token = localStorage.getItem("token");
+      console.log("fetchPaidCourses - token:", token ? "present" : "missing");
       const res = await fetch(`${API_BASE}/enrollments/${userId}`, {
         headers: {
           Authorization: token ? `Bearer ${token}` : '',
         },
       });
+      console.log("fetchPaidCourses - response status:", res.status);
       const text = await res.text();
+      console.log("fetchPaidCourses - response text:", text);
 
       let data: { data?: any[] };
       try {
@@ -300,8 +303,19 @@ export const fetchPaidCourses = createAsyncThunk<string[], string, { rejectValue
         return rejectWithValue(`Invalid JSON response: ${text}`);
       }
 
-      return data.data?.map(course => course._id) || [];
-    } catch {
+      console.log("fetchPaidCourses - raw data.data:", data.data);
+      // Handle different possible structures
+      let courseIds: string[] = [];
+      if (data.data && Array.isArray(data.data)) {
+        courseIds = data.data.map(item => {
+          // Try different possible field names
+          return item.courseId || item.course?._id || item._id || item.id;
+        }).filter(id => id); // Filter out undefined/null values
+      }
+      console.log("fetchPaidCourses - extracted courseIds:", courseIds);
+      return courseIds;
+    } catch (err) {
+      console.error("fetchPaidCourses - error:", err);
       return rejectWithValue("Failed to fetch paid courses");
     }
   }
