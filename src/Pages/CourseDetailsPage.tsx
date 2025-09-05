@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import type { RootState, AppDispatch } from "../store/index";
-//import { fetchCourseById } from "../store/slices/courseSlice";
+import { fetchCourseById } from "../store/slices/coursesSlice";
 import CourseDetails from "../Components/CourseHero";
 import CourseSidebar from "../Components/CourseSidebar";
 import Reviews from "../Components/Rating";
@@ -17,16 +17,15 @@ import Footer from "../Components/Layout/Footer";
 const CoursePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const {
-    data: selectedCourse,
-    loading,
-    error,
-  } = useSelector((state: RootState) => state.courses);
-  const currentCourse = selectedCourse.find((course) => course._id === id);
+
+  // ✅ Correct slice shape
+  const selectedCourse = useSelector((state: RootState) => state.courses.selected);
+  const loading = useSelector((state: RootState) => state.courses.loading);
+  const error = useSelector((state: RootState) => state.courses.error);
 
   const fetchData = useCallback(() => {
     if (id) {
-      //  dispatch(fetchCourseById(id));
+      dispatch(fetchCourseById(id));
     }
   }, [dispatch, id]);
 
@@ -36,12 +35,12 @@ const CoursePage: React.FC = () => {
 
   if (loading === "pending") return <p>Loading course...</p>;
   if (error) return <p>Error: {error}</p>;
-  if (!currentCourse) return <p>No course found.</p>;
+  if (!selectedCourse) return <p>No course found.</p>;
 
   const breadcrumbLinks = [
     { label: "Home", path: "/" },
     { label: "Categories", path: "/categories" },
-    { label: currentCourse.title, path: `/courses/${currentCourse._id}` },
+    { label: selectedCourse.title, path: `/courses/${selectedCourse._id}` },
   ];
 
   return (
@@ -52,17 +51,21 @@ const CoursePage: React.FC = () => {
         <Breadcrumb links={breadcrumbLinks} />
         <div className={styles.coursePage}>
           <div className={styles.mainContent}>
-            <CourseDetails course={currentCourse} />
-            <CourseContent course={currentCourse} />
+            <CourseDetails course={selectedCourse} />
+            <CourseContent course={selectedCourse} />
           </div>
           <div className={styles.sidebar}>
-            <CourseSidebar course={currentCourse} />
+            <CourseSidebar course={selectedCourse} />
           </div>
 
           <div className={styles.review}>
-            <Reviews course={currentCourse} onReviewAdded={fetchData} />
+            <Reviews course={selectedCourse} onReviewAdded={fetchData} />
             <TestimonialCard />
-            <RelatedCourses />
+            {/* ✅ Pass categories & excludeId so RelatedCourses can filter */}
+            <RelatedCourses
+              categories={selectedCourse.categories}
+              excludeId={selectedCourse._id}
+            />
           </div>
         </div>
       </main>
