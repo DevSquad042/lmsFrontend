@@ -10,7 +10,7 @@ import Register from "./Components/Forms/RegisterForm";
 import CategoryPage from "./Pages/CategoryPage";
 import CheckoutPage from "./Pages/Checkout";
 import CourseDetailPage from "./Pages/CourseDetailsPage";
-import CoursesPages from "./Pages/CoursesPage";
+import CoursesPage from "./Pages/CoursesPage";
 import InstructorDetailPage from "./Pages/InstructorsDetailsPage";
 import MessaagesPage from "./Pages/MessagesPage";
 import MessagesPage2 from "./Pages/MessagesPage2";
@@ -22,6 +22,7 @@ import TeachersPage from "./Pages/TeachersPage";
 import OrderFailed from "./Pages/OrderFailed";
 import NotFoundPage from "./Pages/404page";
 import OrderCompletePage from "./Pages/OrderCompletePage";
+import MyCoursesPage from "./Pages/MyCoursesPage";
 
 // ✅ Toastify
 import { ToastContainer } from "react-toastify";
@@ -108,7 +109,7 @@ function App() {
           path="/profile2"
           element={
             <ProtectedRoute>
-              <CoursesPages />
+              <MyCoursesPage />
             </ProtectedRoute>
           }
         />

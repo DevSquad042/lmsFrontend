@@ -19,7 +19,7 @@ const CoursesByMentor: React.FC<Props> = ({ mentorId }) => {
       try {
         setLoading(true);
         const response = await axios.get<Course[]>(
-          `http://localhost:3000/api/courses?mentorId=${mentorId}`
+          `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/courses?mentorId=${mentorId}`
         );
         setCourses(response.data);
       } catch (err) {
@@ -40,7 +40,7 @@ const CoursesByMentor: React.FC<Props> = ({ mentorId }) => {
       <h2>Courses Taught by This Mentor</h2>
       <div className={styles.grid}>
         {courses.map((course) => (
-          <CourseCard key={course.id} course={course} />
+          <CourseCard key={course._id} course={course} />
         ))}
       </div>
     </div>

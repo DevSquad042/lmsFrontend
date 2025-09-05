@@ -22,7 +22,7 @@ export interface Review {
 }
 
 export interface Course {
-  id: any;
+  // id: any;
   _id: string;
   title: string;
   description: string;

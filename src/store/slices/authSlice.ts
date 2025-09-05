@@ -50,6 +50,7 @@ const initialState: AuthState = {
 };
 
 /** ===== Helpers ===== */
+// const API_BASE = `${import.meta.env.VITE_API_BASE_URL || "http://localhost:3000"}/api`;
 const API_BASE = "http://localhost:3000/api";
 
 /** ===== Thunks ===== */
@@ -284,17 +285,22 @@ export const fetchPaidCourses = createAsyncThunk<string[], string, { rejectValue
   "auth/fetchPaidCourses",
   async (userId, { rejectWithValue }) => {
     try {
-      const res = await fetch(`${API_BASE}/users/${userId}/courses`);
+      const token = localStorage.getItem("token");
+      const res = await fetch(`${API_BASE}/enrollments/${userId}`, {
+        headers: {
+          Authorization: token ? `Bearer ${token}` : '',
+        },
+      });
       const text = await res.text();
 
-      let data: { paidCourses?: string[] };
+      let data: { data?: any[] };
       try {
         data = JSON.parse(text);
       } catch {
         return rejectWithValue(`Invalid JSON response: ${text}`);
       }
 
-      return data.paidCourses || [];
+      return data.data?.map(course => course._id) || [];
     } catch {
       return rejectWithValue("Failed to fetch paid courses");
     }

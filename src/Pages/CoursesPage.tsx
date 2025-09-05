@@ -37,7 +37,7 @@ const CoursePage: React.FC = () => {
       <>
         <Header2 />
         <main className={styles.main}>
-          <p>Loading course…</p>
+          <p>Loading my course…</p>
         </main>
         <Footer />
       </>

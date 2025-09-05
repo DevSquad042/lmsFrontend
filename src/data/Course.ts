@@ -35,7 +35,8 @@ export const courses: Course[] = [
         videoFile: 'intro.mp4',
         videoUrl: 'https://example.com/videos/intro',
         pdf: 'intro.pdf',
-        _id: 'section-1'
+        _id: 'section-1',
+        isPreview: true
       }
     ],
     createdAt: now,
@@ -72,7 +73,8 @@ export const courses: Course[] = [
         videoFile: 'setup.mp4',
         videoUrl: 'https://example.com/videos/setup',
         pdf: 'setup.pdf',
-        _id: 'section-2'
+        _id: 'section-2',
+        isPreview: true
       }
     ],
     createdAt: now,
@@ -109,7 +111,8 @@ export const courses: Course[] = [
         videoFile: 'start.mp4',
         videoUrl: 'https://example.com/videos/start',
         pdf: 'start.pdf',
-        _id: 'section-3'
+        _id: 'section-3',
+        isPreview: true
       }
     ],
     createdAt: now,

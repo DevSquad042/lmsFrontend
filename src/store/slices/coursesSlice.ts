@@ -1,6 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import type { Course } from '../../Types/Course';
+// import { use } from 'react';
+
+const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000"; // API base URL
 
 interface CourseState {
   selectedCourse: Course | null;
@@ -21,30 +24,30 @@ export const fetchCourseById = createAsyncThunk<
 >(
   'course/fetchById',
   async (courseId, { rejectWithValue }) => {
+    console.log("Fetching course by ID:", courseId, "from:", `${baseUrl}/api/courses/${courseId}`);
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`http://localhost:3000/api/courses/${courseId}`, {
+      const response = await axios.get(`${baseUrl}/api/courses/${courseId}`, {
         headers: {
-          Authorization: `Bearer ${token}` ? `Bearer ${token}` : '',
+          Authorization: token ? `Bearer ${token}` : '',
         },
       });
+      console.log("Course fetched successfully:", response.data._id);
       return response.data as Course;
     } catch (err) {
-        let message;
-         if (err instanceof Error) {
-          message =
-        err.message ||
-        'Failed to fetch course';
+      console.error("Error fetching course by ID:", courseId, err);
+      let message;
+      if (err instanceof Error) {
+        message = err.message || 'Failed to fetch course';
       } else {
         message = 'An unknown error occurred';
       }
-
       return rejectWithValue(message);
     }
   }
 );
 
-const courseSlice = createSlice({
+const coursesSlice = createSlice({
   name: 'course',
   initialState,
   reducers: {},
@@ -58,11 +61,13 @@ const courseSlice = createSlice({
         state.loading = false;
         state.selectedCourse = action.payload;
       })
+      // .addCase(fetchCourseById.rejected, (state, action) => {
+      //   state.loading = false;
+      // })
       .addCase(fetchCourseById.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload ?? 'Unknown error';
-      });
-  },
-});
+        state.error = action.payload as string ?? 'Unknown error';
+      })},
+  });
 
-export default courseSlice.reducer;
+export default coursesSlice.reducer;

@@ -16,22 +16,29 @@ const initialState: CourseState = {
   error: null,
 };
 
-const baseUrl = "https://byway-hoce.onrender.com"; // API base URL
+const baseUrl = "http://localhost:3000"; // API base URL
 const defaultThumbnail = "https://placehold.co/150x150/png"; // Fallback PNG
 
 // Fetch all courses
 export const fetchCourses = createAsyncThunk<Course[]>(
   "courses/fetchCourses",
   async () => {
-    const response = await axios.get<Course[]>(`${baseUrl}/api/courses`);
-    return response.data.map((course) => ({
-      ...course,
-      thumbnail: course.thumbnail
-        ? course.thumbnail.startsWith("http")
-          ? course.thumbnail
-          : `${baseUrl}/images/${course.thumbnail}`
-        : defaultThumbnail,
-    }));
+    console.log("Fetching all courses from:", `${baseUrl}/api/courses`);
+    try {
+      const response = await axios.get<Course[]>(`${baseUrl}/api/courses`);
+      console.log("All courses fetched successfully:", response.data.length, "courses");
+      return response.data.map((course) => ({
+        ...course,
+        thumbnail: course.thumbnail
+          ? course.thumbnail.startsWith("http")
+            ? course.thumbnail
+            : `${baseUrl}/images/${course.thumbnail}`
+          : defaultThumbnail,
+      }));
+    } catch (error) {
+      console.error("Error fetching all courses:", error);
+      throw error;
+    }
   }
 );
 
@@ -56,8 +63,8 @@ export const fetchCoursesByCategory = createAsyncThunk<Course[], string>(
 // ✅ Fetch single course by ID
 export const fetchCourseById = createAsyncThunk<Course, string>(
   "courses/fetchById",
-  async (id) => {
-    const response = await axios.get<Course>(`${baseUrl}/api/courses/${id}`);
+  async (courseId: string) => {
+    const response = await axios.get<Course>(`${baseUrl}/api/courses/${courseId}`);
     const course = response.data;
     return {
       ...course,
