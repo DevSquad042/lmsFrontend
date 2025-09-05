@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../store";
+import { clearCart } from "../store/slices/cartSlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "../Styles/Checkout.module.css";
@@ -26,21 +27,14 @@ export interface CartItem {
 
 const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-
-  // 🛒 Normal cart items from Redux
+  const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
   const cartItems = useSelector((state: RootState) => state.cart.items);
-
-  // 🛒 Handle Buy Now (items passed via navigate state)
-  const buyNowItems =
-    (location.state as { items?: CartItem[] })?.items || [];
-
-  // If buyNowItems exists, show only those, else show cartItems
-  const itemsToDisplay = buyNowItems.length > 0 ? buyNowItems : cartItems;
 
   const [formData, setFormData] = useState({
     country: "",
     state: "",
+    email: "",
     method: "card",
     cardName: "",
     cardNumber: "",
@@ -48,12 +42,30 @@ const CheckoutPage: React.FC = () => {
     cvc: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
+  // Check for payment status in URL parameters
+  useEffect(() => {
+    const status = searchParams.get("status");
+    const transactionId = searchParams.get("transaction_id");
+    
+    if (status === "successful" && transactionId) {
+      // Clear cart on successful payment
+      dispatch(clearCart());
+      toast.success("Payment successful! Your order has been placed.");
+      navigate("/order1");
+    } else if (status === "cancelled" || status === "failed") {
+      toast.error("Payment failed. Please try again.");
+      navigate("/order2");
+    }
+  }, [searchParams, dispatch, navigate]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ✅ Validation helpers
+  // Validation helpers
   const isValidCardNumber = (num: string) => /^\d{16}$/.test(num);
   const isValidExpiry = (exp: string) => {
     const [monthStr, yearStr] = exp.split("/").map((s) => s.trim());
@@ -67,12 +79,16 @@ const CheckoutPage: React.FC = () => {
   };
   const isValidCVC = (cvc: string) => /^\d{3,4}$/.test(cvc);
   const isValidName = (name: string) => /^[A-Za-z\s]{2,}$/.test(name);
+  const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const handleCheckout = () => {
-    let paymentSuccess = false;
+  const handleCheckout = async () => {
+    if (!formData.country || !formData.state || !formData.email) {
+      toast.warning("Please fill in your country, state, and email.");
+      return;
+    }
 
-    if (!formData.country || !formData.state) {
-      toast.warning("Please fill in your country and state.");
+    if (!isValidEmail(formData.email)) {
+      toast.error("Please enter a valid email address.");
       return;
     }
 
@@ -86,22 +102,62 @@ const CheckoutPage: React.FC = () => {
         toast.error("Invalid card details. Please check and try again.");
         return;
       }
-      paymentSuccess = true;
-    } else if (formData.method === "paypal") {
-      paymentSuccess = true;
     }
 
-    if (paymentSuccess) {
-      toast.success("Payment submitted successfully!");
-      navigate("/order1");
-    } else {
-      toast.error("Payment failed. Try again.");
-      navigate("/order2");
+    const courseIds = cartItems.map((item) => item.id);
+    const total = cartItems.reduce(
+      (acc, item) => acc + item.price * item.quantity,
+      0
+    );
+
+    const paymentData = {
+      courses: courseIds,
+      totalAmount: total,
+      email: formData.email,
+    };
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("You must be logged in to checkout.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await fetch(
+        "https://byway-hoce.onrender.com/api/flutterwave/initiate",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(paymentData),
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok) {
+        const link = result.checkoutLink || result.data?.link;
+        if (link) {
+          window.location.href = link; // redirect to Flutterwave
+        } else {
+          toast.error("Payment initiation failed: No payment link received.");
+        }
+      } else {
+        toast.error(result.message || "Payment initiation failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      toast.error("An error occurred during payment. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // 🧮 Dynamic totals (work with itemsToDisplay instead of just cart)
-  const subtotal = itemsToDisplay.reduce(
+  // Dynamic totals
+  const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
   );
@@ -123,7 +179,6 @@ const CheckoutPage: React.FC = () => {
         </div>
 
         <div className={styles.layout}>
-          {/* LEFT COL - FORM */}
           <div className={styles.leftCol}>
             <div className={styles.card}>
               <div className={styles.formGrid}>
@@ -146,6 +201,17 @@ const CheckoutPage: React.FC = () => {
                     value={formData.state}
                     onChange={handleChange}
                     placeholder="Enter State"
+                  />
+                </div>
+
+                <div className={styles.field}>
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Enter Email"
                   />
                 </div>
               </div>
@@ -233,7 +299,6 @@ const CheckoutPage: React.FC = () => {
             </div>
           </div>
 
-          {/* RIGHT COL - ORDER SUMMARY */}
           <aside className={styles.rightCol}>
             <h2 className={styles.sectionTitle}>Order Details</h2>
 
@@ -283,8 +348,12 @@ const CheckoutPage: React.FC = () => {
               </div>
             </div>
 
-            <button className={styles.proceedBtn} onClick={handleCheckout}>
-              Proceed to Checkout
+            <button
+              className={styles.proceedBtn}
+              onClick={handleCheckout}
+              disabled={loading}
+            >
+              {loading ? "Processing..." : "Proceed to Checkout"}
             </button>
           </aside>
         </div>

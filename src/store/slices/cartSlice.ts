@@ -1,4 +1,3 @@
-
 // redux/slices/cartSlice.ts
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
@@ -94,6 +93,13 @@ const cartSlice = createSlice({
       state.savedForLater = state.savedForLater.filter(item => item.id !== action.payload);
       saveCart(state);
     },
+
+    // ✅ New: clearCart
+    clearCart: (state) => {
+      state.items = [];
+      state.savedForLater = [];
+      saveCart(state);
+    },
   },
 });
 
@@ -105,12 +111,7 @@ export const {
   moveToSaveForLater,
   moveToCart,
   removeFromSaveForLater,
+  clearCart, // ✅ Exported here
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
-
-
-
-
-
-
