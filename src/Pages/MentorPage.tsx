@@ -7,7 +7,7 @@ import { fetchMentorById } from "../store/slices/mentorSlice";
 import MentorDetails from "../Components/MentorDetail";
 import MentorReviews from "../Components/ComponentStyles/MentorReviews.module.css";
 import CoursesByMentor from "../Components/ComponentStyles/CoursesByMentor.module.css";
-import styles from "../Styles/MentorPage.css";
+import styles from "../Styles/MentorPage.module.css";
 import Header2 from "../Components/shared/Header2";
 import Footer from "../Components/Layout/Footer";
 import TestimonialCard from "../Components/TestimonialsSection";

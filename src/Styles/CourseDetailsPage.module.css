@@ -1,7 +1,7 @@
 .courses-wrapper {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+ height: 100vh;
   justify-content: flex-start;
 }
 
@@ -39,6 +39,17 @@
   max-width: 1200px;
   margin: 0 auto;
 }
+.course-details h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 16px 0px;
+  color: #1f2937;
+}
+
+.course-details p {
+  color: #374151;
+  line-height: 1.6;
+}
 
 .sidebar-container {
   width: 250px;
@@ -54,6 +65,35 @@
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 2rem;
 }
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: 0.4fr 1.2fr;
+  gap: 24px;
+}
+
+.rating-summary {
+  padding: 10px 0px;
+}
+
+.reviews-list {
+  width: 50%;
+ margin-left: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.Reviews{
+  width: 50%;
+}
+
+.reviews-list h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #1f2937;
+}
+
 
 @media (max-width: 768px) {
   .courses-section {
