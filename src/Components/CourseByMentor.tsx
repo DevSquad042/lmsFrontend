@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import type { Course } from "../Types/Course";
 import CourseCard from "./cards/CourseCard";
-import styles from "../Styles/CoursesByMentor.module.css";
+import styles from "../Components/ComponentStyles/CoursesByMentor.module.css";
 
 interface Props {
   mentorId: string;

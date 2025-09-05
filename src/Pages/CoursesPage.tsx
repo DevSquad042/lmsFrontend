@@ -21,8 +21,8 @@ const CoursesPages = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        // Retrieve token from localStorage (or your preferred storage)
-        const token = localStorage.getItem("authToken"); // Adjust key based on your app
+        // ✅ Retrieve the token saved by authSlice
+        const token = localStorage.getItem("token");
 
         if (!token) {
           toast.error("You are not authenticated. Please log in.");
@@ -35,12 +35,13 @@ const CoursesPages = () => {
           "https://byway-hoce.onrender.com/api/enrollments",
           {
             headers: {
-              Authorization: `Bearer ${token}`, // Include token in header
+              Authorization: `Bearer ${token}`,
             },
           }
         );
 
-        setCourses(response.data);
+        // ✅ Your response has a "courses" array
+        setCourses(response.data.courses || []);
         setLoading(false);
       } catch (err: any) {
         console.error("Error fetching courses:", err);
@@ -73,7 +74,7 @@ const CoursesPages = () => {
           <h2 className="courses-title">All Courses ({courses.length})</h2>
 
           {loading ? (
-            <p>Loading courses...</p>
+            <div className="loading-spinner"></div>
           ) : courses.length === 0 ? (
             <p>No courses available at the moment.</p>
           ) : (

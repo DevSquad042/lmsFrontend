@@ -103,7 +103,7 @@ const ProfileSettings: React.FC = () => {
       });
 
       const response = await fetch(
-        `https://byway-hoce.onrender.com/api/profile/update`, // Updated endpoint
+        `https://byway-hoce.onrender.com/api/profile/update`,
         {
           method: "PUT",
           headers: {
@@ -122,7 +122,7 @@ const ProfileSettings: React.FC = () => {
       }
 
       const result = await response.json();
-      console.log("Profile update API response:", JSON.stringify(result, null, 2)); // Debug log
+      console.log("Profile update API response:", JSON.stringify(result, null, 2)); 
 
       if (!response.ok) {
         setMessage(result.message || `Error ${response.status}: ${response.statusText} ❌`);
