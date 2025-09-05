@@ -48,6 +48,7 @@
 @media (max-width: 480px) {
   .top-instructors {
     padding: 2.5rem 0;
+    width: 99.9%;
   }
   
   .top-instructors-header {
@@ -60,9 +61,13 @@
   }
   
   .top-instructors-grid {
+    width: 99.9%;
     padding: 0 1rem;
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
+  }
+  ._card_1kukf_1{
+    width: 180px;
   }
 }
 

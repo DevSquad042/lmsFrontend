@@ -131,8 +131,132 @@
   .pagination-wrapper {
     padding-top: 30px;
   }
-
-  .loading-spinner {
-    height: calc(100vh - 12rem); /* Adjusted for extra small screens */
+  ._cardLink_1kukf_153 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
+  .loading-spinner {
+    height: calc(100vh - 12rem);  /*Adjusted for extra small screens */
+  }
+ 
+ .Footer-container{
+  width: 99.9%;
+  padding: 20px;
+}
+.filter-container{
+  /* width: 99.9%; */
+  margin: 0;
+  padding: 15px;
+}
+#root{
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+@media (max-width: 900px) {
+  *{
+    width: 100%;
+    margin: 0
+  }
+  .page-body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .header2{
+    width: 90%;
+    margin: 0;
+    padding: 0;
+  }
+  .main-content{
+    width: 99.9%;
+    margin: 0;
+    padding: 0;
+  }
+  .profile-settings-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* centers horizontally */
+    justify-content: center;
+    text-align: center;    /* centers text */
+    margin: 0 auto;
+    /* 🔴 red background */
+    padding: 20px;
+    border-radius: 10px;   /* optional, to make it card-like */
+    width: 100%;           /* full width on mobile */
+    max-width: 400px;  
+  }
+
+  .profile-settings-container .sidebar {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+  .sidebar {
+    
+    padding: 20px;
+    border-radius: 10px;
+    /* background-color: red; */
+    margin: 0;
+    /* margin-left: -20px; */
+    text-align: center; /* centers text */
+  }
+  .header2{
+    width: 99.9%;
+    margin: 0;
+    padding: 0;
+  }
+   /* Avatar */
+  .sidebar img {
+    display: block;
+    margin: 0 auto 15px auto; /* centers avatar */
+    border-radius: 50%;
+  }
+
+  /* Name + Share button */
+  .sidebar h3,
+  .sidebar button {
+    margin: 0.5rem auto;
+  }
+
+  /* Navigation links */
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;  
+    gap: 10px;
+  }
+
+  .sidebar li {
+    text-align: center;
+    width: auto;
+  }
+
+  .sidebar a {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+  }
+
+  .sidebar a:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+ .sub-container p{
+    flex: 1;
+    width: 100%;
+    margin-bottom: 100px;
+     margin-top: 100px;
+  } 
+  .search-icon2{
+    width: 100px;
+  }
+}
 }

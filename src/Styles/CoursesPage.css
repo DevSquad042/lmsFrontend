@@ -80,13 +80,24 @@
 @media (max-width: 768px) {
   .courses-section {
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
   .sidebar-container {
-    width: 100%;
+    width: max-content;
     margin-bottom: 1rem;
+    margin-right: -10px;
   }
-
+  .sidebar {
+    
+    padding: 20px;
+    border-radius: 10px;
+    /* background-color: red; */
+    margin: 0;
+    /* margin-left: -20px; */
+    text-align: center; /* centers text */
+  }
   .courses-grid {
     grid-template-columns: 1fr;
   }
