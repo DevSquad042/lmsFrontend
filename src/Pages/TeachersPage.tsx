@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom"; // ✅ import Link
+// import { useSelector } from "react-redux";
 import Header2 from "../Components/shared/Header2";
 import ProfileSidebar from "../Components/shared/ProfileSidebar";
 import Footer from "../Components/Layout/Footer";
@@ -9,6 +9,7 @@ import Pagination from "../Components/Pagination";
 import Filter2 from "../Components/Filters/Filter2";
 import MentorCard from "../Components/cards/MentorCard";
 import "../Styles/TeachersPage.css";
+// import type { RootState } from "../store/store";
 
 // ---------- Types ----------
 export interface Mentor {
@@ -35,6 +36,10 @@ const TeachersPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 6;
 
+  // const paidCourses = useSelector(
+  //   (state: RootState) => state.auth.user?.paidCourses || []
+  // );
+
   useEffect(() => {
     const fetchMentors = async () => {
       try {
@@ -47,6 +52,8 @@ const TeachersPage: React.FC = () => {
         const data = Array.isArray(res.data) ? res.data : res.data.data || [];
 
         const transformedMentors: Mentor[] = data.map((instructor: any) => {
+          console.log("Processing instructor:", instructor);
+
           return {
             id: instructor._id,
             name: `${instructor.firstName || ""} ${instructor.lastName || ""}`.trim(),
@@ -114,13 +121,7 @@ const TeachersPage: React.FC = () => {
           ) : (
             <div className="teachers-div">
               {paginatedMentors.map((mentor) => (
-                <Link 
-                  key={mentor.id} 
-                  to={`/teacher/${mentor.id}`} 
-                  style={{ textDecoration: "none", color: "inherit" }} // ✅ keep styles clean
-                >
-                  <MentorCard mentor={mentor} />
-                </Link>
+                <MentorCard key={mentor.id} mentor={mentor} />
               ))}
             </div>
           )}
