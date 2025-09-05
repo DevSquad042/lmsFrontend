@@ -1,4 +1,4 @@
-.hero-container {
+/* .hero-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -148,4 +148,230 @@
   .stat-img {
     width: 120px;
   }
+} */
+
+.hero-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4rem 6rem;
+  position: relative;
+  background-color: #f9fafb;
+  font-family: 'Inter', sans-serif;
+  gap: 2rem;
+}
+
+/* Text Section */
+.hero-text {
+  max-width: 50%;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #1f2937;
+}
+
+.hero-text h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  color: #111827;
+}
+
+.hero-text h1 span {
+  color: #2563EB;
+}
+
+.hero-text p {
+  font-size: 1.125rem;
+  margin-bottom: 2rem;
+  color: #374151;
+}
+
+.hero-button {
+  width: 260px;
+  height: 52px;
+  background-color: #2563EB;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.hero-button:hover {
+  background-color: #1e40af;
+}
+
+/* Visuals Section */
+.hero-visuals {
+  position: relative;
+  width: 31%;
+  border-radius: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #BFDBFE;
+  overflow: hidden;
+}
+
+.main-hero-img {
+  max-height: 500px;
+  width: 100%;
+  height: auto;
+  z-index: 2;
+  object-fit: contain;
+}
+
+.dots-bg {
+  position: absolute;
+  bottom: 0;
+  right: -40px;
+  width: 120px;
+  z-index: 1;
+  transform: translate(-10%, 20%);
+}
+
+.stat-img, .students-img {
+  position: absolute;
+  z-index: 900;
+}
+
+.rate {
+  top: 0%;
+  right: 0%;
+  transform: translate(50%, -20%);
+}
+
+.students-img {
+  top: 1%;
+  left: 0%;
+  transform: translate(-50%, 10%);
+}
+
+.number {
+  bottom: 0%;
+  right: 0%;
+  transform: translate(-170%, -20%);
+}
+
+/* Stats container */
+.stats-container {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  z-index: 2;
+}
+
+.stat-img {
+  width: 150px;
+  height: auto;
+}
+
+/* -------- Responsive -------- */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .hero-container {
+    padding: 3rem 2rem;
+    gap: 3rem;
+  }
+
+  .hero-text {
+    max-width: 60%;
+  }
+
+  .hero-text h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-text p {
+    font-size: 1.05rem;
+  }
+
+  .hero-visuals {
+    width: 40%;
+  }
+
+  .main-hero-img {
+    max-height: 400px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  *{
+    width: 110%;
+    margin: 0;
+  }
+  .header{
+    width: 99.9%;
+    margin: 0;
+  }
+  .root{
+    width: 100%;
+    
+  }
+  .hero-container {
+    flex-direction: column-reverse;
+    padding: 2rem 1.2rem;
+    text-align: center;
+    width: 100%;
+    
+  }
+
+  .hero-text {
+    max-width: 100%;
+  }
+
+  .hero-text h1 {
+    font-size: 2rem;
+  }
+
+  .hero-text p {
+    font-size: 1rem;
+  }
+
+  .hero-button {
+    width: 200px;
+    height: 48px;
+    font-size: 0.95rem;
+  }
+
+  .hero-visuals {
+    width: 100%;
+    border-radius: 20px;
+    padding: 1rem;
+  }
+
+  .main-hero-img {
+    max-height: 280px;
+  }
+
+  /* Hide decorative extras for clarity */
+  .dots-bg,
+  .students-img,
+  .rate,
+  .number {
+    display: none;
+  }
+
+  .stats-container {
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1.5rem;
+  }
+
+  .stat-img {
+    width: 110px;
+  }
+  .top-courses-grid{
+    /* width: 100%; */
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    
+  }
+  
 }

@@ -46,7 +46,7 @@ font-weight: 500;
 @media (max-width: 768px) {
   .instuctor {
     flex-direction: column;
-    margin: 20px;
+    margin: 0;
     text-align: center;
   }
 

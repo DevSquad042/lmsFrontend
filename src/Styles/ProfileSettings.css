@@ -129,7 +129,9 @@
 .upload-btn:hover {
   background-color: #969696;
 }
-
+.Footer-container {
+  width: 100%;
+}
 .save-image-btn {
   margin-top: 15px;
   padding: 10px 20px;
@@ -250,14 +252,89 @@
 
 /* Responsive layout */
 @media (max-width: 900px) {
+  *{
+    width: 99.9%;
+  }
+  #root{
+    width: 100%;
+  }
   .profile-settings-container {
+    display: flex;
     flex-direction: column;
+    align-items: center;   /* centers horizontally */
+    justify-content: center;
+    text-align: center;    /* centers text */
+    margin: 0 auto;
+     /* 🔴 red background */
+    padding: 20px;
+    border-radius: 10px;   /* optional, to make it card-like */
+    width: 100%;           /* full width on mobile */
+    max-width: 400px;  
   }
 
-  .profile-settings-container .profile-sidebar {
+  .profile-settings-container .sidebar {
     flex: 0 0 auto;
     width: 100%;
   }
+  .sidebar {
+    
+    padding: 20px;
+    border-radius: 10px;
+    /* background-color: red; */
+    margin: 0;
+    /* margin-left: -20px; */
+    text-align: center; /* centers text */
+  }
+   /* Avatar */
+  .sidebar img {
+    display: block;
+    margin: 0 auto 15px auto; /* centers avatar */
+    border-radius: 50%;
+  }
+
+  /* Name + Share button */
+  .sidebar h3,
+  .sidebar button {
+    margin: 0.5rem auto;
+  }
+
+  /* Navigation links */
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;  
+    gap: 10px;
+  }
+
+  .sidebar li {
+    text-align: center;
+    width: auto;
+  }
+ .share-btn{
+  padding: 10px 0px;
+  width: 170px
+ }
+  .sidebar a {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+  }
+
+  .sidebar a:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+ .sub-container p{
+    flex: 1;
+    width: 100%;
+    margin-bottom: 100px;
+     margin-top: 100px;
+  } 
 }
 
 
