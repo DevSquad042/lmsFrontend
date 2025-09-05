@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store";
 import { toast } from "react-toastify";
@@ -11,9 +11,32 @@ import percent from "../assets/logo/percent.png";
 import Header1 from "../Components/shared/Header1";
 import Footer from "../Components/Layout/Footer";
 
+// ✅ Define CartItem type if you don’t already have it
+export interface CartItem {
+  id: string;
+  title: string;
+  price: number;
+  image: string;
+  instructor: string;
+  rating: number;
+  lectures: number;
+  level: string;
+  quantity: number;
+}
+
 const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
- const cartItems = useSelector((state: RootState) => state.cart.items);
+  const location = useLocation();
+
+  // 🛒 Normal cart items from Redux
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+
+  // 🛒 Handle Buy Now (items passed via navigate state)
+  const buyNowItems =
+    (location.state as { items?: CartItem[] })?.items || [];
+
+  // If buyNowItems exists, show only those, else show cartItems
+  const itemsToDisplay = buyNowItems.length > 0 ? buyNowItems : cartItems;
 
   const [formData, setFormData] = useState({
     country: "",
@@ -77,8 +100,11 @@ const CheckoutPage: React.FC = () => {
     }
   };
 
-  // 🧮 Dynamic totals
-  const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  // 🧮 Dynamic totals (work with itemsToDisplay instead of just cart)
+  const subtotal = itemsToDisplay.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
   const discount = subtotal > 100 ? -10 : 0;
   const tax = (subtotal + discount) * 0.1;
   const total = subtotal + discount + tax;
@@ -212,14 +238,20 @@ const CheckoutPage: React.FC = () => {
             <h2 className={styles.sectionTitle}>Order Details</h2>
 
             <div className={styles.card}>
-              {cartItems.map((item) => (
+              {itemsToDisplay.map((item) => (
                 <div key={item.id} className={styles.orderItem}>
-                  <img src={item.image} alt={item.title} className={styles.thumb} />
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className={styles.thumb}
+                  />
                   <div className={styles.desc}>
                     <div className={styles.category}>Course</div>
                     <div className={styles.title}>{item.title}</div>
                     <div className={styles.meta}>Qty: {item.quantity}</div>
-                    <div className={styles.price}>${(item.price * item.quantity).toFixed(2)}</div>
+                    <div className={styles.price}>
+                      ${(item.price * item.quantity).toFixed(2)}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -263,5 +295,3 @@ const CheckoutPage: React.FC = () => {
 };
 
 export default CheckoutPage;
-
-

@@ -38,23 +38,23 @@ const CourseSidebar: React.FC<{ course: Course }> = ({ course }) => {
   };
 
   const handleBuyNow = () => {
-    const alreadyInCart = cartItems.some((item) => item.id === course._id);
-
-    if (!alreadyInCart) {
-      dispatch(
-        addToCart({
-          id: course._id,
-          title: course.title,
-          price: Number(course.discountedPrice),
-          image: course.thumbnail,
-          instructor: course.instructor,
-          rating: course.rating,
-          lectures: course.lectures,
-          level: course.level,
-        })
-      );
-    }
-    navigate("/checkout");
+    // 🚀 Skip cart, go directly to checkout with only this course
+    navigate("/checkout", {
+      state: {
+        items: [
+          {
+            id: course._id,
+            title: course.title,
+            price: Number(course.discountedPrice),
+            image: course.thumbnail,
+            instructor: course.instructor,
+            rating: course.rating,
+            lectures: course.lectures,
+            level: course.level,
+          },
+        ],
+      },
+    });
   };
 
   return (
@@ -68,12 +68,18 @@ const CourseSidebar: React.FC<{ course: Course }> = ({ course }) => {
         {/* Price Section */}
         <div className={styles.priceSection}>
           <div className={styles.priceContainer}>
-            <span className={styles.currentPrice}><span>₦</span>
-             {course.discountedPrice}</span>
-            <span className={styles.originalPrice}><span>₦</span>
-             {course.price}</span>
+            <span className={styles.currentPrice}>
+              <span>₦</span>
+              {course.discountedPrice}
+            </span>
+            <span className={styles.originalPrice}>
+              <span>₦</span>
+              {course.price}
+            </span>
           </div>
-          <span className={styles.discountBadge}>{course.discountPercentage}% Off</span>
+          <span className={styles.discountBadge}>
+            {course.discountPercentage}% Off
+          </span>
         </div>
 
         {/* Action Buttons */}
