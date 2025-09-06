@@ -61,6 +61,8 @@
   .Sub-container, .Sub-container2 {
     width: 90%;
     font-size: 13px;
+    height: fit-content;
+    line-height: 2.5;
   }
 
   .Sub-container > h3 {

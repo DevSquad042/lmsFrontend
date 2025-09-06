@@ -12,6 +12,19 @@ import percent from "../assets/logo/percent.png";
 import Header1 from "../Components/shared/Header1";
 import Footer from "../Components/Layout/Footer";
 
+// ✅ Define CartItem type if you don’t already have it
+export interface CartItem {
+  id: string;
+  title: string;
+  price: number;
+  image: string;
+  instructor: string;
+  rating: number;
+  lectures: number;
+  level: string;
+  quantity: number;
+}
+
 const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -290,7 +303,7 @@ const CheckoutPage: React.FC = () => {
             <h2 className={styles.sectionTitle}>Order Details</h2>
 
             <div className={styles.card}>
-              {cartItems.map((item) => (
+              {itemsToDisplay.map((item) => (
                 <div key={item.id} className={styles.orderItem}>
                   <img
                     src={item.image}

@@ -96,16 +96,36 @@
 @media (max-width: 768px) {
   .courses-section {
     flex-direction: column;
+<<<<<<< HEAD
+    justify-content: center;
+    align-items: center;
+=======
     padding: 1rem;
+>>>>>>> a47cae63fd8c1bdc3d19b36cf81a150d75662533
   }
 
   .sidebar-container {
-    width: 100%;
+    width: max-content;
     margin-bottom: 1rem;
+    margin-right: -10px;
   }
+  .sidebar {
+    
+    padding: 20px;
+    border-radius: 10px;
+    /* background-color: red; */
+    margin: 0;
+    /* margin-left: -20px; */
+    text-align: center; /* centers text */
+  }
+<<<<<<< HEAD
+  .courses-grid {
+    grid-template-columns: 1fr;
+=======
 
   .courses-title {
     font-size: 1.5rem;
+>>>>>>> a47cae63fd8c1bdc3d19b36cf81a150d75662533
   }
 }
 

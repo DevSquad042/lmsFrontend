@@ -40,25 +40,26 @@ const Footer: React.FC = () => {
 
       <div  className='Sub-container2'>
         <h3>Contact Us</h3>
-        <p>Address: 123 Main Street, Anytown, CA 12345</p>
-        <p>Tel: +(123) 456--7890</p>
+        <p>Kilometer 7 Enugu portharcourt express way <br /> centinary city Enugu</p>
+        <p>Tel: +(123) 907-798-3405</p>
         <p>Mail: bywatedu@webkul.in</p>
         <div className='Icons'>
-          <Link to="www.facebook.com">
-          <FaFacebook />
-          </Link>
-          <Link to="www.github.com">
-          <FaGithub />
-          </Link>
-          <Link to="https://www.google.com">
-          <FcGoogle />
-          </Link>
-          <Link to="https://twitter.com">
-          <FaXTwitter />
-          </Link>
-          <Link to="https://www.microsoft.com">
-          <FaMicrosoft />
-          </Link>
+         <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
+  <FaFacebook />
+</a>
+<a href="https://www.github.com" target="_blank" rel="noopener noreferrer">
+  <FaGithub />
+</a>
+<a href="https://www.google.com" target="_blank" rel="noopener noreferrer">
+  <FcGoogle />
+</a>
+<a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+  <FaXTwitter />
+</a>
+<a href="https://www.microsoft.com" target="_blank" rel="noopener noreferrer">
+  <FaMicrosoft />
+</a>
+
         </div>
       </div>
     </div>

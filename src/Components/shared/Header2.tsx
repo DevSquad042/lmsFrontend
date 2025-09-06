@@ -19,6 +19,8 @@ interface Course {
 
 const Header2: React.FC = () => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
+  const user = useSelector((state: RootState) => state.auth.user);
+
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -46,7 +48,11 @@ const Header2: React.FC = () => {
   const fetchCourses = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`https://byway-hoce.onrender.com/api/search?query=${encodeURIComponent(searchQuery)}`);
+      const response = await fetch(
+        `https://byway-hoce.onrender.com/api/search?query=${encodeURIComponent(
+          searchQuery
+        )}`
+      );
       const data = await response.json();
       setSearchResults(data.results || []);
     } catch (error) {
@@ -60,6 +66,11 @@ const Header2: React.FC = () => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
+
+  // Get initials from user (fallback to "?" if not logged in)
+  const userInitials = user
+    ? `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}`.toUpperCase()
+    : null;
 
   return (
     <header className="header2">
@@ -98,7 +109,7 @@ const Header2: React.FC = () => {
                   <div className="search-result-info">
                     <h3>{course.title}</h3>
                     <p>{course.description.substring(0, 100)}...</p>
-                    <p className="search-result-price">${course.price}</p>
+                    <p className="search-result-price">₦{course.price}</p>
                   </div>
                 </Link>
               ))
@@ -127,16 +138,24 @@ const Header2: React.FC = () => {
           </Link>
         </div>
 
-        <div className="user-avatar-wrapper" onClick={toggleDropdown}>
-          <div className="user-avatar">B</div>
-          {dropdownOpen && (
-            <div className="user-dropdown">
-              <Link to="/">Home</Link>
-              <Link to="/profile1">Settings</Link>
-              <LogoutButton onLogoutSuccess={handleLogoutSuccess} />
-            </div>
-          )}
-        </div>
+        {/* User section */}
+        {user ? (
+          <div className="user-avatar-wrapper" onClick={toggleDropdown}>
+            <div className="user-avatar">{userInitials}</div>
+            {dropdownOpen && (
+              <div className="user-dropdown">
+                <Link to="/">Home</Link>
+                <Link to="/profile1">Settings</Link>
+                <Link to="/"> <LogoutButton onLogoutSuccess={handleLogoutSuccess} /></Link>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="auth-buttons">
+            <Link to="/login" className="login-btn">Login</Link>
+            <Link to="/register" className="register-btn">Register</Link>
+          </div>
+        )}
       </div>
     </header>
   );
