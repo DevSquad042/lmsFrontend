@@ -4,6 +4,7 @@ export interface Section {
   videoUrl: string;
   pdf: string;
   _id: string;
+  isPreview?: boolean;
 }
 
 export type CourseLevel = "Beginner" | "Intermediate" | "Advanced";
