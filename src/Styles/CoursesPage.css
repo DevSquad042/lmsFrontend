@@ -96,12 +96,7 @@
 @media (max-width: 768px) {
   .courses-section {
     flex-direction: column;
-<<<<<<< HEAD
-    justify-content: center;
-    align-items: center;
-=======
     padding: 1rem;
->>>>>>> a47cae63fd8c1bdc3d19b36cf81a150d75662533
   }
 
   .sidebar-container {
@@ -118,14 +113,9 @@
     /* margin-left: -20px; */
     text-align: center; /* centers text */
   }
-<<<<<<< HEAD
-  .courses-grid {
-    grid-template-columns: 1fr;
-=======
 
   .courses-title {
     font-size: 1.5rem;
->>>>>>> a47cae63fd8c1bdc3d19b36cf81a150d75662533
   }
 }
 
