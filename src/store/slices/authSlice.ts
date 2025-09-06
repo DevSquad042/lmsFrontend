@@ -14,6 +14,7 @@ export interface User {
   description?: string;
   linkedin?: string;
   youtube?: string;
+  language?: string;
   facebook?: string;
   website?: string;
   x?: string;

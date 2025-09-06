@@ -1,6 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Footer from "../Components/Layout/Footer";
 import Header2 from "../Components/shared/Header2";
@@ -14,6 +12,7 @@ interface FormDataType {
   lastName: string;
   headline: string;
   description: string;
+  language: string;
   linkedin: string;
   youtube: string;
   facebook: string;
@@ -31,6 +30,7 @@ const ProfileSettings: React.FC = () => {
     lastName: "",
     headline: "",
     description: "",
+    language: "",
     linkedin: "",
     youtube: "",
     facebook: "",
@@ -43,9 +43,11 @@ const ProfileSettings: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
+  // ✅ ref for file input
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
   // Prefill profile data safely
   useEffect(() => {
-    console.log("User and token in ProfileSettings:", { user, token }); // Debug log
     if (!user) return;
 
     setFormData({
@@ -53,6 +55,7 @@ const ProfileSettings: React.FC = () => {
       lastName: user.lastName || "",
       headline: user.headline || "",
       description: user.description || "",
+      language: user.language || "",
       linkedin: user.linkedin || "",
       youtube: user.youtube || "",
       facebook: user.facebook || "",
@@ -65,7 +68,9 @@ const ProfileSettings: React.FC = () => {
   }, [user]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -80,16 +85,13 @@ const ProfileSettings: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    console.log("handleSubmit called with:", { user, token }); // Debug log
     if (!token) {
       setMessage("No token found. Please log in again ❌");
-      console.log("Token missing in handleSubmit"); // Debug log
       return;
     }
 
     if (!user?.id) {
       setMessage("User ID not found. Please log in again ❌");
-      console.log("User ID missing in handleSubmit"); // Debug log
       return;
     }
 
@@ -99,7 +101,13 @@ const ProfileSettings: React.FC = () => {
     try {
       const data = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
-        if (value !== null) data.append(key, value as any);
+        if (value !== null) {
+          if (value instanceof File) {
+            data.append(key, value);
+          } else {
+            data.append(key, String(value));
+          }
+        }
       });
 
       const response = await fetch(
@@ -113,23 +121,21 @@ const ProfileSettings: React.FC = () => {
         }
       );
 
-      // Check if response is JSON
       const contentType = response.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
         const text = await response.text();
-        console.error("Non-JSON response from profile update:", text);
-        throw new Error(`Server returned non-JSON response: ${response.status} ${response.statusText}`);
+        throw new Error(`Server returned non-JSON response: ${text}`);
       }
 
       const result = await response.json();
-      console.log("Profile update API response:", JSON.stringify(result, null, 2)); 
 
       if (!response.ok) {
-        setMessage(result.message || `Error ${response.status}: ${response.statusText} ❌`);
+        setMessage(
+          result.message || `Error ${response.status}: ${response.statusText} ❌`
+        );
         return;
       }
 
-      // Update Redux user and localStorage
       const updatedUser = { ...user, ...result };
       localStorage.setItem("user", JSON.stringify(updatedUser));
 
@@ -138,9 +144,12 @@ const ProfileSettings: React.FC = () => {
       setMessage("Profile updated successfully ✅");
       setFormData((prev) => ({ ...prev, profilePicture: null }));
       setImagePreview(result.profilePicture || null);
-    } catch (err: any) {
-      console.error("Error updating profile:", err);
-      setMessage(`Error updating profile: ${err.message} ❌`);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setMessage(`Error updating profile: ${err.message} ❌`);
+      } else {
+        setMessage("An unknown error occurred ❌");
+      }
     } finally {
       setLoading(false);
     }
@@ -198,6 +207,66 @@ const ProfileSettings: React.FC = () => {
               />
             </div>
 
+            {/* ✅ New Language dropdown */}
+            <div className="form-group">
+              <label>Language</label>
+              <select
+                name="language"
+                value={formData.language}
+                onChange={handleChange}
+              >
+                <option value="">-- Select Language --</option>
+                <option value="english">English</option>
+                <option value="french">French</option>
+                <option value="spanish">Spanish</option>
+                <option value="german">German</option>
+                <option value="chinese">Chinese</option>
+                <option value="japanese">Japanese</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="profile-image-card">
+            <h2>Profile Picture</h2>
+            <div className="image-preview">
+              {imagePreview ? (
+                <img src={imagePreview} alt="Preview" />
+              ) : (
+                <p>No image selected</p>
+              )}
+            </div>
+            <div className="form-group">
+              <label>Add/Change Profile</label>
+              <div className="input-forms">
+                <input
+                id="imageInput"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                ref={fileInputRef} // ✅ added ref
+              />
+              <button
+                type="button"
+                className="upload-btn"
+                onClick={() => fileInputRef.current?.click()} // ✅ trigger input
+              >
+                Upload
+              </button>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="savee-btn"
+              disabled={loading}
+              onClick={handleSubmit}
+            >
+              {loading ? "Saving..." : "Save Profile"}
+            </button>
+            {message && <p className="status-message">{message}</p>}
+          </div>
+
+          <div>
             <div className="form-group">
               <label>LinkedIn</label>
               <input
@@ -253,33 +322,6 @@ const ProfileSettings: React.FC = () => {
               />
             </div>
           </div>
-
-          <div className="profile-image-card">
-            <h2>Profile Picture</h2>
-            <div className="image-preview">
-              {imagePreview ? <img src={imagePreview} alt="Preview" /> : <p>No image selected</p>}
-            </div>
-            <div className="form-group">
-              <label htmlFor="imageInput">Upload Profile Picture</label>
-              <input
-                id="imageInput"
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-            </div>
-          </div>
-
-          <button
-            type="button"
-            className="save-btn"
-            disabled={loading}
-            onClick={handleSubmit}
-          >
-            {loading ? "Saving..." : "Save Profile"}
-          </button>
-
-          {message && <p className="status-message">{message}</p>}
         </div>
       </section>
       <Footer />
