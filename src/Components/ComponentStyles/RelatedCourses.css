@@ -41,10 +41,10 @@
 /* Grid Container */
 .top-courses-grid {
   /* Remove max-width restriction */
-  width: 100%;
+  /* width: 100%; */
   padding: 0 2rem;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  /* display: grid; */
+ 
   gap: 1.5rem;
 }
 
@@ -64,8 +64,9 @@
   
   .top-courses-grid {
     padding: 0 1.5rem;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.25rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
   }
 }
 

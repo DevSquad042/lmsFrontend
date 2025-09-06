@@ -15,6 +15,7 @@ const CourseSidebar: React.FC<{ course: Course }> = ({ course }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state: RootState) => state.cart.items);
 
+  // Add to Cart
   const handleAddToCart = () => {
     const alreadyInCart = cartItems.some((item) => item.id === course._id);
 
@@ -37,6 +38,7 @@ const CourseSidebar: React.FC<{ course: Course }> = ({ course }) => {
     }
   };
 
+  // Buy Now → ensure course is in cart, then navigate to checkout
   const handleBuyNow = () => {
     const alreadyInCart = cartItems.some((item) => item.id === course._id);
 
@@ -54,7 +56,8 @@ const CourseSidebar: React.FC<{ course: Course }> = ({ course }) => {
         })
       );
     }
-    navigate("/checkout");
+
+    navigate("/checkout"); // ✅ Checkout will read from Redux
   };
 
   return (
@@ -68,12 +71,18 @@ const CourseSidebar: React.FC<{ course: Course }> = ({ course }) => {
         {/* Price Section */}
         <div className={styles.priceSection}>
           <div className={styles.priceContainer}>
-            <span className={styles.currentPrice}><span>₦</span>
-             {course.discountedPrice}</span>
-            <span className={styles.originalPrice}><span>₦</span>
-             {course.price}</span>
+            <span className={styles.currentPrice}>
+              <span>₦</span>
+              {course.discountedPrice}
+            </span>
+            <span className={styles.originalPrice}>
+              <span>₦</span>
+              {course.price}
+            </span>
           </div>
-          <span className={styles.discountBadge}>{course.discountPercentage}% Off</span>
+          <span className={styles.discountBadge}>
+            {course.discountPercentage}% Off
+          </span>
         </div>
 
         {/* Action Buttons */}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import "../Styles/MentorPage.css";
+// import styles from "../Styles/MentorPage.module.css";
 import Header1 from "../Components/shared/Header1";
 import Footer from "../Components/Layout/Footer";
 import TopCourses from "../Components/TopCourses";

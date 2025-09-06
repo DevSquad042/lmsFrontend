@@ -1,17 +1,7 @@
 import React, { useState } from "react";
 import { FaChevronDown, FaPlayCircle } from "react-icons/fa";
 import styles from "./ComponentStyles/CourseContent.module.css";
-
-// Define types more explicitly (if not already in ../Types/Course)
-export interface Section {
-  title: string;
-  isPreview: boolean;
-}
-
-export interface Course {
-  title: string;
-  sections: Section[];
-}
+import type { Course } from "../Types/Course";
 
 interface CourseContentProps {
   course: Course;
@@ -23,6 +13,10 @@ const CourseContent: React.FC<CourseContentProps> = ({ course }) => {
   const toggleSection = (index: number) => {
     setOpenSection((prev) => (prev === index ? null : index));
   };
+
+  if (!course.sections) {
+    return <div className={styles.contentContainer}><p>No sections available.</p></div>;
+  }
 
   return (
     <div className={styles.contentContainer}>
@@ -47,7 +41,7 @@ const CourseContent: React.FC<CourseContentProps> = ({ course }) => {
               <h3 className={styles.sectionTitle}>{section.title}</h3>
             </div>
             <span className={styles.sectionStatus}>
-              {section.isPreview ? "Preview" : "Video"}
+              {(section.isPreview ?? false) ? "Preview" : "Video"}
             </span>
           </div>
 

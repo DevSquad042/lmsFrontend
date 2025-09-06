@@ -1,6 +1,5 @@
-// redux/slices/cartSlice.ts
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
 
 export interface CartItem {
   id: string;
@@ -19,82 +18,75 @@ interface CartState {
   savedForLater: CartItem[];
 }
 
-// ✅ Load cart from localStorage
 const loadCart = (): CartState => {
   try {
-    const data = localStorage.getItem("cart");
+    const data = localStorage.getItem('cart');
     return data ? JSON.parse(data) : { items: [], savedForLater: [] };
   } catch {
     return { items: [], savedForLater: [] };
   }
 };
 
-// ✅ Save cart to localStorage
 const saveCart = (state: CartState) => {
-  localStorage.setItem("cart", JSON.stringify(state));
+  try {
+    localStorage.setItem('cart', JSON.stringify(state));
+  } catch (error) {
+    console.error('Error saving cart to localStorage:', error);
+  }
 };
 
 const initialState: CartState = loadCart();
 
+export const buyNow = createAsyncThunk(
+  'cart/buyNow',
+  async (course: Omit<CartItem, 'quantity'>, { dispatch }) => {
+    dispatch(cartSlice.actions.addToCart(course));
+    return course.id;
+  }
+);
+
 const cartSlice = createSlice({
-  name: "cart",
+  name: 'cart',
   initialState,
   reducers: {
-    addToCart: (state, action: PayloadAction<Omit<CartItem, "quantity">>) => {
-      const existingItem = state.items.find(item => item.id === action.payload.id);
-      if (existingItem) {
-        alert(`${action.payload.title} is already in your cart.`);
-      } else {
-        state.items.push({ ...action.payload, quantity: 1 });
-        saveCart(state);
-      }
-    },
-
-    buyNow: (state, action: PayloadAction<Omit<CartItem, "quantity">>) => {
-      const existingItem = state.items.find(item => item.id === action.payload.id);
+    addToCart: (state, action: PayloadAction<Omit<CartItem, 'quantity'>>) => {
+      const existingItem = state.items.find((item) => item.id === action.payload.id);
       if (!existingItem) {
         state.items.push({ ...action.payload, quantity: 1 });
         saveCart(state);
       }
     },
-
     removeFromCart: (state, action: PayloadAction<string>) => {
-      state.items = state.items.filter(item => item.id !== action.payload);
+      state.items = state.items.filter((item) => item.id !== action.payload);
       saveCart(state);
     },
-
     updateQuantity: (state, action: PayloadAction<{ id: string; quantity: number }>) => {
-      const item = state.items.find(i => i.id === action.payload.id);
+      const item = state.items.find((i) => i.id === action.payload.id);
       if (item) {
         item.quantity = action.payload.quantity;
         saveCart(state);
       }
     },
-
     moveToSaveForLater: (state, action: PayloadAction<string>) => {
-      const item = state.items.find(i => i.id === action.payload);
+      const item = state.items.find((i) => i.id === action.payload);
       if (item) {
-        state.items = state.items.filter(i => i.id !== action.payload);
+        state.items = state.items.filter((i) => i.id !== action.payload);
         state.savedForLater.push(item);
         saveCart(state);
       }
     },
-
     moveToCart: (state, action: PayloadAction<string>) => {
-      const savedItem = state.savedForLater.find(i => i.id === action.payload);
+      const savedItem = state.savedForLater.find((i) => i.id === action.payload);
       if (savedItem) {
-        state.savedForLater = state.savedForLater.filter(i => i.id !== action.payload);
+        state.savedForLater = state.savedForLater.filter((i) => i.id !== action.payload);
         state.items.push(savedItem);
         saveCart(state);
       }
     },
-
     removeFromSaveForLater: (state, action: PayloadAction<string>) => {
-      state.savedForLater = state.savedForLater.filter(item => item.id !== action.payload);
+      state.savedForLater = state.savedForLater.filter((item) => item.id !== action.payload);
       saveCart(state);
     },
-
-    // ✅ New: clearCart
     clearCart: (state) => {
       state.items = [];
       state.savedForLater = [];
@@ -105,13 +97,12 @@ const cartSlice = createSlice({
 
 export const {
   addToCart,
-  buyNow,
   removeFromCart,
   updateQuantity,
   moveToSaveForLater,
   moveToCart,
   removeFromSaveForLater,
-  clearCart, // ✅ Exported here
+  clearCart,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
