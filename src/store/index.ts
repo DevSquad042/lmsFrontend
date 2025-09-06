@@ -3,6 +3,8 @@ import authReducer from "./slices/authSlice";
 import cartReducer from "./slices/cartSlice";
 import mentorReducer from "./slices/mentorSlice";
 import coursesReducer from "./slices/coursesSlice"; // unified
+import reviewsReducer from "./slices/reviewsSlice";
+import chatsReducer from "./slices/chatSlice"; 
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +12,8 @@ export const store = configureStore({
     cart: cartReducer,
     mentors: mentorReducer,
     courses: coursesReducer, // ✅ only one now
+    reviews: reviewsReducer,
+    chats: chatsReducer,     // 👈 register chats slice
   },
 });
 
