@@ -39,7 +39,7 @@ const CourseCard: React.FC<{ course: Course }> = ({ course }) => {
             </div>
             <span className={styles.ratingText}>{safeRating.toFixed(1)}</span>
           </div>
-          <p className={styles.price}>${course.price}</p>
+          <p className={styles.price}>NGN{course.price}</p>
         </div>
       </article>
     </Link>
