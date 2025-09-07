@@ -4,7 +4,7 @@ import Footer from "../Components/Layout/Footer";
 import Header2 from "../Components/shared/Header2";
 import ProfileSidebar from "../Components/shared/ProfileSidebar";
 import { type RootState, type AppDispatch } from "../store/store";
-import { setPaidCourses } from "../store/slices/authSlice";
+import { setPaidCourses, setUser } from "../store/slices/authSlice"; // ✅ import setUser
 import "../Styles/ProfileSettings.css";
 
 interface FormDataType {
@@ -137,7 +137,9 @@ const ProfileSettings: React.FC = () => {
       }
 
       const updatedUser = { ...user, ...result };
-      localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      // ✅ Sync Redux + localStorage
+      dispatch(setUser(updatedUser));
 
       if (result.paidCourses) dispatch(setPaidCourses(result.paidCourses));
 
@@ -239,19 +241,19 @@ const ProfileSettings: React.FC = () => {
               <label>Add/Change Profile</label>
               <div className="input-forms">
                 <input
-                id="imageInput"
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                ref={fileInputRef} // ✅ added ref
-              />
-              <button
-                type="button"
-                className="upload-btn"
-                onClick={() => fileInputRef.current?.click()} // ✅ trigger input
-              >
-                Upload
-              </button>
+                  id="imageInput"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  ref={fileInputRef} // ✅ added ref
+                />
+                <button
+                  type="button"
+                  className="upload-btn"
+                  onClick={() => fileInputRef.current?.click()} // ✅ trigger input
+                >
+                  Upload
+                </button>
               </div>
             </div>
 

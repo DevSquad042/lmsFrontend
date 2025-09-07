@@ -5,8 +5,8 @@ import { useParams } from "react-router-dom";
 import type { RootState, AppDispatch } from "../store/index";
 import { fetchMentorById } from "../store/slices/mentorSlice";
 import MentorDetails from "../Components/MentorDetail";
-import MentorReviews from "../Components/ComponentStyles/MentorReviews.module.css";
-import CoursesByMentor from "../Components/ComponentStyles/CoursesByMentor.module.css";
+import MentorReviews from "../Components/MentorReviews";
+import CoursesByMentor from "../Components/CourseByMentor";
 import styles from "../Styles/MentorPage.module.css";
 import Header2 from "../Components/shared/Header2";
 import Footer from "../Components/Layout/Footer";
@@ -16,7 +16,7 @@ import Breadcrumb from "../Components/Breadcrumb";
 const MentorPage: React.FC = () => {
   const { mentorId } = useParams<{ mentorId: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const { selectedMentor, loading, error } = useSelector(
+  const { selected: selectedMentor, loading, error } = useSelector(
     (state: RootState) => state.mentors
   );
 
