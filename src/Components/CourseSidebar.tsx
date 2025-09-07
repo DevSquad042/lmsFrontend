@@ -15,6 +15,7 @@ const CourseSidebar: React.FC<{ course: Course }> = ({ course }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state: RootState) => state.cart.items);
 
+  // Add to Cart
   const handleAddToCart = () => {
     const alreadyInCart = cartItems.some((item) => item.id === course._id);
 
@@ -37,24 +38,26 @@ const CourseSidebar: React.FC<{ course: Course }> = ({ course }) => {
     }
   };
 
+  // Buy Now → ensure course is in cart, then navigate to checkout
   const handleBuyNow = () => {
-    // 🚀 Skip cart, go directly to checkout with only this course
-    navigate("/checkout", {
-      state: {
-        items: [
-          {
-            id: course._id,
-            title: course.title,
-            price: Number(course.discountedPrice),
-            image: course.thumbnail,
-            instructor: course.instructor,
-            rating: course.rating,
-            lectures: course.lectures,
-            level: course.level,
-          },
-        ],
-      },
-    });
+    const alreadyInCart = cartItems.some((item) => item.id === course._id);
+
+    if (!alreadyInCart) {
+      dispatch(
+        addToCart({
+          id: course._id,
+          title: course.title,
+          price: Number(course.discountedPrice),
+          image: course.thumbnail,
+          instructor: course.instructor,
+          rating: course.rating,
+          lectures: course.lectures,
+          level: course.level,
+        })
+      );
+    }
+
+    navigate("/checkout"); // ✅ Checkout will read from Redux
   };
 
   return (
