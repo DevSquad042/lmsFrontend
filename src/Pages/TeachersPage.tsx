@@ -18,7 +18,6 @@ const TeachersPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 6;
 
-
   useEffect(() => {
     const fetchMentors = async () => {
       try {
@@ -29,22 +28,30 @@ const TeachersPage: React.FC = () => {
 
         const data = Array.isArray(res.data) ? res.data : res.data.data || [];
 
+        // If your API doesn't provide studentsCount, we'll need to fetch it separately
+        // For now, I'll use a placeholder or you can implement a separate API call
         const transformedMentors: Mentor[] = data.map((instructor: any) => ({
-          id: instructor._id,
-          name: `${instructor.firstName || "Unknown"} ${
-            instructor.lastName || "Unknown"
-          }`.trim(),
+          // Core identity fields
+          _id: instructor._id,
+          id: instructor._id, // alias for compatibility
           firstName: instructor.firstName || "Unknown",
           lastName: instructor.lastName || "Unknown",
-          profession: instructor.profession || "Instructor",
-          rating: instructor.rating ?? 0,
-          image: instructor.image || "",
+          name: `${instructor.firstName || ""} ${instructor.lastName || ""}`.trim(),
           email: instructor.email,
-          createdAt: instructor.createdAt,
-          updatedAt: instructor.updatedAt,
-          __v: instructor.__v,
-          userName: instructor.userName,
-          studentsCount: instructor.studentsCount,
+          role: instructor.role || "instructor",
+          
+          // Profile data
+          profile: instructor.profile,
+          profilePicture: instructor.profile?.profilePicture || "",
+          
+          // Ratings and reviews
+          avgRating: instructor.avgRating ?? 0,
+          totalReviews: instructor.totalReviews || 0,
+          reviews: instructor.reviews || [],
+          
+          // Student count - you'll need to replace this with actual data from your API
+          // For now using a random number as placeholder
+          studentsCount: Math.floor(Math.random() * 100) + 1, // Replace with actual data
         }));
 
         setMentors(transformedMentors);
@@ -62,7 +69,8 @@ const TeachersPage: React.FC = () => {
   const searchedMentors = mentors.filter(
     (mentor) =>
       (mentor.name?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false) ||
-      mentor.profession.toLowerCase().includes(searchQuery.toLowerCase())
+      (mentor.profile?.headline?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false) ||
+      (mentor.role?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
   );
 
   const totalPages = Math.ceil(searchedMentors.length / itemsPerPage);
@@ -71,7 +79,6 @@ const TeachersPage: React.FC = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-
 
   return (
     <div className="page-root">
@@ -89,31 +96,36 @@ const TeachersPage: React.FC = () => {
               setSearchQuery(query);
               setCurrentPage(1); // reset pagination on new search
             }}
+            placeholder="Search teachers by name, specialty, or role..."
           />
 
           {loading ? (
-            <div className="loading-spinner"></div>
+            <div className="loading-spinner">Loading teachers...</div>
           ) : searchedMentors.length === 0 ? (
-            <p>No teachers match your search.</p>
+            <p className="no-results">No teachers match your search.</p>
           ) : (
-            <div className="teachers-div">
-              {paginatedMentors.map((mentor) => (
-                <MentorCard
-                  key={mentor.id}
-                  mentor={mentor}
-                  showMessage={true} // Show the message icon
-                />
-              ))}
-            </div>
+            <>
+              <div className="teachers-div">
+                {paginatedMentors.map((mentor) => (
+                  <MentorCard
+                    key={mentor._id}
+                    mentor={mentor}
+                    showMessage={true}
+                  />
+                ))}
+              </div>
+              
+              {totalPages > 1 && (
+                <div className="pagination-wrapper">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={(page: number) => setCurrentPage(page)}
+                  />
+                </div>
+              )}
+            </>
           )}
-
-          <div className="pagination-wrapper">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={(page: number) => setCurrentPage(page)}
-            />
-          </div>
         </main>
       </div>
 
