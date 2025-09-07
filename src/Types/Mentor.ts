@@ -22,5 +22,6 @@ export interface Mentor {
   bio?: string;
   portfolio?: string;
   image?: string;
+  profilePicture?: string; // ✅ added for API compatibility
   studentsCount?: number; // ✅ added for MentorCard use
 }
