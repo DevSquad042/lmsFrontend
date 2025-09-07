@@ -63,12 +63,14 @@ const CoursePage: React.FC = () => {
   return (
     <>
       <Header2 />
-
+ 
       <main className={styles.main}>
-        <Breadcrumb links={breadcrumbLinks} />
+       
         <div className={styles.coursePage}>
           <div className={styles.mainContent}>
-            <CourseDetails course={selectedCourse} />
+           <div>
+            <Breadcrumb links={breadcrumbLinks} />
+             <CourseDetails course={selectedCourse} />
 
             {/* Tabs */}
             <div className="tabs">
@@ -79,7 +81,7 @@ const CoursePage: React.FC = () => {
             </div>
 
             {/* Course Overview */}
-            <section className="course-details" id="course-details">
+            <section className="coursee-details" id="course-details">
               <h2>Course Overview</h2>
               <p>
                 This interactive e-learning course will introduce you to User Experience (UX) design, the art of creating products and services that are intuitive, enjoyable, and user-friendly. Gain a solid foundation in UX principles and learn to apply them in real-world scenarios through engaging modules and interactive exercises.
@@ -111,11 +113,14 @@ const CoursePage: React.FC = () => {
             </section>
 
             <CourseContent course={selectedCourse} />
+            
+          <div className={styles.sidebar}>
+           </div>
+           
+          </div>
+           <CourseSidebar course={selectedCourse} />
           </div>
 
-          <div className={styles.sidebar}>
-            <CourseSidebar course={selectedCourse} />
-          </div>
 
           <div className={styles.review}>
             <div className="container">

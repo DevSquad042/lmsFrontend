@@ -110,7 +110,7 @@ const CartPage: React.FC = () => {
                       <div className="course-main">
                         <div className="title-price-row">
                           <h3 className="course-title">{course.title}</h3>
-                          <span className="course-price">${course.price.toFixed(2)}</span>
+                          <span className="course-price">₦{course.price.toFixed(2)}</span>
                         </div>
                         <p className="course-instructor">By {course.instructor}</p>
                         <div className="course-rating">
@@ -157,7 +157,7 @@ const CartPage: React.FC = () => {
                     <div className="course-main">
                       <div className="title-price-row">
                         <h3 className="course-title">{course.title}</h3>
-                        <span className="course-price">${course.price.toFixed(2)}</span>
+                        <span className="course-price">₦{course.price.toFixed(2)}</span>
                       </div>
                       <p className="course-instructor">By {course.instructor}</p>
                       <div className="course-actions">
