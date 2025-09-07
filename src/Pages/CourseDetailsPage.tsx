@@ -68,33 +68,41 @@ const CoursePage: React.FC = () => {
        
         <div className={styles.coursePage}>
           <div className={styles.mainContent}>
-           <div>
+           <div className={styles.detailsss}>
             <Breadcrumb links={breadcrumbLinks} />
              <CourseDetails course={selectedCourse} />
 
             {/* Tabs */}
-            <div className="tabs">
+            <div className={styles.tabss}>
               <a href="#course-details" className="active">Details</a>
               <a href="#instructor-details">Instructor</a>
               <a href="#more-courses">Courses</a>
               <a href="#reviews-section">Reviews</a>
             </div>
 
-            {/* Course Overview */}
-            <section className="coursee-details" id="course-details">
+           
+          </div>
+           <CourseSidebar course={selectedCourse} />
+          </div>
+
+
+           {/* Course Overview */}
+            <section className={styles.courseDetailss}>
               <h2>Course Overview</h2>
               <p>
-                This interactive e-learning course will introduce you to User Experience (UX) design, the art of creating products and services that are intuitive, enjoyable, and user-friendly. Gain a solid foundation in UX principles and learn to apply them in real-world scenarios through engaging modules and interactive exercises.
+                This interactive e-learning course will introduce you to User Experience (UX) design, the art of creating products <br /> and services  that are intuitive, enjoyable, and user-friendly. Gain a solid foundation in UX principles and learn to apply <br />them in real-world scenarios through engaging modules and interactive exercises.
               </p>
               <h2>Certificate</h2>
               <p>
-                At Byway, we understand the significance of formal recognition for your hard work and dedication to continuous learning. Upon successful completion of our courses, you will earn a prestigious certification that not only validates your expertise but also opens doors to new opportunities in your chosen field.
+                At Byway, we understand the significance of formal recognition for your hard work and dedication to continuous learning. <br />Upon successful completion of our courses, you will earn a prestigious certification that not only validates your expertise <br />but also opens doors to new opportunities in your chosen field.
               </p>
             </section>
 
             {/* Instructor */}
-            <section className="instructor-details" id="instructor-details">
-              <h2>Instructor</h2>
+            <section className={styles.instructorDetails}>
+
+              <div className={styles.instructorInfo}>
+                 <h2>Instructor</h2>
               <span className="instructor-name">Ronald Richards</span>
               <h2 className="instructor-role">UI/UX Designer</h2>
 
@@ -110,16 +118,17 @@ const CoursePage: React.FC = () => {
                   <div><IoPlayOutline size={18} /> <span>15 Courses</span></div>
                 </div>
               </div>
+              <p className={styles.textss}>With over a decade of industry experience, Ronald brings a wealth of practical knowledge to the classroom. He <br /> has played  a pivotal role in designing user-centric interfaces for renowned tech companies, ensuring seamless <br /> brand engaging user experiences.</p>
+              </div>
+             
+                 <CourseContent course={selectedCourse} />
             </section>
 
-            <CourseContent course={selectedCourse} />
-            
+         
+{/*             
           <div className={styles.sidebar}>
-           </div>
+           </div> */}
            
-          </div>
-           <CourseSidebar course={selectedCourse} />
-          </div>
 
 
           <div className={styles.review}>
@@ -131,7 +140,8 @@ const CoursePage: React.FC = () => {
                     <Rating summary={reviewsSummary} />
                   </div>
                   <aside className="reviews-list">
-                    <ReviewCard className="Reviews"
+                    <div className={styles.groupedReviews}>
+                      <ReviewCard className={styles.reviewsss}
                       review={{
                         id: "1",
                         userAvatar: Image,
@@ -141,7 +151,7 @@ const CoursePage: React.FC = () => {
                         reviewText: "I was initially apprehensive, but the instructor was amazing.",
                       }}
                     />
-                    <ReviewCard className="Reviews"
+                    <ReviewCard className={styles.reviewsss}
                       review={{
                         id: "2",
                         userAvatar: Image,
@@ -151,7 +161,7 @@ const CoursePage: React.FC = () => {
                         reviewText: "Well-structured course with a solid foundation in design principles.",
                       }}
                     />
-                    <ReviewCard className="Reviews"
+                    <ReviewCard className={styles.reviewsss}
                       review={{
                         id: "3",
                         userAvatar: Image,
@@ -161,6 +171,10 @@ const CoursePage: React.FC = () => {
                         reviewText: "Exceeded my expectations! Passionate instructor and great community.",
                       }}
                     />
+                   
+                   <button className={styles.button}>View more</button>
+
+                    </div>
                    
                   </aside>
                 </div>
