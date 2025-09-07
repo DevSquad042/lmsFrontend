@@ -54,9 +54,9 @@ const Register: React.FC = () => {
     emails: [],
   });
 
-  // Load autocomplete data from localStorage
+  // Load autocomplete data from sessionStorage
   useEffect(() => {
-    const saved = localStorage.getItem("registerAutocomplete");
+    const saved = sessionStorage.getItem("registerAutocomplete");
     if (saved) {
       try {
         setAutocompleteData(JSON.parse(saved));
@@ -84,7 +84,7 @@ const Register: React.FC = () => {
         updated[arrayKey] = [value, ...updated[arrayKey].slice(0, 4)]; // Keep only 5 recent entries
       }
 
-      localStorage.setItem("registerAutocomplete", JSON.stringify(updated));
+      sessionStorage.setItem("registerAutocomplete", JSON.stringify(updated));
       return updated;
     });
   };

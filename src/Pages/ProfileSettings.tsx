@@ -6,7 +6,7 @@ import Footer from "../Components/Layout/Footer";
 import Header2 from "../Components/shared/Header2";
 import ProfileSidebar from "../Components/shared/ProfileSidebar";
 import { type RootState, type AppDispatch } from "../store/store";
-import { setPaidCourses } from "../store/slices/authSlice";
+import { setPaidCourses, setUser } from "../store/slices/authSlice";
 import "../Styles/ProfileSettings.css";
 
 interface FormDataType {
@@ -129,9 +129,12 @@ const ProfileSettings: React.FC = () => {
         return;
       }
 
-      // Update Redux user and localStorage
+      // Update Redux state and sessionStorage
       const updatedUser = { ...user, ...result };
-      localStorage.setItem("user", JSON.stringify(updatedUser));
+      console.log("Profile update - updatedUser profilePicture:", updatedUser.profilePicture);
+      sessionStorage.setItem("user", JSON.stringify(updatedUser));
+      console.log("Profile update - stored in sessionStorage:", sessionStorage.getItem("user"));
+      dispatch(setUser(updatedUser)); // Update Redux state
 
       if (result.paidCourses) dispatch(setPaidCourses(result.paidCourses));
 

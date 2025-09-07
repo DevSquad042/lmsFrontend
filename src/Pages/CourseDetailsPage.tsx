@@ -32,9 +32,9 @@ const CourseDetailsPage: React.FC = () => {
     fetchData();
   }, [fetchData, id]);
 
-  if (loading) return <p>Loading course...</p>;
+  if (loading === "pending") return <p>Loading course...</p>;
   if (error) return <p>Error: {error}</p>;
-  if (!currentCourse) return <p>No course found.</p>;
+  if (!currentCourse) return <p>No ourse found.</p>;
 
   const breadcrumbLinks = [
     { label: "Home", path: "/" },

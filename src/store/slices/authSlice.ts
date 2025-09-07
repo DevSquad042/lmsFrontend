@@ -37,12 +37,23 @@ interface AuthResponse {
   error?: string;
 }
 
-/** ===== Initial State (rehydrate from localStorage) ===== */
-const savedUser = localStorage.getItem("user");
-const savedToken = localStorage.getItem("token");
+/** ===== Initial State (rehydrate from sessionStorage) ===== */
+const savedUser = sessionStorage.getItem("user");
+const savedToken = sessionStorage.getItem("token");
+
+let parsedUser: User | null = null;
+if (savedUser) {
+  try {
+    parsedUser = JSON.parse(savedUser) as User;
+    console.log("Auth initialState - loaded user from sessionStorage:", parsedUser);
+    console.log("Auth initialState - user.paidCourses:", parsedUser?.paidCourses);
+  } catch (e) {
+    console.error("Auth initialState - failed to parse user from sessionStorage:", e);
+  }
+}
 
 const initialState: AuthState = {
-  user: savedUser ? (JSON.parse(savedUser) as User) : null,
+  user: parsedUser,
   token: savedToken || null,
   loading: false,
   error: null,
@@ -111,8 +122,10 @@ export const loginUser = createAsyncThunk<
       profilePicture: data.user.profilePicture,
     };
 
-    localStorage.setItem("user", JSON.stringify(transformedUser));
-    localStorage.setItem("token", token);
+    console.log("Login - API returned profilePicture:", data.user.profilePicture);
+
+    sessionStorage.setItem("user", JSON.stringify(transformedUser));
+    sessionStorage.setItem("token", token);
 
     return { user: transformedUser, token };
   } catch (err: any) {
@@ -122,10 +135,10 @@ export const loginUser = createAsyncThunk<
 
 // Register
 export const registerUser = createAsyncThunk<
-  { user: User; token?: string },
+  { user: User; token: string | null },
   { firstName: string; lastName: string; userName: string; email: string; password: string },
   { rejectValue: string }
->("auth/signup", async (payload, { rejectWithValue }) => {
+>("auth/registerUser", async (payload, { rejectWithValue }) => {
   try {
     const res = await fetch(`${API_BASE}/auth/signup`, {
       method: "POST",
@@ -140,7 +153,8 @@ export const registerUser = createAsyncThunk<
     } catch {
       // Handle empty response (204 No Content)
       if (res.ok && text.trim() === "") {
-        return { user: payload as any, token: undefined };
+        console.log("Register thunk: Empty response, returning token as null");
+        return { user: payload as any, token: null };
       }
       // For non-OK responses with invalid JSON, still reject with status
       if (!res.ok) {
@@ -170,7 +184,7 @@ export const registerUser = createAsyncThunk<
     }
 
     // Handle case where server doesn't return user data but registration is successful
-    if (!data.user && res.ok) {
+   if (!data.user && res.ok) {
       // Create a minimal user object from the payload
       const user: User = {
         id: "temp-" + Date.now(), // Temporary ID until proper user data is available
@@ -181,7 +195,8 @@ export const registerUser = createAsyncThunk<
         role: "student", // Default role
         paidCourses: [],
       };
-      return { user, token: data.token || data.accessToken };
+      console.log("Register thunk: No user data, returning token:", data.token || data.accessToken);
+      return { user, token: data.token || data.accessToken || null };
     }
 
     if (!data.user) return rejectWithValue("No user data in response");
@@ -205,14 +220,16 @@ export const registerUser = createAsyncThunk<
       profilePicture: data.user.profilePicture,
     };
 
-    const token: string | undefined = data.token || data.accessToken || undefined;
+    const token: string | null = data.token || data.accessToken || null;
+    console.log("Register thunk: Extracted token:", token);
 
     // Store data if token is available
     if (token) {
-      localStorage.setItem("user", JSON.stringify(transformedUser));
-      localStorage.setItem("token", token);
+      sessionStorage.setItem("user", JSON.stringify(transformedUser));
+      sessionStorage.setItem("token", token);
     }
 
+    console.log("Register thunk: Returning user and token:", { user: transformedUser, token });
     return { user: transformedUser, token };
   } catch (err: any) {
     return rejectWithValue(err.message || "Registration failed");
@@ -270,8 +287,8 @@ export const googleLogin = createAsyncThunk<
       profilePicture: data.user.profilePicture,
     };
 
-    localStorage.setItem("user", JSON.stringify(transformedUser));
-    localStorage.setItem("token", token);
+    sessionStorage.setItem("user", JSON.stringify(transformedUser));
+    sessionStorage.setItem("token", token);
 
     return { user: transformedUser, token };
   } catch (err: any) {
@@ -285,9 +302,9 @@ export const fetchPaidCourses = createAsyncThunk<string[], string, { rejectValue
   async (userId, { rejectWithValue }) => {
     try {
       console.log("fetchPaidCourses - userId:", userId);
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       console.log("fetchPaidCourses - token:", token ? "present" : "missing");
-      const res = await fetch(`${API_BASE}/enrollments/${userId}`, {
+      const res = await fetch(`${API_BASE}/courses/enrolled${userId}`, {
         headers: {
           Authorization: token ? `Bearer ${token}` : '',
         },
@@ -326,7 +343,7 @@ export const logoutUser = createAsyncThunk<void, void, { rejectValue: string }>(
   "auth/logoutUser",
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       if (!token) return;
 
       const res = await fetch(`${API_BASE}/auth/logout`, {
@@ -349,8 +366,8 @@ export const logoutUser = createAsyncThunk<void, void, { rejectValue: string }>(
         return rejectWithValue(data.message || `Logout failed with status ${res.status}`);
       }
 
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
+      sessionStorage.removeItem("user");
+      sessionStorage.removeItem("token");
     } catch (err: any) {
       return rejectWithValue(err.message || "Logout failed");
     }
@@ -366,18 +383,18 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       state.error = null;
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
+      sessionStorage.removeItem("user");
+      sessionStorage.removeItem("token");
     },
     setPaidCourses(state, action: PayloadAction<string[]>) {
       if (state.user) {
         state.user.paidCourses = action.payload;
-        localStorage.setItem("user", JSON.stringify(state.user));
+        sessionStorage.setItem("user", JSON.stringify(state.user));
       }
     },
     setUser(state, action: PayloadAction<User>) {
       state.user = action.payload;
-      localStorage.setItem("user", JSON.stringify(state.user));
+      sessionStorage.setItem("user", JSON.stringify(state.user));
     },
   },
   extraReducers: (builder) => {
@@ -404,7 +421,9 @@ const authSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
-        state.token = action.payload.token || null;
+        if (action.payload.token) {
+          state.token = action.payload.token;
+        }
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
@@ -426,9 +445,14 @@ const authSlice = createSlice({
       })
       // Fetch Paid Courses
       .addCase(fetchPaidCourses.fulfilled, (state, action) => {
+        console.log("fetchPaidCourses.fulfilled - action.payload:", action.payload);
         if (state.user) {
           state.user.paidCourses = action.payload;
-          localStorage.setItem("user", JSON.stringify(state.user));
+          console.log("fetchPaidCourses.fulfilled - updated user.paidCourses:", state.user.paidCourses);
+          sessionStorage.setItem("user", JSON.stringify(state.user));
+          console.log("fetchPaidCourses.fulfilled - saved to sessionStorage");
+        } else {
+          console.log("fetchPaidCourses.fulfilled - no user in state");
         }
       })
       // Logout

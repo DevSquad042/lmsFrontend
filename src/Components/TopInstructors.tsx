@@ -15,7 +15,7 @@ const TopInstructors: React.FC = () => {
     dispatch(fetchMentors());
   }, [dispatch]);
 
-  if (loading) {
+  if (loading === "pending") {
     return <div>Loading...</div>;
   }
   if (error) {
@@ -38,9 +38,9 @@ const TopInstructors: React.FC = () => {
           See All
         </Link>
       </header>
-      <div className={styles.instructorslist}>
+      <div className={styles.instructorscarousel}>
         {instructors.slice(0, 4).map((instructor) => (
-          <InstructorCard key={instructor.id} mentor={instructor} />
+          <InstructorCard key={instructor.id} mentor={instructor} showRating={true} />
         ))}
       </div>
     </div>

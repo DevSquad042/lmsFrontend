@@ -42,15 +42,15 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const userData = localStorage.getItem("user");
+    const token = sessionStorage.getItem("token");
+    const userData = sessionStorage.getItem("user");
 
     if (token && userData) {
 
       dispatch(setUser(JSON.parse(userData)));
 
     }
-  }, [dispatch]); 
+  }, [dispatch]);
 
   return (
     <>

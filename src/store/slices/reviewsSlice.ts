@@ -26,7 +26,7 @@ const initialState: ReviewsState = {
 
 // 👉 Helper to attach token to headers
 const getAuthHeader = () => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   return {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -74,9 +74,8 @@ export const addReview = createAsyncThunk(
     rating: number;
     comment: string;
   }) => {
-    const typePath = type.toLowerCase();
     const res = await axios.post(
-      `http://localhost:3000/api/review/addReview/${userId}/${targetId}`,
+      `http://localhost:3000/api/review/addReview/${userId}/${targetId}?type=${type}`,
       { rating, comment }, // body only
       {
         params: { type },

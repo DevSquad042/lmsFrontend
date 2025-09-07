@@ -3,7 +3,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice";
 import cartReducer from "./slices/cartSlice";
-import courseReducer from "./slices/courseSlice";       // ✅ Top courses & selected course
+import courseReducer from "./slices/coursesSlice";       // ✅ Top courses & selected course
 import mentorReducer from "./slices/mentorSlice";
 import coursesReducer from "./slices/coursesSlice";     // ✅ Full course list or paginated view
 import reviewsReducer from "./slices/reviewsSlice";     // ✅ Reviews

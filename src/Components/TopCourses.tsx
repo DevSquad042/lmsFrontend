@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
 import type { RootState, AppDispatch } from '../store/index';
-import { fetchCourses } from '../store/slices/courseSlice';
+import { fetchCourses } from '../store/slices/coursesSlice';
 import CourseCard from './cards/CourseCard';
 import './ComponentStyles/TopCourses.css';
 
@@ -48,8 +48,8 @@ const TopCourses: React.FC = () => {
         </Link>
       </header>
 
-      {/* Responsive Grid View */}
-      <div className="top-courses-grid">
+      {/* Horizontal Scroll Carousel */}
+      <div className="top-courses-carousel">
         {topCourses.length === 0 ? (
           <p>No top courses available.</p>
         ) : (

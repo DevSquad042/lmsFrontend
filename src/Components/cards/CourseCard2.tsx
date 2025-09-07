@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import type { RootState, AppDispatch } from "../../store/";
-import { fetchCourses, patchCourseRating } from "../../store/slices/courseSlice";
-import { FaStar } from "react-icons/fa";
-import styles from "./CardsStyle/CourseCard.module.css";
+import { fetchCourses } from "../../store/slices/coursesSlice";
+import styles from "./CardsStyle/MentorCard.module.css";
 
 interface CourseCard2Props {
   mentorId?: string;
@@ -21,25 +21,21 @@ const CourseCard2: React.FC<CourseCard2Props> = ({ mentorId }) => {
     if (!courses.length) dispatch(fetchCourses());
   }, [dispatch, courses.length]);
 
-  const handleRating = (id: string, rating: number) => {
-    dispatch(patchCourseRating({ id, rating }));
-  };
 
   // ✅ Mentor filter (shorthand)
   const filteredCourses = mentorId
     ? courses.filter((c: any) => c.mentorId === mentorId)
     : courses;
 
-  if (loading) return <p>Loading courses...</p>;
+  if (loading === "pending") return <p>Loading courses...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="course-grid">
       {filteredCourses.map((course) => {
         const {
-          id,
+          _id: id,
           title,
-          description,
           price = 0,
           rating = 0,
           instructor = "Unknown Instructor",
@@ -47,53 +43,33 @@ const CourseCard2: React.FC<CourseCard2Props> = ({ mentorId }) => {
           reviews = 0,
         } = course;
 
-        const safeRating = Math.max(0, Math.min(5, rating));
         const reviewCount = Array.isArray(reviews) ? reviews.length : reviews;
 
         return (
-          <article key={id} className={styles.card} role="article">
-            <div className={styles.imageContainer}>
-              <img
-                src={thumbnail}
-                alt={`Course thumbnail for ${title}`}
-                loading="lazy"
-                onError={(e) => {
-                  e.currentTarget.src = "/placeholder-course.jpg";
-                }}
-              />
-            </div>
-            <div className={styles.content}>
-              <h3 className={styles.title}>{title}</h3>
-              <p className={styles.author}>By {instructor}</p>
+          <Link key={id} to={`/course/${id}`} className={styles.cardLink}>
+            <article className={styles.card}>
+              <div className={styles.imageContainer}>
+                <img
+                  src={thumbnail}
+                  alt={`Course thumbnail for ${title}`}
+                  loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.src = "/placeholder-course.jpg";
+                  }}
+                />
+              </div>
+              <div className={styles.content}>
+                <h4 className={styles.name}>{title}</h4>
+                <p className={styles.role}>By {instructor}</p>
 
-              <div
-                className={styles.rating}
-                role="img"
-                aria-label={`Rating: ${safeRating} out of 5 stars`}
-              >
-                <div className={styles.stars}>
-                  {[...Array(5)].map((_, i) => (
-                    <FaStar
-                      key={i}
-                      color={i < safeRating ? "#FFC107" : "#ccc"}
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleRating(id, i + 1)}
-                    />
-                  ))}
+                <hr className={styles.divider} />
+
+                <div className={styles.rating}>
+                  ⭐ {rating.toFixed(1)} ({reviewCount} Reviews)
                 </div>
-                <span className={styles.reviewCount}>
-                  ({reviewCount} Reviews)
-                </span>
               </div>
-
-              <p className={styles.details}>{description}</p>
-              <div className={styles.priceContainer}>
-                <strong className={styles.price}>
-                  ${price.toFixed(2)}
-                </strong>
-              </div>
-            </div>
-          </article>
+            </article>
+          </Link>
         );
       })}
     </div>

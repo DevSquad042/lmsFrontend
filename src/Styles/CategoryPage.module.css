@@ -22,8 +22,8 @@
   display: grid;
   grid-template-columns: repeat(280px, 3fr);
   gap: 2rem;
-  margin-bottom: 3rem;
-  
+  margin-bottom: 4rem;
+
 }
 
 /* Main Content Area */
@@ -100,28 +100,113 @@
 .grid {
   padding: 0 1rem;
   width: 100%;
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  box-sizing: border-box;
+  justify-content: flex-start;
+}
+
+.grid::-webkit-scrollbar {
+  display: none;
+}
+
+.grid > * {
+  flex: 0 0 320px;
+  scroll-snap-align: start;
+  max-width: calc(100vw - 2rem);
+}
+
+@media (min-width: 1400px) {
+  .grid > * {
+    flex: 0 0 400px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .grid > * {
+    flex: 0 0 450px;
+  }
 }
 
 .mentorGrid {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding: 1.5rem 0 1rem 0;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: flex-start;
+}
+
+.mentorGrid::-webkit-scrollbar {
+  display: none;
+}
+
+.mentorGrid > * {
+  flex: 0 0 320px;
+  scroll-snap-align: start;
+  max-width: calc(100vw - 2rem);
+}
+
+@media (min-width: 1400px) {
+  .mentorGrid > * {
+    flex: 0 0 340px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .mentorGrid > * {
+    flex: 0 0 360px;
+  }
 }
 
 .featuredGrid {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding: 1rem 0;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: flex-start;
+}
+
+.featuredGrid::-webkit-scrollbar {
+  display: none;
+}
+
+.featuredGrid > * {
+  flex: 0 0 300px;
+  scroll-snap-align: start;
+  max-width: calc(100vw - 2rem);
+}
+
+@media (min-width: 1400px) {
+  .featuredGrid > * {
+    flex: 0 0 380px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .featuredGrid > * {
+    flex: 0 0 420px;
+  }
 }
 
 /* Section Styling */
 .mentorsSection,
 .featuredSection {
   margin-bottom: 3rem;
-  padding-top: 2rem;
+  padding-top: 5rem;
   border-top: 1px solid #e5e7eb;
   background: #ffffff;
 }
@@ -138,6 +223,11 @@
 @media (max-width: 640px) {
   .container {
     padding: 1.5rem 1rem;
+  }
+
+
+  .mentorsSection {
+    padding-top: 6rem;
   }
   
   .mainLayout {
@@ -160,17 +250,27 @@
   }
   
   .grid {
-   grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .grid > * {
+    flex: 0 0 250px;
   }
   
   .mentorGrid {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1rem;
   }
-  
+
+  .mentorGrid > * {
+    flex: 0 0 250px;
+  }
+
   .featuredGrid {
-    grid-template-columns: 1fr;
     gap: 1rem;
+  }
+
+  .featuredGrid > * {
+    flex: 0 0 280px;
   }
 }
 
@@ -181,15 +281,27 @@
   }
   
   .grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .grid > * {
+    flex: 0 0 240px;
   }
   
   .mentorGrid {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
   }
-  
+
+  .mentorGrid > * {
+    flex: 0 0 320px;
+  }
+
   .featuredGrid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .featuredGrid > * {
+    flex: 0 0 280px;
   }
 }
 
@@ -203,11 +315,19 @@
   }
   
   .mentorGrid {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
   }
-  
+
+  .mentorGrid > * {
+    flex: 0 0 240px;
+  }
+
   .featuredGrid {
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1rem;
+  }
+
+  .featuredGrid > * {
+    flex: 0 0 320px;
   }
 }
 
@@ -223,10 +343,18 @@
   }
   
   .grid {
-    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .grid > * {
+    flex: 0 0 320px;
   }
   
   .mentorGrid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .mentorGrid > * {
+    flex: 0 0 280px;
   }
 }

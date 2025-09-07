@@ -22,6 +22,7 @@ interface Course {
 const Header2: React.FC = () => {
   const navigate = useNavigate();
   const cartItems = useSelector((state: RootState) => state.cart.items);
+  const { user } = useSelector((state: RootState) => state.auth);
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -114,6 +115,17 @@ const Header2: React.FC = () => {
     setMobileSearchOpen(!mobileSearchOpen);
   };
 
+  // Generate user initials (first letter of first name only)
+  const getUserInitials = () => {
+    if (!user) return 'U'; // Default for unauthenticated users
+
+    const firstName = user.firstName || '';
+    const firstInitial = firstName.charAt(0).toUpperCase();
+
+    // Return first letter of first name, or fallback to 'U'
+    return firstInitial || 'U';
+  };
+
   return (
     <header className="header2">
       <div className="header-left2">
@@ -192,7 +204,7 @@ const Header2: React.FC = () => {
         </button>
 
         <div className="user-avatar-wrapper" onClick={toggleDropdown}>
-          <div className="user-avatar">B</div>
+          <div className="user-avatar">{getUserInitials()}</div>
           {dropdownOpen && (
             <div className="user-dropdown">
               <Link to="/">Home</Link>

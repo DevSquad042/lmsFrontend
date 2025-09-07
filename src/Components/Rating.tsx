@@ -17,7 +17,7 @@ const Reviews: React.FC<{
 
   const userId =
     useSelector((state: RootState) => state.auth.user?.id) ||
-    localStorage.getItem("userId");
+    sessionStorage.getItem("userId");
 
   const { data: reviewsData, average: averageRating, loading } = useSelector((state: any) => state.reviews);
 

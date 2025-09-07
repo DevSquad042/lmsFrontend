@@ -29,9 +29,9 @@ const LoginForm: React.FC = () => {
   // Autocomplete data for login
   const [loginHistory, setLoginHistory] = useState<string[]>([]);
 
-  // Load login history from localStorage
+  // Load login history from sessionStorage
   useEffect(() => {
-    const saved = localStorage.getItem("loginHistory");
+    const saved = sessionStorage.getItem("loginHistory");
     if (saved) {
       try {
         setLoginHistory(JSON.parse(saved));
@@ -47,7 +47,7 @@ const LoginForm: React.FC = () => {
 
     setLoginHistory(prev => {
       const updated = [value, ...prev.filter(item => item !== value)].slice(0, 5); // Keep only 5 recent entries
-      localStorage.setItem("loginHistory", JSON.stringify(updated));
+      sessionStorage.setItem("loginHistory", JSON.stringify(updated));
       return updated;
     });
   };

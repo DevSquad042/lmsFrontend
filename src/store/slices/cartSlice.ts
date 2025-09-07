@@ -20,19 +20,19 @@ interface CartState {
   savedForLater: CartItem[];
 }
 
-// ✅ Load cart from localStorage
+// ✅ Load cart from sessionStorage
 const loadCart = (): CartState => {
   try {
-    const data = localStorage.getItem("cart");
+    const data = sessionStorage.getItem("cart");
     return data ? JSON.parse(data) : { items: [], savedForLater: [] };
   } catch {
     return { items: [], savedForLater: [] };
   }
 };
 
-// ✅ Save cart to localStorage
+// ✅ Save cart to sessionStorage
 const saveCart = (state: CartState) => {
-  localStorage.setItem("cart", JSON.stringify(state));
+  sessionStorage.setItem("cart", JSON.stringify(state));
 };
 
 const initialState: CartState = loadCart();

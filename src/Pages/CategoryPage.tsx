@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../store/index';
-import { fetchCourses } from '../store/slices/courseSlice';
+import { fetchCourses } from '../store/slices/coursesSlice';
 import { fetchMentors } from '../store/slices/mentorSlice';
 import CourseCard from '../Components/cards/CourseCard';
 import InstructorCard from '../Components/cards/MentorCard';
@@ -90,7 +90,7 @@ const CategoryPage: React.FC = () => {
             <h2>Popular Instructors</h2>
             <div className={styles.mentorGrid}>
               {popularInstructors.map((instructor) => (
-                <InstructorCard key={instructor.id} mentor={instructor} />
+                <InstructorCard key={instructor.id} mentor={instructor} showRating={true} />
               ))}
             </div>
           </section>

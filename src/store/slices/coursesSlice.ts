@@ -6,14 +6,16 @@ import type { Course } from '../../Types/Course';
 const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000"; // API base URL
 
 interface CourseState {
+  data: Course[];
   selectedCourse: Course | null;
-  loading: boolean;
+  loading: 'idle' | 'pending' | 'succeeded' | 'failed';
   error: string | null;
 }
 
 const initialState: CourseState = {
+  data: [],
   selectedCourse: null,
-  loading: false,
+  loading: 'idle',
   error: null,
 };
 
@@ -26,7 +28,7 @@ export const fetchCourseById = createAsyncThunk<
   async (courseId, { rejectWithValue }) => {
     console.log("Fetching course by ID:", courseId, "from:", `${baseUrl}/api/courses/${courseId}`);
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       const response = await axios.get(`${baseUrl}/api/courses/${courseId}`, {
         headers: {
           Authorization: token ? `Bearer ${token}` : '',
@@ -47,27 +49,60 @@ export const fetchCourseById = createAsyncThunk<
   }
 );
 
-const coursesSlice = createSlice({
+// Fetch all courses
+ const defaultThumbnail = "https://placehold.co/150x150/png"; // Fallback PNG
+export const fetchCourses = createAsyncThunk<Course[]>(
+  "courses/fetchCourses",
+  async () => {
+    console.log("Fetching all courses from:", `${baseUrl}/api/courses`);
+    try {
+      const response = await axios.get<Course[]>(`${baseUrl}/api/courses`);
+      console.log("All courses fetched successfully:", response.data.length, "courses");
+      return response.data.map((course) => ({
+        ...course,
+        thumbnail: course.thumbnail
+          ? course.thumbnail.startsWith("http")
+            ? course.thumbnail
+            : `${baseUrl}/images/${course.thumbnail}`
+          : defaultThumbnail,
+      }));
+    } catch (error) {
+      console.error("Error fetching all courses:", error);
+      throw error;
+    }
+  }
+);
+
+const courseSlice = createSlice({
   name: 'course',
   initialState,
   reducers: {},
   extraReducers: builder => {
     builder
+      .addCase(fetchCourses.pending, state => {
+        state.loading = 'pending';
+        state.error = null;
+      })
+      .addCase(fetchCourses.fulfilled, (state, action) => {
+        state.loading = 'succeeded';
+        state.data = action.payload;
+      })
+      .addCase(fetchCourses.rejected, (state, action) => {
+        state.loading = 'failed';
+        state.error = action.error.message || 'Failed to fetch courses';
+      })
       .addCase(fetchCourseById.pending, state => {
-        state.loading = true;
+        state.loading = 'pending';
         state.error = null;
       })
       .addCase(fetchCourseById.fulfilled, (state, action) => {
-        state.loading = false;
+        state.loading = 'succeeded';
         state.selectedCourse = action.payload;
       })
-      // .addCase(fetchCourseById.rejected, (state, action) => {
-      //   state.loading = false;
-      // })
       .addCase(fetchCourseById.rejected, (state, action) => {
-        state.loading = false;
+        state.loading = 'failed';
         state.error = action.payload as string ?? 'Unknown error';
       })},
   });
 
-export default coursesSlice.reducer;
+export default courseSlice.reducer;
