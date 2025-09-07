@@ -11,16 +11,19 @@ interface MentorCardProps {
 
 const MentorCard: React.FC<MentorCardProps> = ({ mentor, showMessage = false }) => {
   const mentorName = `${mentor.firstName || ""} ${mentor.lastName || ""}`.trim();
+
+  // ✅ Prefer actual uploaded profile picture
   const mentorAvatar =
-    mentor.image ||
+    mentor.profilePicture || // <-- use profilePicture if API provides it
+    mentor.image || // fallback if some mentors still use "image"
     `https://ui-avatars.com/api/?name=${encodeURIComponent(
-      mentorName
+      mentorName || "Mentor"
     )}&size=150&background=ccc&color=fff`;
 
   return (
     <div className={styles.card}>
       <div className={styles.imageContainer}>
-        <img src={mentorAvatar} alt={mentorName} />
+        <img src={mentorAvatar} alt={mentorName || "Mentor"} />
       </div>
 
       <div className={styles.content}>
@@ -35,7 +38,7 @@ const MentorCard: React.FC<MentorCardProps> = ({ mentor, showMessage = false }) 
         </div>
 
         {showMessage && (
-          <Link to="/profile5/1" className={styles.messageLink}>
+          <Link to={`/profile5/${mentor.id}`} className={styles.messageLink}>
             <FaEnvelope className={styles.messageIcon} /> Message
           </Link>
         )}

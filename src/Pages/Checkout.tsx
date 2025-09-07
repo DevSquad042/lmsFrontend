@@ -314,7 +314,7 @@ const CheckoutPage: React.FC = () => {
             <div className={styles.card}>
               <div className={styles.line}>
                 <span>Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>NGN{subtotal.toFixed(2)}</span>
               </div>
               <div className={styles.line}>
                 <span>Discount</span>
@@ -322,11 +322,11 @@ const CheckoutPage: React.FC = () => {
               </div>
               <div className={styles.line}>
                 <span>Tax</span>
-                <span>${tax.toFixed(2)}</span>
+                <span>NGN{tax.toFixed(2)}</span>
               </div>
               <div className={styles.total}>
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>NGN{total.toFixed(2)}</span>
               </div>
             </div>
             <button
