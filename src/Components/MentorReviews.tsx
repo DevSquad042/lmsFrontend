@@ -60,10 +60,10 @@ const MentorReviews: React.FC<Props> = ({ mentor, onReviewAdded }) => {
 
       {/* Existing Reviews */}
       {mentor.reviews?.map((review) => (
-        <div key={review.id} className={styles.reviewCard}>
-          <p className={styles.reviewComment}>{review.text}</p>
+        <div key={review._id} className={styles.reviewCard}>
+          <p className={styles.reviewComment}>{review.comment}</p>
           <div className={styles.reviewFooter}>
-            <span className={styles.reviewAuthor}>User {review.id}</span>
+            <span className={styles.reviewAuthor}>User {review.userId}</span>
             <span className={styles.reviewRating}>{review.rating} ⭐</span>
           </div>
         </div>

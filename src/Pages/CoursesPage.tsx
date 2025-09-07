@@ -84,12 +84,16 @@ const CoursesPages = () => {
           {loading ? (
             <div className="loading-spinner"></div>
           ) : courses.length === 0 ? (
-            <p>You haven’t enrolled in any courses yet.</p>
+            <p>You haven't enrolled in any courses yet.</p>
           ) : (
             <>
               <div className="courses-grid">
                 {paginatedCourses.map((course) => (
-                  <CourseCard key={course._id} course={course} />
+                  <CourseCard 
+                    key={course._id} 
+                    course={course} 
+                    isEnrolled={true} // This tells the card it's an enrolled course
+                  />
                 ))}
               </div>
 
