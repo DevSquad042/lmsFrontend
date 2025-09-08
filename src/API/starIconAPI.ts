@@ -1,11 +1,14 @@
 import axios from "axios";
 import type { ReviewSummary, ReviewList } from "../Types/rating";
 
-const BASE = "https://byway-hoce.onrender.com/api/review";
+const BASE = "http://localhost:3000/api/review";
 
 export async function getSummary(courseId: string): Promise<ReviewSummary> {
-  const { data } = await axios.get<ReviewSummary>(`${BASE}/:courseId/${courseId}/summary`);
-  return data;
+  const { data } = await axios.get(`${BASE}/courseAverage/${courseId}`);
+  if (data.status !== 'success') {
+    throw new Error('Failed to fetch summary');
+  }
+  return data.data;
 }
 
 export async function getReviews(courseId: string, page = 1, pageSize = 10): Promise<ReviewList> {
