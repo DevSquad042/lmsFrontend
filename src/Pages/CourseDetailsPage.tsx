@@ -20,7 +20,6 @@ import { IoPlayOutline } from "react-icons/io5";
 import Image from "../assets/Images/Ellipse 19.jpg";
 import Rating from "../Components/cards/RatingSummary";
 import ReviewCard from "../Components/cards/ReviewCard";
-import RatingForm from "../Components/Rating";
 
 const reviewsSummary = {
   average: 4.6,
@@ -148,14 +147,7 @@ const CoursePage: React.FC = () => {
           <div className={styles.review}>
             <div className="container">
               <section className="reviews-section" id="reviews-section">
-                {/* <h2>Learner Reviews</h2> */}
-                <RatingForm
-                  course={selectedCourse}
-                  reviews={courseReviews}
-                  onReviewAdded={(courseId) => dispatch(fetchCourseReviews(courseId))}
-                  showAverage={false}
-                  showList={false}
-                />
+                <h2>Learner Reviews</h2>
                 <div className="reviews-grid">
                   <div className="rating-summary">
                     <Rating summary={reviewsSummary} />

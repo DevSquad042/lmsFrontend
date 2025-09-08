@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import type { AppDispatch, RootState } from "../store/index";
 import type { Course, Review } from "../Types/Course";
 import { FaStar } from "react-icons/fa";
@@ -31,14 +32,24 @@ const Reviews: React.FC<{
       : 0;
 
   const handleSubmit = async () => {
-    if (!rating || !userId) {
-      alert("You must be logged in and select a rating to submit.");
+    if (!userId) {
+      toast.error("You must be logged in to submit a review.");
+      return;
+    }
+
+    if (!rating) {
+      toast.error("Please add a rating!");
+      return;
+    }
+
+    if (!comment.trim()) {
+      toast.error("Please add a comment!");
       return;
     }
 
     setSubmitting(true);
     try {
-      await dispatch(
+      const result = await dispatch(
         addReview({
           userId,
           targetId: course._id,
@@ -48,11 +59,20 @@ const Reviews: React.FC<{
         })
       ).unwrap();
 
+      // Show success message from API if available, otherwise use default
+      const successMessage = result.message || "Review submitted successfully!";
+      toast.success(successMessage);
+
       setRating(0);
       setComment("");
       onReviewAdded(course._id);
     } catch (error: any) {
-      alert("Failed to submit review. Please try again.");
+      // Handle specific API error messages
+      if (error.message) {
+        toast.error(error.message);
+      } else {
+        toast.error("Failed to submit review. Please try again.");
+      }
     } finally {
       setSubmitting(false);
     }

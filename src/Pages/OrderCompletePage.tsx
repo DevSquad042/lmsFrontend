@@ -1,6 +1,7 @@
 // src/Pages/OrderCompletePage.tsx
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { FaArrowLeft } from "react-icons/fa";
@@ -8,6 +9,9 @@ import { FaArrowLeft } from "react-icons/fa";
 import Header3 from "../Components/shared/Header3";
 import Footer from "../Components/Layout/Footer";
 import CourseInfoSidebar from "../Components/cards/CourseInfoSidebar";
+import RatingForm from "../Components/Rating";
+import { fetchCourseReviews, selectCourseReviews, selectReviewsLoading, selectReviewsError } from "../store/slices/reviewsSlice";
+import type { AppDispatch } from "../store/index";
 import "../Styles/OrderCompletePage.css";
 
 import type { Course, Section } from "../Types/Course";
@@ -15,12 +19,17 @@ import type { Course, Section } from "../Types/Course";
 const OrderCompletePage = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("curriculum");
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [currentVideo, setCurrentVideo] = useState<string | null>(null);
   const [currentSection, setCurrentSection] = useState<Section | null>(null);
+
+  const courseReviews = useSelector(selectCourseReviews);
+  const reviewsLoading = useSelector(selectReviewsLoading);
+  const reviewsError = useSelector(selectReviewsError);
 
   useEffect(() => {
     const checkEnrollmentAndFetchCourse = async () => {
@@ -77,6 +86,8 @@ const OrderCompletePage = () => {
               setCurrentSection(firstSection);
               setCurrentVideo(firstSection.videoUrl || firstSection.videoFile);
             }
+            // Fetch reviews for the course
+            dispatch(fetchCourseReviews(enrolledCourse._id));
           } else {
             // Fallback: fetch course details from courses API
             try {
@@ -90,13 +101,16 @@ const OrderCompletePage = () => {
               );
               const courseData = courseResponse.data;
               setCourse(courseData);
-              
+
               // Set the first video as default if available
               if (courseData.sections && courseData.sections.length > 0) {
                 const firstSection = courseData.sections[0];
                 setCurrentSection(firstSection);
                 setCurrentVideo(firstSection.videoUrl || firstSection.videoFile);
               }
+
+              // Fetch reviews for the course
+              dispatch(fetchCourseReviews(courseData._id));
             } catch (courseError) {
               console.error("Error fetching course details:", courseError);
               toast.error("Course details not available");
@@ -384,7 +398,70 @@ const OrderCompletePage = () => {
                 </section>
               )}
 
-              {/* ... keep the instructor and reviews sections the same ... */}
+              {activeTab === "reviews" && (
+                <section className="reviews-section">
+                  <h2>Course Reviews</h2>
+
+                  {/* Rating Form */}
+                  <RatingForm
+                    course={course}
+                    reviews={courseReviews}
+                    onReviewAdded={(courseId) => dispatch(fetchCourseReviews(courseId))}
+                    showAverage={false}
+                    showList={false}
+                  />
+
+                  {/* Reviews List */}
+                  <div className="reviews-list" style={{ marginTop: '30px' }}>
+                    <h3>Student Reviews</h3>
+                    {reviewsLoading ? (
+                      <p>Loading reviews...</p>
+                    ) : reviewsError ? (
+                      <p>Error loading reviews: {reviewsError}</p>
+                    ) : courseReviews && courseReviews.length > 0 ? (
+                      courseReviews.map((review) => (
+                        <div key={review.id} className="review-card" style={{
+                          border: '1px solid #ddd',
+                          borderRadius: '8px',
+                          padding: '15px',
+                          marginBottom: '15px',
+                          backgroundColor: '#f9f9f9'
+                        }}>
+                          <div className="review-header" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                            <div style={{ flex: 1 }}>
+                              <strong>{review.userId}</strong>
+                              <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px' }}>
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                  <span key={star} style={{
+                                    color: star <= review.rating ? '#FFC107' : '#ccc',
+                                    fontSize: '18px',
+                                    marginRight: '2px'
+                                  }}>
+                                    ★
+                                  </span>
+                                ))}
+                              </div>
+                              <small style={{ color: '#666', fontSize: '12px' }}>
+                                {review.created_at ? new Date(review.created_at).toLocaleDateString() : 'Just now'}
+                              </small>
+                            </div>
+                          </div>
+                          <p style={{ margin: '0', lineHeight: '1.5' }}>{review.comment}</p>
+                        </div>
+                      ))
+                    ) : (
+                      <p>No reviews yet. Be the first to leave a review!</p>
+                    )}
+                  </div>
+                </section>
+              )}
+
+              {activeTab === "instructor" && (
+                <section className="instructor-section">
+                  <h2>Instructor</h2>
+                  <p>Instructor information will be displayed here.</p>
+                </section>
+              )}
             </div>
 
             {/* Right Column - Course Info Sidebar */}
