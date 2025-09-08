@@ -90,7 +90,9 @@ const CoursePage: React.FC = () => {
             <section className={styles.courseDetailss}>
               <h2>Course Overview</h2>
               <p>
-                This interactive e-learning course will introduce you to User Experience (UX) design, the art of creating products <br /> and services  that are intuitive, enjoyable, and user-friendly. Gain a solid foundation in UX principles and learn to apply <br />them in real-world scenarios through engaging modules and interactive exercises.
+                This interactive e-learning course is designed to give you a solid foundation in the subject area while keeping learning practical,
+                 engaging, and easy to follow. Through step-by-step modules,
+                 you’ll explore core concepts, proven strategies, and hands-on applications that prepare you for real-world scenarios.
               </p>
               <h2>Certificate</h2>
               <p>
