@@ -21,6 +21,14 @@ export interface Review {
   date?: string;
 }
 
+export interface VideoProgress {
+  completedVideos: number;
+  totalVideos: number;
+  completionPercentage: number;
+  lastWatchedVideo?: string;
+  watchedVideos: string[]; // Array of video IDs that have been watched
+}
+
 export interface Course {
   // id: any;
   _id: string;
@@ -47,6 +55,9 @@ export interface Course {
   lectures: number;
   chapters: number;
   level: CourseLevel;
+
+  // Progress tracking (optional - populated from API)
+  progress?: VideoProgress;
 
   // Meta
   createdAt: string;

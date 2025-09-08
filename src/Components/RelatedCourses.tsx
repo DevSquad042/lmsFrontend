@@ -4,70 +4,99 @@ import './ComponentStyles/RelatedCourses.css';
 import type { Course } from '../Types/Course'; // Import the proper type
 import courseImg from '../assets/Images/course.jpg';
 
-const RelatedCourses: React.FC = () => {
+interface RelatedCoursesProps {
+  categories: string[];
+  excludeId: string;
+}
+
+const RelatedCourses: React.FC<RelatedCoursesProps> = ({ categories, excludeId }) => {
   // Use a proper Course array with unique data
-  const courses: Course[] = [
+  const allCourses: Course[] = [
     {
-      id: 'top-course-1',
+      _id: 'top-course-1',
       title: "Beginner's Guide to Design",
-      author: 'Ronald Richards',
+      instructor: 'Ronald Richards',
       rating: 5,
-      reviews: 1200, 
-      details: '22 Total Hours. 155 Lectures. Beginner',
+      reviews: [],
+      description: '22 Total Hours. 155 Lectures. Beginner',
       price: 149.9,
-      image: courseImg,
+      thumbnail: courseImg,
       chapters: 18,
-      category: 'Design',
-      hours: 22, // Renamed from totalHours
-      lectures: 155, // Renamed from totalLectures
-      level: 'Beginner'
+      categories: ['Design'],
+      hours: 22,
+      lectures: 155,
+      level: 'Beginner',
+      tags: ['Design', 'Beginner'],
+      sections: [{ title: 'Intro', videoFile: '', videoUrl: '', pdf: '', _id: 's1', isPreview: true }],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      __v: 0
     },
     {
-      id: 'top-course-2',
+      _id: 'top-course-2',
       title: 'React from Scratch',
-      author: 'Jane Doe',
-      rating: 5, 
-      reviews: 980,
-      details: '40 Total Hours. 200 Lectures. Intermediate',
+      instructor: 'Jane Doe',
+      rating: 5,
+      reviews: [],
+      description: '40 Total Hours. 200 Lectures. Intermediate',
       price: 199.99,
-      image: courseImg,
+      thumbnail: courseImg,
       chapters: 25,
-      category: 'Development',
+      categories: ['Development'],
       hours: 40,
       lectures: 200,
-      level: 'Intermediate'
+      level: 'Intermediate',
+      tags: ['React', 'Intermediate'],
+      sections: [{ title: 'Setup', videoFile: '', videoUrl: '', pdf: '', _id: 's2', isPreview: true }],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      __v: 0
     },
     {
-      id: 'top-course-3',
+      _id: 'top-course-3',
       title: 'Advanced JavaScript Concepts',
-      author: 'John Smith',
+      instructor: 'John Smith',
       rating: 4,
-      reviews: 850,
-      details: '30 Total Hours. 175 Lectures. Advanced',
+      reviews: [],
+      description: '30 Total Hours. 175 Lectures. Advanced',
       price: 179.99,
-      image: courseImg,
+      thumbnail: courseImg,
       chapters: 20,
-      category: 'Development',
+      categories: ['Development'],
       hours: 30,
       lectures: 175,
-      level: 'Advanced'
+      level: 'Advanced',
+      tags: ['JavaScript', 'Advanced'],
+      sections: [{ title: 'Advanced', videoFile: '', videoUrl: '', pdf: '', _id: 's3', isPreview: true }],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      __v: 0
     },
     {
-      id: 'top-course-4',
+      _id: 'top-course-4',
       title: 'Python for Data Science',
-      author: 'Maria Garcia',
+      instructor: 'Maria Garcia',
       rating: 5,
-      reviews: 1100,
-      details: '45 Total Hours. 250 Lectures. Intermediate',
+      reviews: [],
+      description: '45 Total Hours. 250 Lectures. Intermediate',
       price: 189.9,
-      image: courseImg,
+      thumbnail: courseImg,
       chapters: 28,
-      category: 'Data Science',
+      categories: ['Data Science'],
       hours: 45,
       lectures: 250,
-      level: 'Intermediate'
+      level: 'Intermediate',
+      tags: ['Python', 'Data Science'],
+      sections: [{ title: 'Data', videoFile: '', videoUrl: '', pdf: '', _id: 's4', isPreview: true }],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      __v: 0
     }
   ];
+
+  const courses = allCourses.filter(course =>
+    course.categories.some(cat => categories.includes(cat)) && course._id !== excludeId
+  );
 
   return (
     <section className="top-courses">
@@ -80,7 +109,7 @@ const RelatedCourses: React.FC = () => {
 
       <div className="top-courses-grid">
         {courses.map((course) => (
-          <CourseCard key={course.id} course={course} />
+          <CourseCard key={course._id} course={course} />
         ))}
       </div>
     </section>

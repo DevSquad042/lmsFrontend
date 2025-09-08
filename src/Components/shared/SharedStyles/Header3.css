@@ -6,8 +6,9 @@
     display: flex;
     justify-content: space-between;
     color: white;
-    margin: 20px 70px;
+    margin: 20px 30px;
     font-size: 15px;
+    box-sizing: border-box;
 }
 .logo3 {
   width: 80px;  
@@ -20,5 +21,47 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+/* Tablet styles */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .nav3 {
+    margin: 15px 50px;
+    height: 8vh;
+  }
+
+  .logo3 {
+    width: 70px;
+  }
+
+  .nav-left3 {
+    width: 150px;
+  }
+
+  .nav-left3 h3 {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav3 {
+    margin: 10px 20px;
+    height: 7vh;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo3 {
+    width: 60px;
+  }
+
+  .nav-left3 {
+    width: auto;
+  }
+
+  .nav-left3 h3 {
+    font-size: 12px;
+  }
 }
  

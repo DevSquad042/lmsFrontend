@@ -43,7 +43,7 @@ export const fetchReviews = createAsyncThunk(
 
     if (type === 'user') {
       // Use new endpoint structure for user reviews
-      url = `http://localhost:3000/api/review/getReviews/userReviews/${targetId}`;
+      url = `(index):1 Access to XMLHttpRequest at 'https://byway-hoce.onrender.com/api/courses' from origin 'http://localhost:5175' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.`;
     } else {
       // Keep old structure for Course and instructor
       url = `http://localhost:3000/api/review/getReviews/${targetId}`;

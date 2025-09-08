@@ -1,12 +1,21 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 .header {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 14px 24px;
+  padding-right: 50px;
   background-color: #fff;
   border-bottom: 1px solid #ddd;
   font-family: 'inter';
-  margin: 0px 30px;
+  box-sizing: border-box;
+  position: fixed;
+  z-index: 1;
 }
 
 .header-left2 {
@@ -36,7 +45,7 @@
   border-radius: 6px;
   margin: 0 24px;
   padding: 6px 12px;
-  position: relative; /* Added for search results positioning */
+  position: relative;
 }
 
 .search-icon {
@@ -148,39 +157,102 @@
   cursor: pointer;
 }
 
-@media (max-width: 768px) {
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #2c3e50;
+  cursor: pointer;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.mobile-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border-top: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.mobile-menu.open {
+  display: block;
+}
+
+.mobile-link {
+  display: block;
+  padding: 12px 24px;
+  color: #2c3e50;
+  text-decoration: none;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.mobile-link:hover {
+  background: #f8f8f8;
+}
+
+/* Tablet styles */
+@media (max-width: 1024px) and (min-width: 769px) {
   .header {
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 0px;
+    padding: 12px 20px;
   }
 
   .header-search {
-    display: none; /* Hides search bar on mobile as per your original CSS */
+    max-width: 400px;
+    margin: 0 16px;
+  }
+
+  .header-right {
+    gap: 12px;
+  }
+
+  .btn-outline,
+  .btn-filled {
+    padding: 5px 10px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 10px 16px;
+    position: relative;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .header-search {
+    display: none;
   }
 
   .search-results {
-    display: none; /* Ensure search results are also hidden on mobile */
+    display: none;
   }
 
   .header-link,
   .header-link2 {
-    display: none; /* Hides links on mobile as per your original CSS */
+    display: none;
+  }
+
+  .header-right {
+    display: none;
   }
 
   .header-left2 {
     gap: 12px;
   }
 
-  .header-logo {
-    width: 40px;
+  .header-logo2 {
+    width: 70px;
     height: auto;
-  }
-
-  .header-right {
-    gap: 16px;
-    display: flex;
-    align-items: center;
   }
 }

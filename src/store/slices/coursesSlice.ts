@@ -34,10 +34,17 @@ export const fetchCourseById = createAsyncThunk<
           Authorization: token ? `Bearer ${token}` : '',
         },
       });
-      console.log("Course fetched successfully:", response.data._id);
+      console.log("Course fetched successfully:", response.data._id, "Status:", response.status);
       return response.data as Course;
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error fetching course by ID:", courseId, err);
+      if (err.response) {
+        console.error("Response status:", err.response.status, "Response data:", err.response.data);
+      } else if (err.request) {
+        console.error("No response received:", err.request);
+      } else {
+        console.error("Request setup error:", err.message);
+      }
       let message;
       if (err instanceof Error) {
         message = err.message || 'Failed to fetch course';
@@ -57,7 +64,7 @@ export const fetchCourses = createAsyncThunk<Course[]>(
     console.log("Fetching all courses from:", `${baseUrl}/api/courses`);
     try {
       const response = await axios.get<Course[]>(`${baseUrl}/api/courses`);
-      console.log("All courses fetched successfully:", response.data.length, "courses");
+      console.log("All courses fetched successfully:", response.data.length, "courses", "Status:", response.status);
       return response.data.map((course) => ({
         ...course,
         thumbnail: course.thumbnail
@@ -66,8 +73,15 @@ export const fetchCourses = createAsyncThunk<Course[]>(
             : `${baseUrl}/images/${course.thumbnail}`
           : defaultThumbnail,
       }));
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching all courses:", error);
+      if (error.response) {
+        console.error("Response status:", error.response.status, "Response data:", error.response.data);
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+      } else {
+        console.error("Request setup error:", error.message);
+      }
       throw error;
     }
   }

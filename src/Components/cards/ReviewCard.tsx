@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import './ReviewCard.css';
 
@@ -89,7 +87,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, className = "" }) => {
             <span className="rating-number">{review.rating}</span>
           </div>
           <div className="review-date">
-            Reviewed on {formatDate(review.date)}
+            Reviewed llln {formatDate(review.date)}
           </div>
         </div>
       </div>

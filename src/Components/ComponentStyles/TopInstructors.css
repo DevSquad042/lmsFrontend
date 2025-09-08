@@ -1,0 +1,162 @@
+.top-instructors {
+  padding: 4rem 0;
+  background-color: #f8f9fa;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.top-instructors-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  padding: 0 2rem;
+  max-width: 100%; /* allow full width */
+}
+
+.top-instructors-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #111827;
+  line-height: 1.2;
+}
+
+.top-instructors-see-all {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #3b82f6;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.top-instructors-see-all:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+/* Grid Container - auto adjust columns */
+.top-instructors-grid {
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  width: 100%; /* take full width */
+}
+
+/* Responsive Design - Matches Home Page Layout */
+@media (max-width: 480px) {
+  .top-instructors {
+    padding: 2.5rem 0;
+    width: 99.9%;
+  }
+  
+  .top-instructors-header {
+    padding: 0 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .top-instructors-title {
+    font-size: 1.5rem;
+  }
+  
+  .top-instructors-grid {
+    width: 99.9%;
+    padding: 0 1rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  ._card_1kukf_1{
+    width: 180px;
+  }
+}
+
+/* Loading Skeletons */
+.mentor-card-skeleton {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f0;
+  padding: 16px;
+  height: 380px;
+  display: flex;
+  flex-direction: column;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-image {
+  width: 100%;
+  height: 140px;
+  background: #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.skeleton-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.skeleton-text {
+  height: 16px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  width: 80%;
+}
+
+.skeleton-text.short {
+  width: 60%;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Error States */
+.error-message {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+}
+
+.error-message p {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.error-message button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s ease;
+}
+
+.error-message button:hover {
+  background: #2563eb;
+}
+
+/* No Data State */
+.no-instructors {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+}
+
+.no-instructors p {
+  font-size: 1.1rem;
+  margin: 0;
+}
+

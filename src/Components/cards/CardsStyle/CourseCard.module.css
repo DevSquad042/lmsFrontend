@@ -10,6 +10,7 @@
   display: flex;
   flex-direction: column;
   margin: 20px 0 0 10px;
+  position: relative;
 }
 
 .card:hover {
@@ -70,8 +71,28 @@
 .progressFill {
   height: 100%;
   background-color: #3b82f6;
-  width: 10%;
+  width: 0%;
   border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progressContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progressText {
+  font-size: 11px;
+  color: #64748b;
+  margin: 4px 10px 0 10px;
+  font-weight: 500;
+}
+
+.completionIcon {
+  color: #10b981;
+  font-size: 16px;
+  flex-shrink: 0;
 }
 
 .rating {
@@ -183,4 +204,28 @@
   .rating {
     margin: 6px 6px 0 6px;
   }
+}
+
+.loadingOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.spinner {
+  font-size: 24px;
+  color: #3b82f6;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

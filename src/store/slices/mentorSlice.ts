@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import type { Mentor } from '../../Types/Mentor';
-import type { RootState } from '../store';
+import type { RootState } from '../../store/index';
 
 interface MentorState {
   data: Mentor[];
@@ -19,10 +19,10 @@ const initialState: MentorState = {
 };
 
 export const fetchMentors = createAsyncThunk<Mentor[]>(
-  'mentors/fetchMentors',
+  'instructors/fetchMentors',
   async () => {
     const response = await axios.get(
-      'http://localhost:3000/api/instructors'
+      'https://byway-hoce.onrender.com/api/instructors'
     );
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return response.data.map((instructor: any) => ({
@@ -33,17 +33,17 @@ export const fetchMentors = createAsyncThunk<Mentor[]>(
 );
 
 export const fetchMentorById = createAsyncThunk<Mentor, string>(
-  'mentors/fetchMentorById',
+  'instructors/fetchMentorById',
   async (id) => {
     const response = await axios.get(
-      `http://localhost:3000/api/instructors/${id}`
+      `https://byway-hoce.onrender.com/api/instructors/${id}`
     );
     return { ...response.data, id: response.data._id } as Mentor;
   }
 );
 
 const mentorSlice = createSlice({
-  name: 'mentors',
+  name: 'instructors',
   initialState,
   reducers: {},
   extraReducers: (builder) => {

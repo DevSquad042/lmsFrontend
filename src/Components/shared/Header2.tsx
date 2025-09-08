@@ -1,13 +1,11 @@
-import React from 'react';
 import './SharedStyles/Header2.css';
 import { IoMdHeartEmpty } from "react-icons/io";
-import { FaShoppingCart, FaSearch } from 'react-icons/fa';
+import { FaShoppingCart, FaSearch, FaBars, FaTimes } from 'react-icons/fa';
 import { IoIosNotificationsOutline } from "react-icons/io";
 import Logo1 from '../../assets/logo/logo copy.png';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { useState, useEffect } from 'react';
-import { toast } from "react-toastify";
 import type { RootState } from "../../store/store";
 import LogoutButton from '../../Components/Logout';
 
@@ -20,40 +18,26 @@ interface Course {
 }
 
 const Header2: React.FC = () => {
-  const navigate = useNavigate();
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  const { user } = useSelector((state: RootState) => state.auth);
+  const user = useSelector((state: RootState) => state.auth.user);
+
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Course[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [mobileSearchQuery, setMobileSearchQuery] = useState('');
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
   const handleLogoutSuccess = () => {
-     setDropdownOpen(false);
+    setDropdownOpen(false);
   };
 
   useEffect(() => {
-    const delayDebounceFn = setTimeout(async () => {
+    const delayDebounceFn = setTimeout(() => {
       if (searchQuery.trim()) {
-        try {
-          setIsLoading(true);
-          const response = await fetch(`https://byway-hoce.onrender.com/api/search?query=${encodeURIComponent(searchQuery)}`);
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          const data = await response.json();
-          setSearchResults(data.results || []);
-        } catch (error) {
-          console.error('Error fetching search results:', error);
-          setSearchResults([]);
-        } finally {
-          setIsLoading(false);
-        }
+        fetchCourses();
       } else {
         setSearchResults([]);
       }
@@ -62,69 +46,32 @@ const Header2: React.FC = () => {
     return () => clearTimeout(delayDebounceFn);
   }, [searchQuery]);
 
+  const fetchCourses = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(
+        `https://byway-hoce.onrender.com/api/search?query=${encodeURIComponent(
+          searchQuery
+        )}`
+      );
+      const data = await response.json();
+      setSearchResults(data.results || []);
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+      setSearchResults([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
-  // Handle search functionality
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!searchQuery.trim()) {
-      toast.warning('Please enter a search term');
-      return;
-    }
-
-    // Navigate to courses page with search results
-    navigate('/courses', {
-      state: {
-        searchQuery: searchQuery.trim(),
-        fromSearch: true
-      }
-    });
-
-    // Clear search input
-    setSearchQuery('');
-  };
-
-  // Handle mobile search functionality
-  const handleMobileSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!mobileSearchQuery.trim()) {
-      toast.warning('Please enter a search term');
-      return;
-    }
-
-    setMobileSearchOpen(false);
-
-    // Navigate to courses page with search results
-    navigate('/courses', {
-      state: {
-        searchQuery: mobileSearchQuery.trim(),
-        fromSearch: true
-      }
-    });
-
-    // Clear search input
-    setMobileSearchQuery('');
-  };
-
-  // Toggle mobile search overlay
-  const toggleMobileSearch = () => {
-    setMobileSearchOpen(!mobileSearchOpen);
-  };
-
-  // Generate user initials (first letter of first name only)
-  const getUserInitials = () => {
-    if (!user) return 'U'; // Default for unauthenticated users
-
-    const firstName = user.firstName || '';
-    const firstInitial = firstName.charAt(0).toUpperCase();
-
-    // Return first letter of first name, or fallback to 'U'
-    return firstInitial || 'U';
-  };
+  // Get initials from user (fallback to "?" if not logged in)
+  const userInitials = user
+    ? `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}`.toUpperCase()
+    : null;
 
   return (
     <header className="header2">
@@ -133,12 +80,13 @@ const Header2: React.FC = () => {
           <img src={Logo1} alt="Byway Logo" className="header-logo2" />
         </Link>
         <Link to="/categories" className="header-link">Categories</Link>
-        <button className="mobile-menu-btn" aria-label="Menu">
-          ☰
-        </button>
       </div>
 
-      <form className="header-search4" onSubmit={handleSearch}>
+      <button className="hamburger2" onClick={() => setMenuOpen(!menuOpen)}>
+        {menuOpen ? <FaTimes /> : <FaBars />}
+      </button>
+
+      <div className="header-search4">
         <FaSearch className="search-icon4" />
         <input
           type="text"
@@ -166,14 +114,14 @@ const Header2: React.FC = () => {
                   <div className="search-result-info">
                     <h3>{course.title}</h3>
                     <p>{course.description.substring(0, 100)}...</p>
-                    <p className="search-result-price">${course.price}</p>
+                    <p className="search-result-price">₦{course.price}</p>
                   </div>
                 </Link>
               ))
             )}
           </div>
         )}
-      </form>
+      </div>
 
       <div className="right-header2">
         <Link to="/" className="header-link2">Teach on Byway</Link>
@@ -195,50 +143,46 @@ const Header2: React.FC = () => {
           </Link>
         </div>
 
-        <button
-          className="mobile-search-btn"
-          onClick={toggleMobileSearch}
-          aria-label="Search"
-        >
-          <FaSearch />
-        </button>
-
-        <div className="user-avatar-wrapper" onClick={toggleDropdown}>
-          <div className="user-avatar">{getUserInitials()}</div>
-          {dropdownOpen && (
-            <div className="user-dropdown">
-              <Link to="/">Home</Link>
-              <Link to="/profile1">Settings</Link>
-              <LogoutButton onLogoutSuccess={handleLogoutSuccess} />
-            </div>
-          )}
-        </div>
+        {/* User section */}
+        {user ? (
+          <div className="user-avatar-wrapper" onClick={toggleDropdown}>
+            <div className="user-avatar">{userInitials}</div>
+            {dropdownOpen && (
+              <div className="user-dropdown">
+                <Link to="/">Home</Link>
+                <Link to="/profile1">Settings</Link>
+                <Link to="/"> <LogoutButton onLogoutSuccess={handleLogoutSuccess} /></Link>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="auth-buttons">
+            <Link to="/login" className="login-btn">Login</Link>
+            <Link to="/register" className="register-btn">Register</Link>
+          </div>
+        )}
       </div>
 
-      {/* Mobile Search Overlay */}
-      {mobileSearchOpen && (
-        <div className="mobile-search-overlay active" onClick={toggleMobileSearch}>
-          <div className="mobile-search-container" onClick={(e) => e.stopPropagation()}>
-            <form className="mobile-search-form" onSubmit={handleMobileSearch}>
-              <input
-                type="text"
-                placeholder="Search courses..."
-                className="mobile-search-input"
-                value={mobileSearchQuery}
-                onChange={(e) => setMobileSearchQuery(e.target.value)}
-                autoFocus
-              />
-              <button
-                type="submit"
-                className="mobile-search-submit"
-                disabled={!mobileSearchQuery.trim()}
-              >
-                Search
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+      <div className={`mobile-menu2 ${menuOpen ? 'open' : ''}`}>
+        <Link to="/categories" className="mobile-link2" onClick={() => setMenuOpen(false)}>Categories</Link>
+        <Link to="/" className="mobile-link2" onClick={() => setMenuOpen(false)}>Teach on Byway</Link>
+        <Link to="/profile" className="mobile-link2" onClick={() => setMenuOpen(false)}>Wishlist</Link>
+        <Link to="/cart" className="mobile-link2" onClick={() => setMenuOpen(false)}>Cart</Link>
+        <Link to="/notifications" className="mobile-link2" onClick={() => setMenuOpen(false)}>Notifications</Link>
+        {user ? (
+          <>
+            <Link to="/profile1" className="mobile-link2" onClick={() => setMenuOpen(false)}>Settings</Link>
+            <div className="mobile-link2">
+              <LogoutButton onLogoutSuccess={() => setMenuOpen(false)} />
+            </div>
+          </>
+        ) : (
+          <>
+            <Link to="/login" className="mobile-link2" onClick={() => setMenuOpen(false)}>Login</Link>
+            <Link to="/register" className="mobile-link2" onClick={() => setMenuOpen(false)}>Register</Link>
+          </>
+        )}
+      </div>
     </header>
   );
 };

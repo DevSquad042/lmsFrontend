@@ -1,6 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import './SharedStyles/Header1.css';
-import { FaShoppingCart, FaSearch } from 'react-icons/fa';
+import { FaShoppingCart, FaSearch, FaBars, FaTimes } from 'react-icons/fa';
 import Logo1 from '../../assets/logo/logo copy.png';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -17,6 +16,7 @@ const Header1: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Course[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -56,6 +56,10 @@ const Header1: React.FC = () => {
         </Link>
         <Link to="/categories" className="header-link">Categories</Link>
       </div>
+
+      <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+        {menuOpen ? <FaTimes /> : <FaBars />}
+      </button>
 
       <div className="header-search">
         <FaSearch className="search-icon" />
@@ -103,6 +107,14 @@ const Header1: React.FC = () => {
         <Link to="/register">
           <button className="btn-filled">Sign Up</button>
         </Link>
+      </div>
+
+      <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
+        <Link to="/categories" className="mobile-link" onClick={() => setMenuOpen(false)}>Categories</Link>
+        <Link to="/" className="mobile-link" onClick={() => setMenuOpen(false)}>Teach on Byway</Link>
+        <Link to="/cart" className="mobile-link" onClick={() => setMenuOpen(false)}>Cart</Link>
+        <Link to="/login" className="mobile-link" onClick={() => setMenuOpen(false)}>Log In</Link>
+        <Link to="/register" className="mobile-link" onClick={() => setMenuOpen(false)}>Sign Up</Link>
       </div>
     </header>
   );
