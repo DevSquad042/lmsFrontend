@@ -10,8 +10,9 @@ import cartReducer, {
   moveToCart,
   removeFromSaveForLater,
 } from "./slices/cartSlice";
-import profileReducer from "./slices/ProfileSlice"; 
+import profileReducer from "./slices/ProfileSlice";
 import coursesReducer from "./slices/coursesSlice"; // ✅ unified slice (use this, not courseSlice)
+import reviewsReducer from "./slices/reviewsSlice";
 
 // ✅ Custom middleware with action matching
 type ReduxAction = { type: string; [key: string]: unknown };
@@ -57,6 +58,7 @@ const store = configureStore({
     cart: cartReducer,
     profile: profileReducer,
     courses: coursesReducer, // ✅ use unified courses slice
+    reviews: reviewsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(toastMiddleware),
