@@ -52,4 +52,6 @@ export interface Mentor {
   image?: string;
   profilePicture?: string; // kept for compatibility
   studentsCount?: number;  // still useful in frontend
+  bio?: string;
+  portfolio?: string;
 }

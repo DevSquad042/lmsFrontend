@@ -9,8 +9,48 @@ import styles from '../Styles/Checkout.module.css';
 import paypal from '../assets/logo/paypal.png';
 import visa from '../assets/logo/visa.png';
 import percent from '../assets/logo/percent.png';
-import Header1 from '../Components/shared/Header1';
+import Header2 from '../Components/shared/Header2';
 import Footer from '../Components/Layout/Footer';
+
+interface FlutterwaveResponse {
+  status: string;
+  transaction_id?: string;
+  tx_ref?: string;
+}
+
+interface FlutterwaveConfig {
+  public_key: string;
+  tx_ref: string;
+  amount: number;
+  currency: string;
+  redirect_url: string;
+  customer: {
+    email: string;
+    name: string;
+    phone_number: string;
+  };
+  customizations: {
+    title: string;
+    description: string;
+    logo: string;
+  };
+  meta: {
+    courses: string[];
+    course_titles: string[];
+    course_images: string[];
+    country: string;
+    state: string;
+    total_items: number;
+  };
+  callback: (response: FlutterwaveResponse) => void;
+  onclose: () => void;
+}
+
+declare global {
+  interface Window {
+    FlutterwaveCheckout: (config: FlutterwaveConfig) => void;
+  }
+}
 
 const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
@@ -23,54 +63,36 @@ const CheckoutPage: React.FC = () => {
     state: '',
     email: '',
     method: 'card',
-    cardName: '',
-    cardNumber: '',
-    expiry: '',
-    cvc: '',
   });
 
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // Handle Flutterwave payment callback
     const status = searchParams.get('status');
     const transactionId = searchParams.get('transaction_id');
 
     if (status === 'successful' && transactionId) {
+      // Payment was successful
       dispatch(clearCart());
       toast.success('Payment successful! Your order has been placed.');
       navigate('/order1');
-    } else if (status === 'cancelled' || status === 'failed') {
+    } else if (status === 'cancelled') {
+      toast.error('Payment was cancelled. Please try again.');
+    } else if (status === 'failed') {
       toast.error('Payment failed. Please try again.');
-      navigate('/order2');
+      navigate('/order-failed');
     }
   }, [searchParams, dispatch, navigate]);
-
-  useEffect(() => {
-    console.log('Cart items in checkout:', cartItems);
-    console.log('Cart items from localStorage:', localStorage.getItem('cart'));
-  }, [cartItems]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const isValidCardNumber = (num: string) => /^\d{16}$/.test(num);
-  const isValidExpiry = (exp: string) => {
-    const [monthStr, yearStr] = exp.split('/').map((s) => s.trim());
-    const month = parseInt(monthStr, 10);
-    const year = parseInt(yearStr, 10);
-    if (!month || !year || month < 1 || month > 12) return false;
-    const now = new Date();
-    const expiryDate = new Date(2000 + year, month);
-    return expiryDate > now;
-  };
-  const isValidCVC = (cvc: string) => /^\d{3,4}$/.test(cvc);
-  const isValidName = (name: string) => /^[A-Za-z\s]{2,}$/.test(name);
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleCheckout = async () => {
-    console.log('Cart items at checkout time:', cartItems);
     if (cartItems.length === 0) {
       toast.error('Your cart is empty. Please add items before proceeding.');
       return;
@@ -86,67 +108,89 @@ const CheckoutPage: React.FC = () => {
       return;
     }
 
-    if (formData.method === 'card') {
-      if (
-        !isValidName(formData.cardName) ||
-        !isValidCardNumber(formData.cardNumber) ||
-        !isValidExpiry(formData.expiry) ||
-        !isValidCVC(formData.cvc)
-      ) {
-        toast.error('Invalid card details. Please check and try again.');
-        return;
-      }
-    }
-
-    const courseIds = cartItems.map((item) => item.id);
-    const total = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-
-    const paymentData = {
-      courses: courseIds,
-      totalAmount: total,
-      email: formData.email,
-    };
-
-    console.log('Payment data being sent:', paymentData);
-
-    const token = localStorage.getItem('token');
-    if (!token) {
-      toast.error('You must be logged in to checkout.');
-      navigate('/login');
-      return;
-    }
-
     try {
       setLoading(true);
-      const response = await fetch('https://byway-hoce.onrender.com/api/flutterwave/initiate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+      
+      // Prepare payment data
+      const courseIds = cartItems.map((item) => item.id);
+      const courseTitles = cartItems.map((item) => item.title);
+      const courseImages = cartItems.map((item) => item.image);
+      const total = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+      
+      // Use the first course image as the logo for Flutterwave (or your own logo)
+      const logoUrl = cartItems[0]?.image || `${window.location.origin}/logo.png`;
+      
+      const paymentData = {
+        tx_ref: `tx-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        amount: total,
+        currency: 'NGN',
+        redirect_url: `${window.location.origin}/checkout`,
+        customer: {
+          email: formData.email,
+          name: 'Customer',
+          phone_number: '' 
         },
-        body: JSON.stringify(paymentData),
-      });
+        customizations: {
+          title: 'Course Purchase',
+          description: cartItems.length === 1 
+            ? cartItems[0].title 
+            : `${cartItems.length} Courses`,
+          logo: logoUrl
+        },
+        meta: {
+          courses: courseIds,
+          course_titles: courseTitles,
+          course_images: courseImages,
+          country: formData.country,
+          state: formData.state,
+          total_items: cartItems.length
+        },
+      };
 
-      console.log('Response status:', response.status);
-      const result = await response.json();
-      console.log('API response:', result);
-
-      if (response.ok) {
-        const link = result.checkoutLink || result.data?.link;
-        if (link) {
-          window.location.href = link;
-        } else {
-          toast.error('Payment initiation failed: No payment link received.');
-        }
-      } else {
-        toast.error(result.message || 'Payment initiation failed. Please try again.');
+      // Load Flutterwave script
+      await loadFlutterwaveScript();
+      
+      // Initialize Flutterwave payment
+      if (window.FlutterwaveCheckout) {
+        window.FlutterwaveCheckout({
+          public_key: 'FLWPUBK_TEST-c893d9e0dcb31cc02a354247a5d2f3f1-X', // Replace with your public key
+          ...paymentData,
+          callback: function(response: FlutterwaveResponse) {
+            if (response.status === 'successful') {
+              dispatch(clearCart());
+              navigate('/order1');
+            } else {
+              navigate('/order-failed');
+            }
+          },
+          onclose: function() {
+            toast.info('Payment window closed');
+          },
+        });
       }
     } catch (error) {
       console.error('Payment error:', error);
       toast.error('An error occurred during payment. Please try again.');
+      navigate('/order-failed');
     } finally {
       setLoading(false);
     }
+  };
+
+  const loadFlutterwaveScript = () => {
+    return new Promise((resolve, reject) => {
+      if (document.getElementById('flutterwave-script')) {
+        resolve(true);
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.id = 'flutterwave-script';
+      script.src = 'https://checkout.flutterwave.com/v3.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => reject(new Error('Failed to load Flutterwave script'));
+      document.body.appendChild(script);
+    });
   };
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
@@ -156,7 +200,7 @@ const CheckoutPage: React.FC = () => {
 
   return (
     <>
-      <Header1 />
+      <Header2 />
       <div className={styles.container}>
         <div className={styles.pageTitleRow}>
           <h1 className={styles.pageTitle}>Checkout Page</h1>
@@ -221,52 +265,6 @@ const CheckoutPage: React.FC = () => {
                     <img src={visa} alt="visa logo" />
                   </div>
                 </div>
-                {formData.method === 'card' && (
-                  <>
-                    <div className={styles.formField}>
-                      <label>Name of Card</label>
-                      <input
-                        name="cardName"
-                        value={formData.cardName}
-                        onChange={handleChange}
-                        placeholder="Name on card"
-                        required
-                      />
-                    </div>
-                    <div className={styles.formField}>
-                      <label>Card Number</label>
-                      <input
-                        name="cardNumber"
-                        value={formData.cardNumber}
-                        onChange={handleChange}
-                        placeholder="1234 5678 9012 3456"
-                        required
-                      />
-                    </div>
-                    <div className={styles.rowTwo}>
-                      <div className={styles.formField}>
-                        <label>Expiry Date</label>
-                        <input
-                          name="expiry"
-                          value={formData.expiry}
-                          onChange={handleChange}
-                          placeholder="MM / YY"
-                          required
-                        />
-                      </div>
-                      <div className={styles.formField}>
-                        <label>CVC/CVV</label>
-                        <input
-                          name="cvc"
-                          value={formData.cvc}
-                          onChange={handleChange}
-                          placeholder="CVC"
-                          required
-                        />
-                      </div>
-                    </div>
-                  </>
-                )}
                 <div className={styles.divider} />
                 <label className={styles.radioBottom}>
                   <input
@@ -282,6 +280,10 @@ const CheckoutPage: React.FC = () => {
                   </span>
                 </label>
               </div>
+              <div className={styles.paymentNote}>
+                <p>💳 You will enter your card details securely on the Flutterwave payment page.</p>
+                <p>🔒 Your payment information is processed securely and never stored on our servers.</p>
+              </div>
             </div>
           </div>
           <aside className={styles.rightCol}>
@@ -295,7 +297,7 @@ const CheckoutPage: React.FC = () => {
                       <div className={styles.category}>Course</div>
                       <div className={styles.title}>{item.title}</div>
                       <div className={styles.meta}>Qty: {item.quantity}</div>
-                      <div className={styles.price}>${(item.price * item.quantity).toFixed(2)}</div>
+                      <div className={styles.price}>NGN{(item.price * item.quantity).toFixed(2)}</div>
                     </div>
                   </div>
                 ))
@@ -318,7 +320,7 @@ const CheckoutPage: React.FC = () => {
               </div>
               <div className={styles.line}>
                 <span>Discount</span>
-                <span className={styles.neg}>${discount.toFixed(2)}</span>
+                <span className={styles.neg}>NGN{discount.toFixed(2)}</span>
               </div>
               <div className={styles.line}>
                 <span>Tax</span>
@@ -334,7 +336,14 @@ const CheckoutPage: React.FC = () => {
               onClick={handleCheckout}
               disabled={loading || cartItems.length === 0}
             >
-              {loading ? 'Processing...' : 'Proceed to Checkout'}
+              {loading ? (
+                <>
+                  <span className={styles.loadingSpinner}></span>
+                  Processing...
+                </>
+              ) : (
+                'Proceed to Payment'
+              )}
             </button>
             {cartItems.length === 0 && (
               <div className={styles.warningText}>

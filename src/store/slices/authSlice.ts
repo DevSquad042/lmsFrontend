@@ -19,6 +19,7 @@ export interface User {
   website?: string;
   x?: string;
   profilePicture?: string;
+  isVerified?: boolean;
 }
 
 export interface AuthState {
@@ -29,10 +30,11 @@ export interface AuthState {
 }
 
 interface AuthResponse {
-  user: User;
+  user?: User;
   token?: string;
   accessToken?: string;
   message?: string;
+  success?: boolean;
 }
 
 /** ===== Initial State (rehydrate from localStorage) ===== */
@@ -90,9 +92,9 @@ export const loginUser = createAsyncThunk<
   }
 });
 
-// Register
+// Register - Updated to handle email verification flow
 export const registerUser = createAsyncThunk<
-  { user: User; token: string },
+  { user?: User; token?: string; message: string },
   { firstName: string; lastName: string; userName: string; email: string; password: string },
   { rejectValue: string }
 >("auth/registerUser", async (payload, { rejectWithValue }) => {
@@ -114,16 +116,25 @@ export const registerUser = createAsyncThunk<
     if (!res.ok) {
       return rejectWithValue(data.message || `Registration failed with status ${res.status}`);
     }
-    if (!data.user) return rejectWithValue("No user data in response");
-    if (!data.token && !data.accessToken) return rejectWithValue("No token or accessToken in response");
 
-    const token: string = data.token || data.accessToken!;
-    if (!data.user.paidCourses) data.user.paidCourses = [];
+    // Handle different successful registration scenarios:
+    // 1. Immediate login (with token and user)
+    // 2. Email verification required (success message but no token)
+    if (data.user && (data.token || data.accessToken)) {
+      // Case 1: Immediate login
+      const token: string = data.token || data.accessToken!;
+      if (!data.user.paidCourses) data.user.paidCourses = [];
 
-    localStorage.setItem("user", JSON.stringify(data.user));
-    localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("token", token);
 
-    return { user: data.user, token };
+      return { user: data.user, token, message: data.message || "Registration successful" };
+    } else {
+      // Case 2: Email verification required
+      return { 
+        message: data.message || "Registration successful. Please check your email to verify your account." 
+      };
+    }
   } catch (err: any) {
     return rejectWithValue(err.message || "Registration failed");
   }
@@ -249,6 +260,9 @@ const authSlice = createSlice({
       state.user = action.payload;
       localStorage.setItem("user", JSON.stringify(state.user));
     },
+    clearError(state) {
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -266,15 +280,19 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload || "Login failed";
       })
-      // Register
+      // Register - Updated to handle both scenarios
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
+        // Only set user and token if they exist (immediate login scenario)
+        if (action.payload.user && action.payload.token) {
+          state.user = action.payload.user;
+          state.token = action.payload.token;
+        }
+        // For email verification scenario, we don't set user/token but it's still a success
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
@@ -321,5 +339,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout, setPaidCourses, setUser } = authSlice.actions;
+export const { logout, setPaidCourses, setUser, clearError } = authSlice.actions;
 export default authSlice.reducer;

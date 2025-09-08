@@ -63,14 +63,12 @@ const LoginForm: React.FC = () => {
         throw new Error("No credential returned from Google");
       }
 
-      // Send the Google credential (JWT) to your backend
       const res = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
         headers: { Authorization: `Bearer ${credentialResponse.credential}` },
       });
 
       console.log("Google User:", res.data);
 
-      // Example: dispatch authSlice action with google user id
       const result = await dispatch(loginUser({
         email: res.data.email,
         password: ""
@@ -120,10 +118,11 @@ const LoginForm: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
+              className={styles.input}
             />
 
             <label htmlFor="password">Password</label>
-            <div style={{ position: "relative" }}>
+            <div className={styles.passwordField}>
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
@@ -132,18 +131,11 @@ const LoginForm: React.FC = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="current-password"
-                style={{ paddingRight: "2.5rem" }}
+                className={`${styles.input} ${styles.passwordInput}`}
               />
               <span
                 onClick={() => setShowPassword(!showPassword)}
-                style={{
-                  position: "absolute",
-                  right: "0.75rem",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  cursor: "pointer",
-                  color: "#555",
-                }}
+                className={styles.eyeIcon}
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>

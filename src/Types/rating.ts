@@ -1,10 +1,10 @@
 export interface Review {
-  courseId: number;
-  userId: string;
+  id: string;
+  userName: string;
+  userAvatar: string;
   rating: number; // 1..5
-  comment: string;
-  
-  created_at: string;
+  reviewText: string;
+  date: string;
 }
 
 export interface ReviewList {
@@ -14,8 +14,6 @@ export interface ReviewList {
 }
 
 export interface ReviewSummary {
-  courseId: string;
-  average: number; // 0..5
-  total: number;
-  breakdown: { [k: number]: number }; // {1..5}
+  averageRating: number;
+  totalReviews: number;
 }
