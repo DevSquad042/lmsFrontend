@@ -1,65 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import '../Styles/ReviewPage.css';
 import ProfileSidebar from '../Components/shared/ProfileSidebar';
 import Header2 from '../Components/shared/Header2';
 import Footer from '../Components/Layout/Footer';
+import { type RootState, type AppDispatch } from '../store/store';
+import { fetchUserReviews, selectUserReviews, selectUserReviewsLoading, selectUserReviewsError } from '../store/slices/reviewsSlice';
 
 const reviewsPerPage = 4;
 
-const reviews = [
-  {
-    course: 'React from Scratch',
-    rating: 5,
-    text: "I was initially apprehensive... But the instructor, John Doe, did an amazing job.",
-  },
-  {
-    course: 'JavaScript Essentials',
-    rating: 4,
-    text: "Very interactive and helpful!",
-  },
-  {
-    course: 'UI/UX Design Masterclass',
-    rating: 5,
-    text: "This course helped me land a freelance gig!",
-  },
-  {
-    course: 'HTML & CSS Basics',
-    rating: 3,
-    text: "Good start for beginners but could be deeper.",
-  },
-  {
-    course: 'Advanced TypeScript',
-    rating: 4,
-    text: "Challenging but rewarding.",
-  },
-  {
-    course: 'JavaScript Essentials',
-    rating: 4,
-    text: "Very interactive and helpful!",
-  },
-  {
-    course: 'UI/UX Design Masterclass',
-    rating: 5,
-    text: "This course helped me land a freelance gig!",
-  },
-  {
-    course: 'HTML & CSS Basics',
-    rating: 3,
-    text: "Good start for beginners but could be deeper.",
-  },
-  {
-    course: 'Advanced TypeScript',
-    rating: 4,
-    text: "Challenging but rewarding.",
-  },
-];
-
 const ReviewPage: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { user } = useSelector((state: RootState) => state.auth);
+  const userReviews = useSelector(selectUserReviews);
+  const loading = useSelector(selectUserReviewsLoading);
+  const error = useSelector(selectUserReviewsError);
+
   const [currentPage, setCurrentPage] = useState(1);
 
-  const totalPages = Math.ceil(reviews.length / reviewsPerPage);
+  useEffect(() => {
+    if (user?.id) {
+      dispatch(fetchUserReviews(user.id));
+    }
+  }, [dispatch, user?.id]);
+
+  const totalPages = Math.ceil((userReviews?.length || 0) / reviewsPerPage);
   const startIndex = (currentPage - 1) * reviewsPerPage;
-  const selectedReviews = reviews.slice(startIndex, startIndex + reviewsPerPage);
+  const selectedReviews = (userReviews || []).slice(startIndex, startIndex + reviewsPerPage);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -68,36 +35,36 @@ const ReviewPage: React.FC = () => {
   return (
     <div>
         <Header2/>
-        
+
     <section className="review-page-layout">
       <ProfileSidebar />
       <div className="review-main">
-        <h3>Reviews ({reviews.length})</h3>
-        {selectedReviews.map((review, idx) => (
-          <div key={idx} className="review-card">
-            <div className="review-header">
-              <p className="course-name">Course Name: <b>{review.course}</b></p>
-              <span className="menu-icon">⋯</span>
-            </div>
+        <h3>Reviews ({userReviews?.length || 0})</h3>
+        {loading && <p>Loading reviews...</p>}
+        {error && <p>Error: {error}</p>}
+        {!loading && !error && selectedReviews.map((review) => (
+          <div key={review.id} className="review-card2">
             <div className="review-rating">Rating: {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</div>
-            <p className="review-text">Review: {review.text}</p>
+            <p className="review-text">Review: {review.comment}</p>
           </div>
         ))}
 
         {/* Pagination - Just numbers */}
-        <div className="pagination-bar">
-          <span className="arrow" onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}>{'<'}</span>
-          {[...Array(totalPages)].map((_, i) => (
-            <span
-              key={i}
-              className={`page-number ${currentPage === i + 1 ? 'active' : ''}`}
-              onClick={() => handlePageChange(i + 1)}
-            >
-              {i + 1}
-            </span>
-          ))}
-          <span className="arrow" onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}>{'>'}</span>
-        </div>
+        {!loading && !error && (userReviews?.length || 0) > 0 && (
+          <div className="pagination-bar">
+            <span className="arrow" onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}>{'<'}</span>
+            {[...Array(totalPages)].map((_, i) => (
+              <span
+                key={i}
+                className={`page-number ${currentPage === i + 1 ? 'active' : ''}`}
+                onClick={() => handlePageChange(i + 1)}
+              >
+                {i + 1}
+              </span>
+            ))}
+            <span className="arrow" onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}>{'>'}</span>
+          </div>
+        )}
       </div>
     </section>
     <Footer/>
@@ -106,4 +73,3 @@ const ReviewPage: React.FC = () => {
 };
 
 export default ReviewPage;
-
