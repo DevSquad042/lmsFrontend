@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
-import { FaArrowLeft } from "react-icons/fa"; // Import the arrow icon
+import { FaArrowLeft } from "react-icons/fa";
 
 import Header3 from "../Components/shared/Header3";
 import Footer from "../Components/Layout/Footer";

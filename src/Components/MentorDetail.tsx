@@ -8,7 +8,7 @@ interface Props {
 }
 
 const MentorDetails: React.FC<Props> = ({ mentor }) => {
-  const safeRating = Math.max(0, Math.min(5, mentor.rating || 0));
+  const safeRating = Math.max(0, Math.min(5, mentor.avgRating || 0));
 
   return (
     <div className={styles.detailsContainer}>

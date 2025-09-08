@@ -1,80 +1,49 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-weight: 'inter';
+  font-family: 'Inter', sans-serif;
 }
-.main{
+
+.main {
   width: 100%;
   height: 100%;
   padding: 0 3rem;
   overflow: hidden;
 }
-.mainContent{
+
+.mainContent {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  font-family: 'inter';
+  gap: 2rem;
   font-size: 14px;
   font-weight: 400;
- 
+  flex-wrap: wrap; /* allow wrapping for smaller screens */
 }
 
-.course-details h2 {
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin: 16px 0px;
-  color: #1f2937;
-}
-
-.course-details p {
-  color: #374151;
-  line-height: 1.6;
-}
-
- 
-
-
-
-.coursePage{
+.coursePage {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   flex-wrap: wrap;
   align-items: flex-start;
-   
-}
-
-.coursee-section {
-  display: flex;
-  flex: 1;
-  padding: 2rem;
   gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
-/* .course-details{
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  justify-content: flex-start;
-
- 
-
-
-} */
-.detailsss{
-  padding-right: 250px;
- 
+/* Details + Sidebar */
+.detailsss {
+  flex: 1;
+  min-width: 280px;
+  padding-right: 2rem;
 }
-.courseDetailss{
+
+.courseDetailss {
   display: flex;
   flex-direction: column;
-  padding-left: 0px;
-  margin-left: 0px;
   margin-bottom: 50px;
 }
+
 .courseDetailss h2 {
   font-size: 1.4rem;
   font-weight: 600;
@@ -87,19 +56,19 @@
   line-height: 1.6;
 }
 
+/* Tabs */
 .tabss {
   display: flex;
-  gap: 16px;
-  margin: 50px 0px;
- 
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 30px 0px;
 }
 
 .tabss a {
-  display: inline-block;
   text-decoration: none;
   background: #f1f5f9;
-  border: 1px solid grey;
-  padding: 15px 20px;
+  border: 1px solid #d1d5db;
+  padding: 12px 16px;
   border-radius: 8px;
   font-weight: 500;
   cursor: pointer;
@@ -117,13 +86,13 @@
   background: rgba(239, 246, 255, 1);
 }
 
-.instructorDetails{
-  width: 60%;
+/* Instructor */
+.instructorDetails {
+  width: 100%;
   display: flex;
   flex-direction: column;
-   padding: 20px 0px;
-
-  font-size: 16px !important;
+  padding: 20px 0px;
+  font-size: 16px;
 }
 
 .instructorDetails h2 {
@@ -131,37 +100,22 @@
   font-size: 20px;
 }
 
-.instructorDetails-name {
-  font-size: 16px;
-  font-weight: 600;
-  display: block;
-  margin-bottom: 4px;
-  color: #0957ff;
-}
-
-.instructorDetails-role {
-  color: #6b7280;
-  margin-bottom: 16px;
-  font-size: 16px !important;
-  font-weight: lighter;
-  margin-bottom: 10px;
-}
-
-.instructorDetails-profile {
+.instructor-profile {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 16px;
-  font-weight: 600;
+  margin-bottom: 1rem;
 }
 
-.instructorDetails-avatar {
+.instructor-avatar {
   width: 64px;
   height: 64px;
   border-radius: 50%;
   object-fit: cover;
 }
 
-.instructorDetails-meta div {
+.instructor-meta div {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -170,115 +124,14 @@
   margin-bottom: 4px;
 }
 
-.textss{
-  margin-top: 25px;
+.textss {
+  margin-top: 20px;
   font-size: 16px;
   color: #334155;
   font-weight: 400;
-
-
-
 }
 
-.groupedReview{
-  width: 100%
-}
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  font-size: 1.5rem;
-  font-weight: 600;
-  border-radius: 8px;
-  height: 50px;
-  width: 150px;
-
-  cursor: pointer;
-
-  text-decoration: none;
-  background-color: white;
-  color: #000;
-}
-
-
-
-
-
-
-/* .reviewsss{
-  width: 50%;
-} */
-
-
-/* .course-details h2 {
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin: 16px 0px;
-  color: #1f2937;
-}
-
-.course-details p {
-  color: #374151;
-  line-height: 1.6;
-}
-.sidebar-container {
-  width: 250px;
-  flex-shrink: 0;
-} */
-
-/* 
-.coursePage{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  align-items: flex-start;
-}
-
-.sidebar{
-  width: 22%;
-  height: 55vh;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 0 0.9rem;
-}
-
-.courses-section {
-  display: flex;
-  flex: 1;
-  padding: 2rem;
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-.course-details h2 {
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin: 16px 0px;
-  color: #1f2937;
-}
-
-.course-details p {
-  color: #374151;
-  line-height: 1.6;
-}
-
-.sidebar-container {
-  width: 250px;
-  flex-shrink: 0;
-}
-
-.main-content {
-  flex-grow: 1;
-}
-
-.courses-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
-}
-
+/* Reviews */
 .reviews-grid {
   display: grid;
   grid-template-columns: 0.4fr 1.2fr;
@@ -290,31 +143,96 @@
 }
 
 .reviews-list {
-  width: 50%;
- margin-left: 300px;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
-.Reviews{
-  width: 50%;
+
+.groupedReviews {
+  width: 100%;
 }
 
-.reviews-list h2 {
-  font-size: 1.3rem;
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
   font-weight: 600;
-  margin-bottom: 8px;
-  color: #1f2937;
-} */
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  background-color: white;
+  color: #000;
+  border: 1px solid #d1d5db;
+  transition: 0.2s;
+  margin-top: 1rem;
+}
 
+.button:hover {
+  background: #f3f4f6;
+}
 
-@media (max-width: 768px) {
-  .courses-section {
+/* ------------------ Responsive Breakpoints ------------------ */
+
+/* Tablets */
+@media (max-width: 992px) {
+  .main {
+    padding: 0 1.5rem;
+  }
+
+  .mainContent {
     flex-direction: column;
-    padding: 1rem;
-    gap: 1rem;
   }
-  .sidebar-container {
+
+  .detailsss {
+    padding-right: 0;
+  }
+
+  .reviews-grid {
+    grid-template-columns: 1fr; /* stack rating + reviews */
+  }
+
+  .instructor-profile {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .main {
+    padding: 0 1rem;
+  }
+
+  .tabss {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tabss a {
     width: 100%;
+    text-align: center;
+    font-size: 13px;
+    padding: 10px;
   }
-} 
+
+  .instructor-profile {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .instructor-avatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  .reviews-list {
+    gap: 12px;
+  }
+
+  .button {
+    width: 100%;
+    font-size: 14px;
+  }
+}
