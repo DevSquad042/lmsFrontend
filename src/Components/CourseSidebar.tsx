@@ -99,7 +99,7 @@ const CourseSidebar: React.FC<{ course: Course }> = ({ course }) => {
         <div className={styles.shareSection}>
           <div className={styles.shareHeader}>
             <span className={styles.shareLabel}>Share</span>
-            <div className={styles.socialIcons}>
+            <div className={styles.socialIconss}>
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
                 <FaFacebook className="icon" />
               </a>

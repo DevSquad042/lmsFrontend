@@ -1,71 +1,137 @@
-.courses-wrapper {
-  display: flex;
-  flex-direction: column;
- height: 100vh;
-  justify-content: flex-start;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
 }
 
-.main{
+.main {
+  width: 100%;
+  height: 100%;
   padding: 0 3rem;
   overflow: hidden;
 }
 
-.mainContent{
-  width: 68%;
-  min-height: 90vh;
+.mainContent {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  font-size: 14px;
+  font-weight: 400;
+  flex-wrap: wrap; /* allow wrapping for smaller screens */
 }
 
-
-.coursePage{
+.coursePage {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   flex-wrap: wrap;
   align-items: flex-start;
-}
-
-.sidebar{
-  width: 22%;
-  height: 55vh;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 0 0.9rem;
-}
-
-.courses-section {
-  display: flex;
-  flex: 1;
-  padding: 2rem;
   gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
 }
-.course-details h2 {
+
+/* Details + Sidebar */
+.detailsss {
+  flex: 1;
+  min-width: 280px;
+  padding-right: 2rem;
+}
+
+.courseDetailss {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 50px;
+}
+
+.courseDetailss h2 {
   font-size: 1.4rem;
   font-weight: 600;
   margin: 16px 0px;
   color: #1f2937;
 }
 
-.course-details p {
+.courseDetailss p {
   color: #374151;
   line-height: 1.6;
 }
 
-.sidebar-container {
-  width: 250px;
-  flex-shrink: 0;
+/* Tabs */
+.tabss {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 30px 0px;
 }
 
-.main-content {
-  flex-grow: 1;
+.tabss a {
+  text-decoration: none;
+  background: #f1f5f9;
+  border: 1px solid #d1d5db;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #000;
+  font-size: 14px;
 }
 
-.courses-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
+.tabss a:hover {
+  background: #e2e8f0;
 }
 
+.tabss a.active {
+  border: none;
+  background: rgba(239, 246, 255, 1);
+}
+
+/* Instructor */
+.instructorDetails {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0px;
+  font-size: 16px;
+}
+
+.instructorDetails h2 {
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+.instructor-profile {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 1rem;
+}
+
+.instructor-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.instructor-meta div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #374151;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.textss {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #334155;
+  font-weight: 400;
+}
+
+/* Reviews */
 .reviews-grid {
   display: grid;
   grid-template-columns: 0.4fr 1.2fr;
@@ -77,31 +143,96 @@
 }
 
 .reviews-list {
-  width: 50%;
- margin-left: 300px;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
-.Reviews{
-  width: 50%;
+
+.groupedReviews {
+  width: 100%;
 }
 
-.reviews-list h2 {
-  font-size: 1.3rem;
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
   font-weight: 600;
-  margin-bottom: 8px;
-  color: #1f2937;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  background-color: white;
+  color: #000;
+  border: 1px solid #d1d5db;
+  transition: 0.2s;
+  margin-top: 1rem;
 }
 
+.button:hover {
+  background: #f3f4f6;
+}
 
-@media (max-width: 768px) {
-  .courses-section {
-    flex-direction: column;
-    padding: 1rem;
-    gap: 1rem;
+/* ------------------ Responsive Breakpoints ------------------ */
+
+/* Tablets */
+@media (max-width: 992px) {
+  .main {
+    padding: 0 1.5rem;
   }
-  .sidebar-container {
+
+  .mainContent {
+    flex-direction: column;
+  }
+
+  .detailsss {
+    padding-right: 0;
+  }
+
+  .reviews-grid {
+    grid-template-columns: 1fr; /* stack rating + reviews */
+  }
+
+  .instructor-profile {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .main {
+    padding: 0 1rem;
+  }
+
+  .tabss {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tabss a {
     width: 100%;
+    text-align: center;
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .instructor-profile {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .instructor-avatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  .reviews-list {
+    gap: 12px;
+  }
+
+  .button {
+    width: 100%;
+    font-size: 14px;
   }
 }
