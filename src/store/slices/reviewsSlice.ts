@@ -72,30 +72,15 @@ export const addReview = createAsyncThunk(
     rating: number;
     comment: string;
   }) => {
-    try {
-      const res = await axios.post(
-        `http://localhost:3000/api/review/addReview/${userId}/${targetId}`,
-        { rating, comment }, // body only
-        {
-          params: { type },   // ✅ send type as query parameter
-          ...getAuthHeader(),
-        }
-      );
-
-      // Return both the data and any success message
-      return {
-        data: res.data as Review,
-        message: res.data?.message || null
-      };
-    } catch (error: any) {
-      // Handle specific API error messages
-      if (error.response?.data?.message) {
-        // Re-throw the error with the specific message so it can be handled in the component
-        throw new Error(error.response.data.message);
+    const res = await axios.post(
+      `http://localhost:3000/api/review/addReview/${userId}/${targetId}`,
+      { rating, comment }, // body only
+      {
+        params: { type },   // ✅ send type as query parameter
+        ...getAuthHeader(),
       }
-      // Re-throw other errors as-is
-      throw error;
-    }
+    );
+    return res.data as Review;
   }
 );
 
@@ -203,8 +188,8 @@ const reviewsSlice = createSlice({
       })
 
       // addReview
-      .addCase(addReview.fulfilled, (state, action: PayloadAction<{ data: Review; message: any }>) => {
-        state.data.push(action.payload.data);
+      .addCase(addReview.fulfilled, (state, action: PayloadAction<Review>) => {
+        state.data.push(action.payload);
       })
 
       // fetchAverage
