@@ -86,7 +86,8 @@
 }
 
 /* Review card */
-.review-card {
+.review-card2 {
+  width: 700px !important;
   margin-top: 10px;
   background: #fff;
   padding: 20px;
@@ -156,8 +157,9 @@
     padding: 20px;
   }
 
-  .review-card {
+  .review-card2 {
     padding: 16px;
+    width: 60%;
   }
 
   .pagination-bar {

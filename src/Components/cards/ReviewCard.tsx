@@ -63,7 +63,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, className = "" }) => {
   };
 
   return (
-    <div className={`review-card ${className}`}>
+    <div className={`review-card2 ${className}`}>
       {/* User Profile Section */}
       <div className="review-header">
         <div className="user-info">
