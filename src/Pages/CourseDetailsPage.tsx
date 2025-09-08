@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import type { RootState, AppDispatch } from "../store/index";
 import { fetchCourseById } from "../store/slices/coursesSlice";
+import { fetchCourseReviews, selectCourseReviews, selectReviewsLoading, selectReviewsError } from "../store/slices/reviewsSlice";
 import CourseDetails from "../Components/CourseHero";
 import CourseSidebar from "../Components/CourseSidebar";
 import CourseContent from "../Components/CourseContent";
@@ -40,6 +41,10 @@ const CoursePage: React.FC = () => {
   const loading = useSelector((state: RootState) => state.courses.loading);
   const error = useSelector((state: RootState) => state.courses.error);
 
+  const courseReviews = useSelector(selectCourseReviews);
+  const reviewsLoading = useSelector(selectReviewsLoading);
+  const reviewsError = useSelector(selectReviewsError);
+
   const fetchData = useCallback(() => {
     if (id) {
       dispatch(fetchCourseById(id));
@@ -49,6 +54,12 @@ const CoursePage: React.FC = () => {
   useEffect(() => {
     fetchData();
   }, [fetchData, id]);
+
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchCourseReviews(id));
+    }
+  }, [dispatch, id]);
 
   if (loading === "pending") return <p>Loading course...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -136,48 +147,27 @@ const CoursePage: React.FC = () => {
           <div className={styles.review}>
             <div className="container">
               <section className="reviews-section" id="reviews-section">
-                {/* <h2>Learner Reviews</h2> */}
+                <h2>Learner Reviews</h2>
                 <div className="reviews-grid">
                   <div className="rating-summary">
                     <Rating summary={reviewsSummary} />
                   </div>
                   <aside className="reviews-list">
                     <div className={styles.groupedReviews}>
-                      <ReviewCard className={styles.reviewsss}
-                      review={{
-                        id: "1",
-                        userAvatar: Image,
-                        userName: "John Doe",
-                        rating: 5,
-                        date: new Date().toISOString(),
-                        reviewText: "I was initially apprehensive, but the instructor was amazing.",
-                      }}
-                    />
-                    <ReviewCard className={styles.reviewsss}
-                      review={{
-                        id: "2",
-                        userAvatar: Image,
-                        userName: "Jane Smith",
-                        rating: 4,
-                        date: new Date().toISOString(),
-                        reviewText: "Well-structured course with a solid foundation in design principles.",
-                      }}
-                    />
-                    <ReviewCard className={styles.reviewsss}
-                      review={{
-                        id: "3",
-                        userAvatar: Image,
-                        userName: "Alice Johnson",
-                        rating: 5,
-                        date: new Date().toISOString(),
-                        reviewText: "Exceeded my expectations! Passionate instructor and great community.",
-                      }}
-                    />
-                   
-                   <button className={styles.button}>View more</button>
-
+                      {reviewsLoading ? (
+                        <p>Loading reviews...</p>
+                      ) : reviewsError ? (
+                        <p>Error loading reviews: {reviewsError}</p>
+                      ) : courseReviews && courseReviews.length > 0 ? (
+                        courseReviews.map((review) => (
+                          <ReviewCard key={review.id} className={styles.reviewsss} review={review} />
+                        ))
+                      ) : (
+                        <p>No reviews available.</p>
+                      )}
+                      <button className={styles.button}>View more</button>
                     </div>
-                   
+
                   </aside>
                 </div>
               </section>
