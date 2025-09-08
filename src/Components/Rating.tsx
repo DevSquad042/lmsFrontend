@@ -9,7 +9,10 @@ import styles from "./ComponentStyles/Rating.module.css";
 const Reviews: React.FC<{
   course: Course;
   onReviewAdded: (courseId: string) => void;
-}> = ({ course, onReviewAdded }) => {
+  reviews?: Review[];
+  showAverage?: boolean;
+  showList?: boolean;
+}> = ({ course, onReviewAdded, reviews: propReviews, showAverage = true, showList = true }) => {
   const dispatch = useDispatch<AppDispatch>();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
@@ -19,7 +22,7 @@ const Reviews: React.FC<{
     useSelector((state: RootState) => state.auth.user?.id) ||
     localStorage.getItem("userId");
 
-  const reviews: Review[] = course.reviews || [];
+  const reviews: Review[] = propReviews || course.reviews || [];
 
   // ✅ Calculate average rating from reviews
   const averageRating =
@@ -48,6 +51,8 @@ const Reviews: React.FC<{
       setRating(0);
       setComment("");
       onReviewAdded(course._id);
+    } catch (error: any) {
+      alert("Failed to submit review. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -55,23 +60,25 @@ const Reviews: React.FC<{
 
   return (
     <div className={styles.reviewsSection}>
-      <h2>Student Reviews</h2>
+      {showAverage && <h2>Student Reviews</h2>}
 
       {/* Average */}
-      <div className={styles.averageBox}>
-        <h3>
-          {averageRating ? `${averageRating.toFixed(1)} / 5` : "No rating yet"}
-        </h3>
-        <div className={styles.stars}>
-          {[1, 2, 3, 4, 5].map((s) => (
-            <FaStar
-              key={s}
-              color={s <= Math.round(averageRating) ? "#FFC107" : "#ccc"}
-            />
-          ))}
+      {showAverage && (
+        <div className={styles.averageBox}>
+          <h3>
+            {averageRating ? `${averageRating.toFixed(1)} / 5` : "No rating yet"}
+          </h3>
+          <div className={styles.stars}>
+            {[1, 2, 3, 4, 5].map((s) => (
+              <FaStar
+                key={s}
+                color={s <= Math.round(averageRating) ? "#FFC107" : "#ccc"}
+              />
+            ))}
+          </div>
+          <p>{reviews.length} reviews</p>
         </div>
-        <p>{reviews.length} reviews</p>
-      </div>
+      )}
 
       {/* Review Form */}
       <div className={styles.reviewForm}>
@@ -98,36 +105,38 @@ const Reviews: React.FC<{
       </div>
 
       {/* Reviews List */}
-      <div className={styles.reviewsList}>
-        {reviews.length === 0 ? (
-          <p>Be the first to leave a review!</p>
-        ) : (
-          reviews.map((r) => (
-            <div key={r.id} className={styles.reviewCard}>
-              <div className={styles.reviewHeader}>
-                <img
-                  src={r.avatar || "/default-avatar.png"}
-                  alt={`Avatar for ${r.userId}`}
-                  className={styles.avatar}
-                />
-                <div className={styles.reviewerInfo}>
-                  <strong>{r.userId}</strong>
-                  <div className={styles.stars}>
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <FaStar
-                        key={s}
-                        color={s <= r.rating ? "#FFC107" : "#ccc"}
-                      />
-                    ))}
+      {showList && (
+        <div className={styles.reviewsList}>
+          {reviews.length === 0 ? (
+            <p>Be the first to leave a review!</p>
+          ) : (
+            reviews.map((r) => (
+              <div key={r.id} className={styles.reviewCard}>
+                <div className={styles.reviewHeader}>
+                  <img
+                    src={r.avatar || "/default-avatar.png"}
+                    alt={`Avatar for ${r.userId}`}
+                    className={styles.avatar}
+                  />
+                  <div className={styles.reviewerInfo}>
+                    <strong>{r.userId}</strong>
+                    <div className={styles.stars}>
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <FaStar
+                          key={s}
+                          color={s <= r.rating ? "#FFC107" : "#ccc"}
+                        />
+                      ))}
+                    </div>
+                    <small>{r.date || "Just now"}</small>
                   </div>
-                  <small>{r.date || "Just now"}</small>
                 </div>
+                <p>{r.comment}</p>
               </div>
-              <p>{r.comment}</p>
-            </div>
-          ))
-        )}
-      </div>
+            ))
+          )}
+        </div>
+      )}
     </div>
   );
 };

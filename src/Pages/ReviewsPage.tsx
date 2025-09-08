@@ -20,9 +20,15 @@ const ReviewPage: React.FC = () => {
 
   useEffect(() => {
     if (user?.id) {
+      console.log('Dispatching fetchUserReviews for user.id:', user.id);
       dispatch(fetchUserReviews(user.id));
     }
   }, [dispatch, user?.id]);
+  useEffect(() => {
+    console.log('ReviewsPage - userReviews:', userReviews);
+    console.log('ReviewsPage - loading:', loading);
+    console.log('ReviewsPage - error:', error);
+  }, [userReviews, loading, error]);
 
   const totalPages = Math.ceil((userReviews?.length || 0) / reviewsPerPage);
   const startIndex = (currentPage - 1) * reviewsPerPage;
