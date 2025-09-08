@@ -49,7 +49,7 @@ const Reviews: React.FC<{
 
     setSubmitting(true);
     try {
-      const result = await dispatch(
+      await dispatch(
         addReview({
           userId,
           targetId: course._id,
@@ -59,17 +59,14 @@ const Reviews: React.FC<{
         })
       ).unwrap();
 
-      // Show success message from API if available, otherwise use default
-      const successMessage = result.message || "Review submitted successfully!";
-      toast.success(successMessage);
-
+      toast.success("Review submitted successfully!");
       setRating(0);
       setComment("");
       onReviewAdded(course._id);
     } catch (error: any) {
       // Handle specific API error messages
-      if (error.message) {
-        toast.error(error.message);
+      if (error.message === "You have already reviewed this target 5 times.") {
+        toast.error("You have already reviewed this target 5 times.");
       } else {
         toast.error("Failed to submit review. Please try again.");
       }

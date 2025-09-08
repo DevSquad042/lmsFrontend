@@ -335,7 +335,7 @@ const OrderCompletePage = () => {
                 >
                   Instructor
                 </button>
-                <button 
+                <button
                   className={activeTab === "reviews" ? "active" : ""}
                   onClick={() => setActiveTab("reviews")}
                 >
