@@ -3,7 +3,7 @@ import { IoMdHeartEmpty } from "react-icons/io";
 import { FaShoppingCart, FaSearch } from 'react-icons/fa';
 import { IoIosNotificationsOutline } from "react-icons/io";
 import Logo1 from '../../assets/logo/logo copy.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { useState, useEffect } from 'react';
 import type { RootState } from "../../store/store";
@@ -26,6 +26,8 @@ const Header2: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Course[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
@@ -67,6 +69,12 @@ const Header2: React.FC = () => {
     setSearchQuery(e.target.value);
   };
 
+  const handleCourseClick = (id: string) => {
+    setSearchResults([]); // close dropdown
+    setSearchQuery('');   // clear input
+    navigate(`/courses/${id}`);
+  };
+
   // Get initials from user (fallback to "?" if not logged in)
   const userInitials = user
     ? `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}`.toUpperCase()
@@ -96,10 +104,10 @@ const Header2: React.FC = () => {
               <div className="search-loading">Loading...</div>
             ) : (
               searchResults.map((course) => (
-                <Link
+                <div
                   key={course._id}
-                  to={`/course/${course._id}`}
                   className="search-result-item"
+                  onClick={() => handleCourseClick(course._id)}
                 >
                   <img
                     src={course.thumbnail}
@@ -111,7 +119,7 @@ const Header2: React.FC = () => {
                     <p>{course.description.substring(0, 100)}...</p>
                     <p className="search-result-price">₦{course.price}</p>
                   </div>
-                </Link>
+                </div>
               ))
             )}
           </div>
@@ -146,7 +154,9 @@ const Header2: React.FC = () => {
               <div className="user-dropdown">
                 <Link to="/">Home</Link>
                 <Link to="/profile1">Settings</Link>
-                <Link to="/"> <LogoutButton onLogoutSuccess={handleLogoutSuccess} /></Link>
+                <Link to="/">
+                  <LogoutButton onLogoutSuccess={handleLogoutSuccess} />
+                </Link>
               </div>
             )}
           </div>

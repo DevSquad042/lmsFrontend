@@ -4,6 +4,8 @@
   height: 450px;
   padding: 1.0rem;
   border: none;
+  margin-top: 60px;
+  padding-right: 20px;
 
 
   border-radius: 8px;
@@ -123,7 +125,9 @@
   padding-bottom: 20px;
 }
 
-.socialIcons{
+.socialIconss{
+  background-color: none;
+  color: none;
   width: 250px;
   font-size: 30px;
   display: flex;
