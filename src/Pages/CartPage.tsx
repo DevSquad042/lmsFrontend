@@ -14,7 +14,7 @@ import "../Styles/CartPage.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { courseData } from "../data/coursedata";
+
 
 
 
@@ -75,11 +75,8 @@ const CartPage: React.FC = () => {
           </Link>{" "}
           ›{" "}
 
-          <Link to={`/courses/${courseData.id}`} className="breadcrumb-link">
-
-            Details
-          </Link>{" "}
-          › <span className="breadcrumb-current">Shopping Cart</span>
+        
+           <span className="breadcrumb-current">Shopping Cart</span>
         </nav>
       </div>
 

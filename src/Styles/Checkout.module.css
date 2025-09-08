@@ -17,7 +17,7 @@
 
 /* header */
 .pageTitleRow {
-  width: 100%;
+  width: 400px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -40,7 +40,7 @@
 }
 
 .breadcrumbs a {
-  color: #2563eb;
+  color:black;
   text-decoration: none;
 }
 
