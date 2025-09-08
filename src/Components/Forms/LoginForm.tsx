@@ -30,7 +30,7 @@ const LoginForm: React.FC = () => {
     if (user && token) {
       console.log("User and token after login:", { user, token });
       toast.success("Login successful!");
-      navigate("/");
+      navigate("/profile1");
     }
   }, [user, token, navigate]);
 
