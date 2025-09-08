@@ -1,5 +1,3 @@
-// src/Pages/CategoryPage.tsx
-
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "../store/index";
@@ -13,6 +11,7 @@ import styles from "../Styles/CategoryPage.module.css";
 import Header2 from "../Components/shared/Header2";
 import Footer from "../Components/Layout/Footer";
 import type { Course } from "../Types/Course";
+import type { Mentor } from "../Types/Mentor";
 
 const coursesPerPage = 6;
 
@@ -20,15 +19,11 @@ const CategoryPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const courses = useSelector((state: RootState) => state.courses.list);
-  const coursesLoading = useSelector(
-    (state: RootState) => state.courses.loading
-  );
+  const coursesLoading = useSelector((state: RootState) => state.courses.loading);
   const coursesError = useSelector((state: RootState) => state.courses.error);
 
-  const mentors = useSelector((state: RootState) => state.mentors.list);
-  const mentorsLoading = useSelector(
-    (state: RootState) => state.mentors.loading
-  );
+  const mentors = useSelector((state: RootState) => state.mentors.data);
+  const mentorsLoading = useSelector((state: RootState) => state.mentors.loading);
   const mentorsError = useSelector((state: RootState) => state.mentors.error);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -38,18 +33,26 @@ const CategoryPage: React.FC = () => {
     dispatch(fetchMentors());
   }, [dispatch]);
 
-  // Pagination
+  console.log("Mentors from Redux:", mentors);
+  console.log("Mentors Error:", mentorsError);
+  const safeCourses = Array.isArray(courses) ? courses : [];
+  const safeMentors = Array.isArray(mentors) ? mentors : [];
+  console.log("Safe Mentors:", safeMentors);
+  console.log("Popular Mentors:", safeMentors.slice(0, 4));
+
   const indexOfLastCourse = currentPage * coursesPerPage;
   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
-  const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
-  const totalPages = Math.ceil(courses.length / coursesPerPage);
+  const currentCourses = safeCourses.slice(indexOfFirstCourse, indexOfLastCourse);
+  const totalPages = Math.ceil(safeCourses.length / coursesPerPage);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // ✅ Loading state with spinner
+  const popularMentors = safeMentors.slice(0, 4);
+  const featuredCourses = safeCourses.slice(0, 3);
+
   if (coursesLoading === "pending" || mentorsLoading === "pending") {
     return (
       <div className={styles.loadingContainer}>
@@ -61,9 +64,6 @@ const CategoryPage: React.FC = () => {
 
   if (coursesError) return <p>Error loading courses: {coursesError}</p>;
   if (mentorsError) return <p>Error loading mentors: {mentorsError}</p>;
-
-  const popularMentors = mentors.slice(0, 4);
-  const featuredCourses = courses.slice(0, 3);
 
   return (
     <div className={styles.pageContainer}>
@@ -90,32 +90,46 @@ const CategoryPage: React.FC = () => {
               </header>
               <section className={styles.courseSection}>
                 <div className={styles.grid}>
-                  {currentCourses.map((course: Course) => (
-                    <CourseCard key={course._id} course={course} />
-                  ))}
+                  {currentCourses.length > 0 ? (
+                    currentCourses.map((course: Course) => (
+                      <CourseCard key={course._id} course={course} />
+                    ))
+                  ) : (
+                    <p className={styles.noCourses}>No courses found.</p>
+                  )}
                 </div>
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={handlePageChange}
-                />
+                {safeCourses.length > coursesPerPage && (
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                  />
+                )}
               </section>
             </main>
           </div>
           <section className={styles.mentorsSection}>
             <h2>Popular Mentors</h2>
             <div className={styles.mentorGrid}>
-              {popularMentors.map((mentor) => (
-                <MentorCard key={mentor.id} mentor={mentor} />
-              ))}
+              {popularMentors.length > 0 ? (
+                popularMentors.map((mentor: Mentor) => (
+                  <MentorCard key={mentor._id || mentor.id} mentor={mentor} />
+                ))
+              ) : (
+                <p className={styles.noMentors}>No mentors found.</p>
+              )}
             </div>
           </section>
           <section className={styles.featuredSection}>
             <h2>Featured Courses</h2>
             <div className={styles.featuredGrid}>
-              {featuredCourses.map((course: Course) => (
-                <CourseCard key={course._id} course={course} />
-              ))}
+              {featuredCourses.length > 0 ? (
+                featuredCourses.map((course: Course) => (
+                  <CourseCard key={course._id} course={course} />
+                ))
+              ) : (
+                <p className={styles.noCourses}>No featured courses found.</p>
+              )}
             </div>
           </section>
         </div>

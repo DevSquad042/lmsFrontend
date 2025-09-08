@@ -59,7 +59,7 @@ const MentorCard: React.FC<MentorCardProps> = ({ mentor, showMessage = false }) 
 
         {showMessage && (
           <Link to={`/profile5/${mentor._id || mentor.id}`} className={styles.messageLink}>
-            <FaEnvelope className={styles.messageIcon} /> View Profile
+            <FaEnvelope className={styles.messageIcon} /> Message Mentor
           </Link>
         )}
       </div>
