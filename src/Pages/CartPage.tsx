@@ -14,11 +14,6 @@ import "../Styles/CartPage.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { courseData } from "../data/coursedata";
-
-
-
-
 const CartPage: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -28,16 +23,10 @@ const CartPage: React.FC = () => {
     (state: RootState) => state.cart.savedForLater
   );
 
-
-
-  const price = cartItems.reduce(
-    (acc, item) => acc + item.price,
-    0
-  );
+  const price = cartItems.reduce((acc, item) => acc + item.price, 0);
   const discount = price > 100 ? -10 : 0;
   const tax = (price + discount) * 0.1;
   const total = price + discount + tax;
-
 
   const handleAddToCart = async (courseId: string) => {
     try {
@@ -52,13 +41,11 @@ const CartPage: React.FC = () => {
       );
 
       if (response.status === 200 || response.status === 201) {
-
         dispatch(moveToCart(courseId));
         console.log("Course added to cart successfully:", response.data);
       }
     } catch (error) {
       console.error("Error adding course to cart:", error);
-
       alert("Failed to add course to cart. Please try again.");
     }
   };
@@ -74,10 +61,8 @@ const CartPage: React.FC = () => {
             Categories
           </Link>{" "}
           ›{" "}
-
-          <Link to={`/courses/${courseData.id}`} className="breadcrumb-link">
-
-            Details
+          <Link to="/courses" className="breadcrumb-link">
+            Courses
           </Link>{" "}
           › <span className="breadcrumb-current">Shopping Cart</span>
         </nav>
@@ -85,7 +70,6 @@ const CartPage: React.FC = () => {
 
       <div className="main-content">
         <div className="content-grid">
-         
           <div className="cart-section">
             <div className="cart-container">
               <div className="cart-header">
@@ -101,8 +85,8 @@ const CartPage: React.FC = () => {
                 </div>
 
                 {cartItems.length > 0 ? (
-                  cartItems.map((course, index) => (
-                    <div key={index} className="table-row" >
+                  cartItems.map((course) => (
+                    <div key={course.id} className="table-row">
                       <div className="course-image">
                         <img src={course.image} alt={course.title} />
                       </div>
@@ -114,7 +98,6 @@ const CartPage: React.FC = () => {
                         </div>
                         <p className="course-instructor">By {course.instructor}</p>
                         <div className="course-rating">
-                          {/* <span className="rating">{course.rating.toFixed(1)}</span> */}
                           <span className="lectures">
                             {course.lectures} Lectures, {course.level}
                           </span>
@@ -139,6 +122,9 @@ const CartPage: React.FC = () => {
                 ) : (
                   <div className="empty-cart">
                     <p>Your cart is empty</p>
+                    <Link to="/courses" className="continue-shopping-btn">
+                      Continue Shopping
+                    </Link>
                   </div>
                 )}
               </div>
@@ -181,13 +167,15 @@ const CartPage: React.FC = () => {
             )}
           </div>
 
-          {/* RIGHT - Order summary */}
-          <div className="summary-section">
-            <OrderSummaryCard
-              summary={{ price, discount, tax, total }}
-              onCheckout={() => navigate("/checkout")}
-            />
-          </div>
+          {/* Order summary */}
+          {cartItems.length > 0 && (
+            <div className="summary-section">
+              <OrderSummaryCard
+                summary={{ price, discount, tax, total }}
+                onCheckout={() => navigate("/checkout")}
+              />
+            </div>
+          )}
         </div>
       </div>
 
