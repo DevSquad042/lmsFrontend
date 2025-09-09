@@ -192,7 +192,7 @@ const CheckoutPage: React.FC = () => {
                       <div className={styles.category}>Course</div>
                       <div className={styles.title}>{item.title}</div>
                       <div className={styles.meta}>Qty: {item.quantity}</div>
-                      <div className={styles.price}>${(item.price * item.quantity).toFixed(2)}</div>
+                      <div className={styles.price}>NGN{(item.price * item.quantity).toFixed(2)}</div>
                     </div>
                   </div>
                 ))
@@ -215,7 +215,7 @@ const CheckoutPage: React.FC = () => {
               </div>
               <div className={styles.line}>
                 <span>Discount</span>
-                <span className={styles.neg}>${discount.toFixed(2)}</span>
+                <span className={styles.neg}>NGN{discount.toFixed(2)}</span>
               </div>
               <div className={styles.line}>
                 <span>Tax</span>
