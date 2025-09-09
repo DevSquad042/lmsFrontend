@@ -1,78 +1,218 @@
+/* Base Footer Styles */
 .Footer-container {
   background-color: #1E293B;
   color: white;
-  height: 50vh;
   width: 100%;
+  min-height: 300px; /* Changed from fixed height to min-height */
   display: flex;
-  justify-content: space-around;
-  align-items: center;
+  justify-content: space-between;
+  align-items: flex-start;
   flex-wrap: wrap;
-  padding: 30px;
+  padding: 40px 30px;
+  gap: 30px;
 }
 
 .Sub-container {
   font-weight: 500;
   font-size: 14px;
-  height: 190px;
-  line-height: 200%;
+  line-height: 1.6;
+  flex: 1;
+  min-width: 200px;
+  max-width: 300px;
 }
-.Sub-container a{
+
+.Sub-container img {
+  max-width: 120px;
+  height: auto;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.Sub-container a {
   color: white;
   text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 .Sub-container a:hover {
   text-decoration: underline;
+  color: #60A5FA;
 }
 
 .Sub-container > h3 {
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #F1F5F9;
 }
 
 .Sub-container2 {
-  height: 200px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  flex: 1;
+  min-width: 200px;
+  max-width: 300px;
 }
 
+.Sub-container2 > h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #F1F5F9;
+}
 
 .Icons {
-  width: 200px;
   display: flex;
-  justify-content: space-between;
-  font-size: 20px;
+  gap: 16px;
+  margin-top: 16px;
 }
+
 .Icons a {
   color: white;
   text-decoration: none;
+  font-size: 20px;
+  transition: all 0.3s ease;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* ✅ Responsive for screens smaller than 768px */
+.Icons a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Tablet Responsiveness (769px - 1024px) */
+@media (max-width: 1024px) {
+  .Footer-container {
+    padding: 35px 25px;
+    gap: 25px;
+  }
+
+  .Sub-container {
+    flex: 1 1 calc(50% - 15px);
+    min-width: 180px;
+    max-width: none;
+  }
+
+  .Sub-container2 {
+    flex: 1 1 calc(50% - 15px);
+    min-width: 180px;
+    max-width: none;
+  }
+
+  .Sub-container img {
+    max-width: 100px;
+    margin-bottom: 14px;
+  }
+}
+
+/* Small Tablet / Large Mobile (481px - 768px) */
 @media (max-width: 768px) {
   .Footer-container {
     flex-direction: column;
-    height: auto;
     text-align: center;
-    align-items: center;
-
+    padding: 30px 20px;
+    gap: 30px;
+    min-height: auto;
   }
 
-  .Sub-container, .Sub-container2 {
-    width: 90%;
+  .Sub-container,
+  .Sub-container2 {
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .Sub-container > h3,
+  .Sub-container2 > h3 {
+    font-size: 16px;
+  }
+
+  .Sub-container {
     font-size: 13px;
-    height: fit-content;
-    line-height: 2.5;
-  }
-
-  .Sub-container > h3 {
-    font-size: 15px;
   }
 
   .Icons {
-    width: 100%;
-    font-size: 18px;
     justify-content: center;
     gap: 20px;
+    margin-top: 20px;
+  }
+
+  .Icons a {
+    font-size: 18px;
+  }
+}
+
+/* Mobile Responsiveness (320px - 480px) */
+@media (max-width: 480px) {
+  .Footer-container {
+    padding: 25px 15px;
+    gap: 25px;
+  }
+
+  .Sub-container,
+  .Sub-container2 {
+    width: 100%;
+    font-size: 12px;
+  }
+
+  .Sub-container > h3,
+  .Sub-container2 > h3 {
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+
+  .Sub-container p {
+    line-height: 1.5;
+  }
+
+  .Sub-container img {
+    max-width: 80px;
+    margin-bottom: 12px;
+  }
+
+  .Icons {
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .Icons a {
+    font-size: 16px;
+    padding: 6px;
+  }
+}
+
+/* Extra Small Mobile (320px and below) */
+@media (max-width: 320px) {
+  .Footer-container {
+    padding: 20px 10px;
+    gap: 20px;
+  }
+
+  .Sub-container,
+  .Sub-container2 {
+    font-size: 11px;
+  }
+
+  .Sub-container > h3,
+  .Sub-container2 > h3 {
+    font-size: 14px;
+  }
+
+  .Sub-container img {
+    max-width: 60px;
+    margin-bottom: 10px;
+  }
+
+  .Icons {
+    gap: 12px;
+  }
+
+  .Icons a {
+    font-size: 14px;
+    padding: 4px;
   }
 }

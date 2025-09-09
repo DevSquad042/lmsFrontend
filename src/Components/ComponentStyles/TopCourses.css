@@ -42,16 +42,17 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: calc(100vh - 8rem); /* Full height minus padding */
+  min-height: 200px; /* Reasonable minimum height instead of full viewport */
+  padding: 2rem 0;
   background: #ffffff; /* White background during loading */
 }
 
 .loading-spinner::after {
   content: '';
-  width: 50px;
-  height: 50px;
-  border: 6px solid #e5e7eb;
-  border-top: 6px solid #3b82f6; /* Blue to match contact button */
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top: 4px solid #3b82f6; /* Blue to match contact button */
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -67,6 +68,7 @@
   }
 
   .loading-spinner {
-    height: calc(100vh - 6rem); /* Adjusted for mobile padding */
+    min-height: 150px; /* Smaller minimum height for mobile */
+    padding: 1.5rem 0;
   }
 }
