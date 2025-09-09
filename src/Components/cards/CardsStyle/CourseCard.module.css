@@ -4,6 +4,7 @@
   overflow: visible;
   background-color: #fff;
   transition: transform 0.2s;
+  height: 320px; 
 }
 
 .cardLink {

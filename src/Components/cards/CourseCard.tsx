@@ -92,7 +92,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, isEnrolled = false }) =
             )}
           </div>
           <p className={styles.price}>
-            {isEnrolled ? "Watch Now" : `NGN${course.price}`}
+            {isEnrolled ? "Watch Now" : `₦${course.price}`}
           </p>
         </div>
       </article>

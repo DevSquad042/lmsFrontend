@@ -1,5 +1,12 @@
+
 /* CategoryPage.module.css */
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 .pageContainer {
+  width: 100vw;
   min-height: 100vh;
   background: #f9fafb;
   display: flex;
@@ -103,12 +110,11 @@
 }
 
 /* Grid Layouts */
-.grid {
-  padding: 0;
+.grid2 {
   width: 100%;
   display: grid;
   gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: auto auto auto;
 }
 
 .mentorGrid {

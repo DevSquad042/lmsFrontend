@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
@@ -55,7 +55,7 @@ const TopInstructors: React.FC = () => {
       <header className="top-instructors-header">
         <h2 className="top-instructors-title">Top Instructors</h2>
         <Link 
-          to="/mentors"
+         to="/categories"
           className="top-instructors-see-all"
           onClick={handleScrollTop}
           aria-label="View all instructors"

@@ -89,7 +89,7 @@ const CategoryPage: React.FC = () => {
                 </div>
               </header>
               <section className={styles.courseSection}>
-                <div className={styles.grid}>
+                <div className={styles.grid2}>
                   {currentCourses.length > 0 ? (
                     currentCourses.map((course: Course) => (
                       <CourseCard key={course._id} course={course} />
