@@ -7,49 +7,21 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import styles from '../Styles/Checkout.module.css';
-import paypal from '../assets/logo/paypal.png';
-import visa from '../assets/logo/visa.png';
 import percent from '../assets/logo/percent.png';
 import Header2 from '../Components/shared/Header2';
 import Footer from '../Components/Layout/Footer';
 
+// Type declarations for Flutterwave
 interface FlutterwaveResponse {
   status: string;
   transaction_id?: string;
   tx_ref?: string;
-}
-
-interface FlutterwaveConfig {
-  public_key: string;
-  tx_ref: string;
-  amount: number;
-  currency: string;
-  redirect_url: string;
-  customer: {
-    email: string;
-    name: string;
-    phone_number: string;
-  };
-  customizations: {
-    title: string;
-    description: string;
-    logo: string;
-  };
-  meta: {
-    courses: string[];
-    course_titles: string[];
-    course_images: string[];
-    country: string;
-    state: string;
-    total_items: number;
-  };
-  callback: (response: FlutterwaveResponse) => void;
-  onclose: () => void;
+  // Add other properties as needed based on Flutterwave documentation
 }
 
 declare global {
   interface Window {
-    FlutterwaveCheckout: (config: FlutterwaveConfig) => void;
+    FlutterwaveCheckout: (config: any) => void;
   }
 }
 
@@ -63,10 +35,11 @@ const CheckoutPage: React.FC = () => {
     country: '',
     state: '',
     email: '',
-    method: 'card',
   });
 
   const [loading, setLoading] = useState(false);
+
+  const courseIds = cartItems.map((item) => item.id);
 
   const enrollUserInCourses = async (courseIds: string[]) => {
     try {
@@ -146,7 +119,6 @@ const CheckoutPage: React.FC = () => {
   };
 
   useEffect(() => {
-    // Handle Flutterwave payment callback
     const status = searchParams.get('status');
     const transactionId = searchParams.get('transaction_id');
 
@@ -158,7 +130,8 @@ const CheckoutPage: React.FC = () => {
       dispatch(clearCart());
 
       // Attempt to enroll user in courses
-      enrollUserInCourses(courseIds);
+      const currentCourseIds = cartItems.map((item) => item.id);
+      enrollUserInCourses(currentCourseIds);
 
       toast.success('Payment successful! Your order has been placed.');
       navigate('/order1');
@@ -170,7 +143,12 @@ const CheckoutPage: React.FC = () => {
       toast.error('Payment failed. Please try again.');
       navigate('/order-failed');
     }
-  }, [searchParams, dispatch, navigate]);
+  }, [searchParams, dispatch, navigate, cartItems]);
+
+  useEffect(() => {
+    console.log('Cart items in checkout:', cartItems);
+    console.log('Cart items from localStorage:', localStorage.getItem('cart'));
+  }, [cartItems]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -180,6 +158,7 @@ const CheckoutPage: React.FC = () => {
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleCheckout = async () => {
+    console.log('Cart items at checkout time:', cartItems);
     if (cartItems.length === 0) {
       toast.error('Your cart is empty. Please add items before proceeding.');
       return;
@@ -207,7 +186,7 @@ const CheckoutPage: React.FC = () => {
       // Use the first course image as the logo for Flutterwave (or your own logo)
       const logoUrl = cartItems[0]?.image || `${window.location.origin}/logo.png`;
       
-      const paymentData = {
+const paymentData = {
         tx_ref: `tx-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         amount: total,
         currency: 'NGN',
@@ -263,11 +242,11 @@ const CheckoutPage: React.FC = () => {
             toast.info('Payment window closed');
           },
         });
+
       }
     } catch (error) {
       console.error('Payment error:', error);
       toast.error('An error occurred during payment. Please try again.');
-      navigate('/order-failed');
     } finally {
       setLoading(false);
     }
@@ -317,6 +296,7 @@ const CheckoutPage: React.FC = () => {
         <div className={styles.layout}>
           <div className={styles.leftCol}>
             <div className={styles.card}>
+              <h3 className={styles.sectionTitle}>Billing Information</h3>
               <div className={styles.formGrid}>
                 <div className={styles.field}>
                   <label>Country</label>
@@ -352,42 +332,9 @@ const CheckoutPage: React.FC = () => {
                   />
                 </div>
               </div>
-              <h3 className={styles.sectionTitle}>Payment Method</h3>
-              <div className={styles.paymentCard}>
-                <div className={styles.radioRow}>
-                  <label className={styles.radio}>
-                    <input
-                      type="radio"
-                      name="method"
-                      value="card"
-                      checked={formData.method === 'card'}
-                      onChange={handleChange}
-                    />
-                    <span className={styles.radioLabel}>Credit/Debit Card</span>
-                  </label>
-                  <div className={styles.cardIcons}>
-                    <img src={visa} alt="visa logo" />
-                  </div>
-                </div>
-                <div className={styles.divider} />
-                <label className={styles.radioBottom}>
-                  <input
-                    type="radio"
-                    name="method"
-                    value="paypal"
-                    checked={formData.method === 'paypal'}
-                    onChange={handleChange}
-                  />
-                  <span className={styles.radioLabel}>PayPal</span>
-                  <span className={styles.paypalIcon}>
-                    <img src={paypal} alt="paypal logo" />
-                  </span>
-                </label>
-              </div>
-              <div className={styles.paymentNote}>
-                <p>💳 You will enter your card details securely on the Flutterwave payment page.</p>
-                <p>🔒 Your payment information is processed securely and never stored on our servers.</p>
-              </div>
+              <p className={styles.paymentInfo}>
+                You will be redirected to Flutterwave to complete your payment securely.
+              </p>
             </div>
           </div>
           <aside className={styles.rightCol}>
@@ -440,14 +387,7 @@ const CheckoutPage: React.FC = () => {
               onClick={handleCheckout}
               disabled={loading || cartItems.length === 0}
             >
-              {loading ? (
-                <>
-                  <span className={styles.loadingSpinner}></span>
-                  Processing...
-                </>
-              ) : (
-                'Proceed to Payment'
-              )}
+              {loading ? 'Processing...' : 'Proceed to Checkout'}
             </button>
             {cartItems.length === 0 && (
               <div className={styles.warningText}>
