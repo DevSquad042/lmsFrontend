@@ -11,6 +11,15 @@ export interface Review {
   created_at: string;
 }
 
+interface RawReview {
+  id: string;
+  course_id: number;
+  user_id: string;
+  rating: number;
+  comment: string;
+  created_at: string;
+}
+
 interface ReviewsState {
   data: Review[];
   average: number | null;
@@ -109,7 +118,7 @@ export const fetchUserReviews = createAsyncThunk(
     );
     const response = res.data;
     console.log('fetchUserReviews - Raw response:', response);
-    let rawReviews: any[];
+    let rawReviews: RawReview[];
     if (Array.isArray(response)) {
       rawReviews = response;
     } else if (response.data && Array.isArray(response.data)) {
@@ -119,7 +128,7 @@ export const fetchUserReviews = createAsyncThunk(
     }
     console.log('fetchUserReviews - Raw reviews:', rawReviews);
     // Transform snake_case to camelCase to match Review interface
-    const result: Review[] = rawReviews.map((review: any) => ({
+    const result: Review[] = rawReviews.map((review: RawReview) => ({
       id: review.id,
       courseId: review.course_id,
       userId: review.user_id,
@@ -135,35 +144,31 @@ export const fetchUserReviews = createAsyncThunk(
 export const fetchCourseReviews = createAsyncThunk(
   "reviews/fetchCourseReviews",
   async (courseId: string) => {
-    try {
-      const res = await axios.get(
-        `http://localhost:3000/api/review/courseReviews/${courseId}`,
-        getAuthHeader()
-      );
-      const response = res.data;
-      let rawReviews: any[];
-      if (response.data && response.data.reviews && Array.isArray(response.data.reviews)) {
-        rawReviews = response.data.reviews;
-      } else if (Array.isArray(response)) {
-        rawReviews = response;
-      } else if (response.data && Array.isArray(response.data)) {
-        rawReviews = response.data;
-      } else {
-        throw new Error("Invalid response structure");
-      }
-      // Transform snake_case to camelCase to match Review interface
-      const result: Review[] = rawReviews.map((review: any) => ({
-        id: review.id,
-        courseId: review.course_id,
-        userId: review.user_id,
-        rating: review.rating,
-        comment: review.comment,
-        created_at: review.created_at,
-      }));
-      return result;
-    } catch (error) {
-      throw error; // Let RTK handle it
+    const res = await axios.get(
+      `https://byway-hoce.onrender.com/api/review/courseReviews/${courseId}`,
+      getAuthHeader()
+    );
+    const response = res.data;
+    let rawReviews: RawReview[];
+    if (response.data && response.data.reviews && Array.isArray(response.data.reviews)) {
+      rawReviews = response.data.reviews;
+    } else if (Array.isArray(response)) {
+      rawReviews = response;
+    } else if (response.data && Array.isArray(response.data)) {
+      rawReviews = response.data;
+    } else {
+      throw new Error("Invalid response structure");
     }
+    // Transform snake_case to camelCase to match Review interface
+    const result: Review[] = rawReviews.map((review: RawReview) => ({
+      id: review.id,
+      courseId: review.course_id,
+      userId: review.user_id,
+      rating: review.rating,
+      comment: review.comment,
+      created_at: review.created_at,
+    }));
+    return result;
   }
 );
 
