@@ -52,7 +52,7 @@ const TopInstructors: React.FC = () => {
       <header className="top-instructors-header">
         <h2 className="top-instructors-title">Top Instructors</h2>
         <Link 
-          to="/mentors"
+         to="/categories"
           className="top-instructors-see-all"
           onClick={handleScrollTop}
           aria-label="View all instructors"

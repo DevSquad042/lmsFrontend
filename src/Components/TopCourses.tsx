@@ -39,7 +39,7 @@ const TopCourses: React.FC = () => {
       <header className="top-courses-header">
         <h2 className="top-courses-title">Top Courses</h2>
         <Link 
-          to="/courses" 
+          to="/categories"
           className="top-courses-see-all"
           onClick={handleScrollTop}
         >
@@ -47,7 +47,7 @@ const TopCourses: React.FC = () => {
         </Link>
       </header>
       
-      <div className="top-courses-grid">
+      <div className="top-courses-grid2">
         {topCourses.length === 0 ? (
           <p>No top courses available.</p>
         ) : (
