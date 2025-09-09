@@ -31,6 +31,9 @@ const initialState: ReviewsState = {
   userReviewsError: null,
 };
 
+// 👉 API Base URL
+const API_BASE = "http://localhost:3000";
+
 // 👉 Helper to attach token to headers
 const getAuthHeader = () => {
   const token = localStorage.getItem("token");
@@ -46,7 +49,7 @@ export const fetchReviews = createAsyncThunk(
   "reviews/fetchReviews",
   async ({ targetId, type }: { targetId: string; type: "Course" | "instructor" }) => {
     const res = await axios.get(
-      "http://localhost:3000/api/review/getReviews",
+      `${API_BASE}/api/review/getReviews`,
       {
         params: { targetId, type },
         ...getAuthHeader(),
@@ -73,7 +76,7 @@ export const addReview = createAsyncThunk(
     comment: string;
   }) => {
     const res = await axios.post(
-      `http://localhost:3000/api/review/addReview/${userId}/${targetId}`,
+      `${API_BASE}/api/review/addReview/${userId}/${targetId}`,
       { rating, comment }, // body only
       {
         params: { type },   // ✅ send type as query parameter
@@ -89,7 +92,7 @@ export const fetchAverage = createAsyncThunk(
   "reviews/fetchAverage",
   async ({ targetId, type }: { targetId: string; type: "Course" | "instructor" }) => {
     const res = await axios.get(
-      `http://localhost:3000/api/review/${targetId}/average`,
+      `${API_BASE}/api/review/${targetId}/average`,
       {
         params: { type },
         ...getAuthHeader(),
@@ -104,19 +107,24 @@ export const fetchUserReviews = createAsyncThunk(
   "reviews/fetchUserReviews",
   async (targetId: string) => {
     const res = await axios.get(
-      `http://localhost:3000/api/review/getReviews/userReviews/${targetId}`,
+      `${API_BASE}/api/review/getReviews/userReviews/${targetId}`,
       getAuthHeader()
     );
     const response = res.data;
     console.log('fetchUserReviews - Raw response:', response);
     let rawReviews: any[];
-    if (Array.isArray(response)) {
+
+    // Backend response structure: { data: { reviews: [...] } }
+    if (response.data && response.data.reviews && Array.isArray(response.data.reviews)) {
+      rawReviews = response.data.reviews;
+    } else if (Array.isArray(response)) {
       rawReviews = response;
     } else if (response.data && Array.isArray(response.data)) {
       rawReviews = response.data;
     } else {
       rawReviews = [];
     }
+
     console.log('fetchUserReviews - Raw reviews:', rawReviews);
     // Transform snake_case to camelCase to match Review interface
     const result: Review[] = rawReviews.map((review: any) => ({
@@ -137,7 +145,7 @@ export const fetchCourseReviews = createAsyncThunk(
   async (courseId: string) => {
     try {
       const res = await axios.get(
-        `http://localhost:3000/api/review/courseReviews/${courseId}`,
+        `${API_BASE}/api/review/courseReviews/${courseId}`,
         getAuthHeader()
       );
       const response = res.data;
