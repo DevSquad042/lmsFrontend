@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from '../Styles/Checkout.module.css';
 import percent from '../assets/logo/percent.png';
-import Header1 from '../Components/shared/Header1';
+import Header2 from '../Components/shared/Header2';
 import Footer from '../Components/Layout/Footer';
 
 const CheckoutPage: React.FC = () => {
@@ -127,7 +127,7 @@ const CheckoutPage: React.FC = () => {
 
   return (
     <>
-      <Header1 />
+      <Header2/>
       <div className={styles.container}>
         <div className={styles.pageTitleRow}>
           <h1 className={styles.pageTitle}>Checkout Page</h1>
@@ -192,7 +192,7 @@ const CheckoutPage: React.FC = () => {
                       <div className={styles.category}>Course</div>
                       <div className={styles.title}>{item.title}</div>
                       <div className={styles.meta}>Qty: {item.quantity}</div>
-                      <div className={styles.price}>${(item.price * item.quantity).toFixed(2)}</div>
+                      <div className={styles.price}>₦{(item.price * item.quantity).toFixed(2)}</div>
                     </div>
                   </div>
                 ))
@@ -211,7 +211,7 @@ const CheckoutPage: React.FC = () => {
             <div className={styles.card}>
               <div className={styles.line}>
                 <span>Subtotal</span>
-                <span>NGN{subtotal.toFixed(2)}</span>
+                <span>₦{subtotal.toFixed(2)}</span>
               </div>
               <div className={styles.line}>
                 <span>Discount</span>
@@ -219,11 +219,11 @@ const CheckoutPage: React.FC = () => {
               </div>
               <div className={styles.line}>
                 <span>Tax</span>
-                <span>NGN{tax.toFixed(2)}</span>
+                <span>₦{tax.toFixed(2)}</span>
               </div>
               <div className={styles.total}>
                 <span>Total</span>
-                <span>NGN{total.toFixed(2)}</span>
+                <span>₦{total.toFixed(2)}</span>
               </div>
             </div>
             <button
