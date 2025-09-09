@@ -105,7 +105,7 @@ const CheckoutPage: React.FC = () => {
       if (response.ok) {
         const link = result.checkoutLink || result.data?.link;
         if (link) {
-          window.location.href = link; // Redirect to Flutterwave's payment page
+          window.location.href = link; 
         } else {
           toast.error('Payment initiation failed: No payment link received.');
         }
