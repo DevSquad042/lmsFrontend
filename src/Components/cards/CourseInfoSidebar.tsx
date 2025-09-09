@@ -21,11 +21,11 @@ const CourseInfoSidebar: React.FC<CourseInfoSidebarProps> = ({ course }) => {
         
         <div className={styles.priceSection}>
            <span className={styles.price}>
-             {course.discountedPrice && course.discountedPrice < course.price ? `NGN ${course.discountedPrice}` : course.price === 0 ? "FREE" : `NGN ${course.price}`}
+             {course.discountedPrice && course.discountedPrice < course.price ? `₦ ${course.discountedPrice}` : course.price === 0 ? "FREE" : `₦ ${course.price}`}
            </span>
            {(course.discountedPrice && course.discountedPrice < course.price) || (course.originalPrice && course.originalPrice > course.price) ? (
              <span className={styles.originalPrice}>
-               NGN {course.discountedPrice && course.discountedPrice < course.price ? course.price : course.originalPrice}
+               ₦ {course.discountedPrice && course.discountedPrice < course.price ? course.price : course.originalPrice}
              </span>
            ) : null}
          </div>
