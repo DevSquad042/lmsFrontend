@@ -12,8 +12,8 @@
   width: 100%;
   background: #f9fafb;
   position: relative;
-  z-index: 1; /* Lower than header's z-index */
-  padding-top: 80px; /* Adjust based on Header2 height to prevent content overlap */
+  z-index: 1;
+  padding-top: 80px;
 }
 
 .container {
@@ -104,7 +104,7 @@
 
 /* Grid Layouts */
 .grid {
-  padding: 0 1rem;
+  padding: 0;
   width: 100%;
   display: grid;
   gap: 1.5rem;
@@ -114,14 +114,14 @@
 .mentorGrid {
   display: grid;
   gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  min-height: 200px; /* Ensure visibility even if empty */
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  min-height: 200px;
 }
 
 .featuredGrid {
   display: grid;
   gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
 /* Section Styling */
@@ -129,8 +129,9 @@
 .featuredSection {
   margin-bottom: 3rem;
   padding: 2rem;
-  border-top: 1px solid #e5e7eb;
   background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .mentorsSection h2,
@@ -186,7 +187,7 @@
   }
 
   .wrapper {
-    padding-top: 60px; /* Adjust for smaller header on mobile */
+    padding-top: 60px;
   }
 
   .mainLayout {
@@ -210,16 +211,27 @@
 
   .grid {
     grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 1fr;
   }
-
+  
   .mentorGrid {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    display: flex;
     gap: 1rem;
+    overflow-x: scroll;
+  }
+  
+  .featuredGrid {
+    display: flex;
+    gap: 1rem;
+    overflow-x: scroll;
   }
 
-  .featuredGrid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  /*
+   * Corrected: Set the width of the cards in the sliding sections
+   */
+  .mentorGrid > *,
+  .featuredGrid > * {
+    flex: 0 0 280px; /* Adjust this value to set card width */
   }
 
   .mentorsSection,
@@ -234,7 +246,7 @@
   }
 
   .wrapper {
-    padding-top: 70px; /* Adjust for medium screens */
+    padding-top: 70px;
   }
 
   .mainLayout {
@@ -243,15 +255,15 @@
   }
 
   .grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .mentorGrid {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .featuredGrid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -261,19 +273,24 @@
   }
 
   .wrapper {
-    padding-top: 80px; /* Consistent with larger screens */
+    padding-top: 80px;
+  }
+
+  .mainLayout {
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
   }
 
   .grid {
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .mentorGrid {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
   }
 
   .featuredGrid {
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -284,7 +301,7 @@
   }
 
   .wrapper {
-    padding-top: 80px; /* Consistent with larger screens */
+    padding-top: 80px;
   }
 
   .mainLayout {
@@ -293,10 +310,14 @@
   }
 
   .grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .mentorGrid {
     grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .featuredGrid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }

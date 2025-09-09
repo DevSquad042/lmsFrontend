@@ -2,7 +2,7 @@
   padding: 4rem 2rem;
   width: 100%;
   margin: 0 auto;
-  background: #ffffff; /* Ensure white background */
+  background: #ffffff;
 }
 
 .top-courses-header {
@@ -33,7 +33,8 @@
 
 .top-courses-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-auto-rows: 1fr;
   gap: 2rem;
 }
 
@@ -42,8 +43,8 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: calc(100vh - 8rem); /* Full height minus padding */
-  background: #ffffff; /* White background during loading */
+  height: calc(100vh - 8rem);
+  background: #ffffff;
 }
 
 .loading-spinner::after {
@@ -51,7 +52,7 @@
   width: 50px;
   height: 50px;
   border: 6px solid #e5e7eb;
-  border-top: 6px solid #3b82f6; /* Blue to match contact button */
+  border-top: 6px solid #3b82f6;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -61,12 +62,18 @@
   100% { transform: rotate(360deg); }
 }
 
+/* Responsive Styles */
 @media (max-width: 768px) {
   .top-courses-title {
     font-size: 2rem;
   }
+  
+  .top-courses-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
 
   .loading-spinner {
-    height: calc(100vh - 6rem); /* Adjusted for mobile padding */
+    height: calc(100vh - 6rem);
   }
 }
