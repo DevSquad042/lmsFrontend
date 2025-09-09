@@ -1,11 +1,10 @@
-// src/Components/RelatedCourses.tsx
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import type { RootState, AppDispatch } from "../store";
 import { fetchCourses } from "../store/slices/coursesSlice";
 import CourseCard from "./cards/CourseCard";
-import "./ComponentStyles/RelatedCourses.css";
+import styles from "./ComponentStyles/RelatedCourses.module.css";
 import type { Course } from "../Types/Course";
 
 interface RelatedCoursesProps {
@@ -25,7 +24,7 @@ const RelatedCourses: React.FC<RelatedCoursesProps> = ({ categories, excludeId }
     }
   }, [dispatch, courses.length]);
 
-  // ✅ Filter related courses
+  // Filter related courses
   const relatedCourses: Course[] = courses
     .filter((course) => course._id !== excludeId) // exclude current
     .filter((course) =>
@@ -37,15 +36,15 @@ const RelatedCourses: React.FC<RelatedCoursesProps> = ({ categories, excludeId }
   if (error) return <p>Error loading related courses: {error}</p>;
 
   return (
-    <section className="top-courses">
-      <header className="top-courses-header">
-        <h2 className="top-courses-title">Related Courses</h2>
-        <Link to="/courses" className="top-courses-see-all" aria-label="View all courses">
+    <section className={styles.topCourses}>
+      <header className={styles.topCoursesHeader}>
+        <h2 className={styles.topCoursesTitle}>More Courses Like This</h2>
+        <Link to="/courses" className={styles.topCoursesSeeAll} aria-label="View all courses">
           See All
         </Link>
       </header>
 
-      <div className="top-courses-grid">
+      <div className={styles.topCoursesGrid}>
         {relatedCourses.length === 0 ? (
           <p>No related courses found.</p>
         ) : (

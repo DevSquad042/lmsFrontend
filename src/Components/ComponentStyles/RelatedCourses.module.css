@@ -1,0 +1,83 @@
+.topCourses {
+  padding: 4rem 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 ;
+  background: #ffffff;
+}
+
+.topCoursesHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.topCoursesTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+}
+
+.topCoursesSeeAll {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.2s;
+  display: none;
+}
+
+.topCoursesSeeAll:hover {
+  color: #0056b3;
+}
+
+/* Use flexbox for horizontal sliding and ensure it's contained */
+.topCoursesGrid {
+  display: flex;
+  gap: 2rem;
+  overflow-x: scroll; /* Enables horizontal scrolling */
+  padding-bottom: 1rem;
+  width: 100%;
+  /* Fixes the positioning issue */
+  margin: 0 auto;
+}
+
+/* Ensure each card has a fixed width and doesn't shrink */
+.topCoursesGrid > * {
+  flex-shrink: 0;
+  width: 280px;
+  min-height: 400px;
+}
+
+.loadingSpinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: calc(100vh - 8rem);
+  background: #ffffff;
+}
+
+.loadingSpinner::after {
+  content: '';
+  width: 50px;
+  height: 50px;
+  border: 6px solid #e5e7eb;
+  border-top: 6px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .topCoursesTitle {
+    font-size: 2rem;
+  }
+}

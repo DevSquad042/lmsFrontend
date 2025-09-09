@@ -1,8 +1,54 @@
+/* Styles for the Pagination container */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  gap: 0.5rem; /* Adds consistent spacing between buttons */
+}
+
+/* Base styles for all pagination buttons */
+.pageButton {
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db; /* A clean, light border */
+  border-radius: 0.5rem; /* Rounded corners */
+  background: white;
+  color: #4b5563; /* Default text color */
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Hover effect for all buttons */
+.pageButton:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+/* Disabled state for Previous/Next buttons */
+.pageButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Active state for the current page button */
+.active {
+  background: #2563eb; /* A distinct blue background */
+  color: white; /* White text for contrast */
+  border-color: #2563eb;
+}
+
+.active:hover {
+  background: #1d4ed8; /* A darker blue on hover for the active button */
+  border-color: #1d4ed8;
+}
+
 .wrapper {
   display: flex;
   justify-content: flex-start;
   margin-top: 3rem;
-  overflow-x: auto; /* allow horizontal scroll */
+  overflow-x: auto;
   scroll-behavior: smooth;
   padding: 0.5rem;
 }
@@ -23,7 +69,7 @@
   background: white;
   cursor: pointer;
   font-size: 1.2rem;
-  flex-shrink: 0; /* so arrows don't shrink in small screens */
+  flex-shrink: 0;
 }
 
 .arrow:hover {
@@ -48,10 +94,4 @@
 .page:hover {
   background: #F9FAFB;
   color: #111827;
-}
-
-.active {
-  background: #2563EB;
-  color: white;
-  border-color: #2563EB;
 }
