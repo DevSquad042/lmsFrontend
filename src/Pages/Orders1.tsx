@@ -1,11 +1,25 @@
 import { FaCheck } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { fetchPaidCourses } from "../store/slices/authSlice";
+import type { AppDispatch } from "../store";
 import Header2 from "../Components/shared/Header2";
 import Footer from "../Components/Layout/Footer";
 import '../Styles/Orders1.css'
 
 const Orders1: React.FC = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   console.log('Orders1 component rendered - no enrollment logic here');
+
+  const handleRefreshCourses = () => {
+    // Refresh the user's paid courses data
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (user.id) {
+      dispatch(fetchPaidCourses(user.id));
+    }
+    navigate('/profile2');
+  };
 
   return (
     <div className="orders-page">
@@ -19,24 +33,25 @@ const Orders1: React.FC = () => {
           Thank you for your purchase! You will receive a confirmation email soon.
         </p>
         <p className="order-status__message">
-          Your courses are being processed and will be available in your account shortly.
+          Your courses have been enrolled and are now available in your account.
         </p>
         <div className="order-status__actions" style={{ marginTop: '20px' }}>
-          <Link
-            to="/profile2"
+          <button
+            onClick={handleRefreshCourses}
             style={{
               display: 'inline-block',
               padding: '12px 24px',
               background: '#007bff',
               color: 'white',
-              textDecoration: 'none',
+              border: 'none',
               borderRadius: '6px',
               fontWeight: '500',
-              marginRight: '10px'
+              marginRight: '10px',
+              cursor: 'pointer'
             }}
           >
             View My Courses
-          </Link>
+          </button>
           <Link
             to="/"
             style={{

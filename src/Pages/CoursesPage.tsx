@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import Footer from "../Components/Layout/Footer";
 import Header2 from "../Components/shared/Header2";
@@ -10,8 +11,12 @@ import "../Styles/CoursesPage.css";
 import type { Course } from "../Types/Course";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { fetchPaidCourses } from "../store/slices/authSlice";
+import type { RootState, AppDispatch } from "../store";
 
 const CoursesPages = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const user = useSelector((state: RootState) => state.auth.user);
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -27,6 +32,11 @@ const CoursesPages = () => {
           toast.error("You are not authenticated. Please log in.");
           setLoading(false);
           return;
+        }
+
+        // Refresh user's paid courses data
+        if (user?.id) {
+          dispatch(fetchPaidCourses(user.id));
         }
 
         const response = await axios.get(
@@ -59,7 +69,7 @@ const CoursesPages = () => {
     };
 
     fetchCourses();
-  }, []);
+  }, [dispatch, user?.id]);
 
   // Pagination logic
   const totalPages = Math.ceil(courses.length / itemsPerPage);

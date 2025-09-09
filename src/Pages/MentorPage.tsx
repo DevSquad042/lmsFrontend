@@ -14,22 +14,26 @@ import TestimonialCard from "../Components/TestimonialsSection";
 import Breadcrumb from "../Components/Breadcrumb";
 
 const MentorPage: React.FC = () => {
-  const { mentorId } = useParams<{ mentorId: string }>();
+  const { mentorId: urlMentorId } = useParams<{ mentorId: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const { selectedMentor, loading, error } = useSelector(
     (state: RootState) => state.mentors
   );
 
+  // Handle nested mentor data structure
+  const mentorData = selectedMentor?.instructor || selectedMentor;
+  const actualMentorId = mentorData?.id || mentorData?._id || urlMentorId;
+
   const fetchData = () => {
-    if (mentorId) {
-      console.log('MentorPage - Fetching mentor with ID:', mentorId);
-      dispatch(fetchMentorById(mentorId));
+    if (urlMentorId) {
+      console.log('MentorPage - Fetching mentor with ID:', urlMentorId);
+      dispatch(fetchMentorById(urlMentorId));
     }
   };
 
   useEffect(() => {
     fetchData();
-  }, [dispatch, mentorId]);
+  }, [dispatch, urlMentorId]);
 
   // Debug logging
   useEffect(() => {
@@ -43,7 +47,7 @@ const MentorPage: React.FC = () => {
   const breadcrumbLinks = [
     { label: "Home", path: "/" },
     { label: "Mentors", path: "/mentors" },
-    { label: selectedMentor.name, path: `/mentors/${selectedMentor.id}` },
+    { label: mentorData?.name || "Mentor", path: `/mentors/${actualMentorId}` },
   ];
 
   return (
@@ -52,9 +56,9 @@ const MentorPage: React.FC = () => {
       <Breadcrumb links={breadcrumbLinks} />
       <div className={styles.mentorPage}>
         <div className={styles.mainContent}>
-          <MentorDetails mentor={selectedMentor} />
-          <MentorReviews mentor={selectedMentor} onReviewAdded={fetchData} />
-          <CoursesByMentor mentorId={selectedMentor.id} />
+          <MentorDetails mentor={mentorData} />
+          <MentorReviews mentor={mentorData} onReviewAdded={fetchData} />
+          <CoursesByMentor mentorId={actualMentorId} />
           <TestimonialCard />
         </div>
       </div>

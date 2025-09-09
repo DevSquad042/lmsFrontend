@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState, AppDispatch } from '../store';
 import { clearCart } from '../store/slices/cartSlice';
+import { setPaidCourses, fetchPaidCourses } from '../store/slices/authSlice';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
@@ -41,7 +42,7 @@ const CheckoutPage: React.FC = () => {
 
   const courseIds = cartItems.map((item) => item.id);
 
-  const enrollUserInCourses = async (courseIds: string[]) => {
+  const enrollUserInCourses = async (courseIds: string[]): Promise<boolean> => {
     try {
       console.log('Attempting to enroll user in courses:', courseIds);
       const token = localStorage.getItem('token');
@@ -49,7 +50,7 @@ const CheckoutPage: React.FC = () => {
       if (!token) {
         console.error('No authentication token found for enrollment');
         toast.error('Authentication required for enrollment');
-        return;
+        return false;
       }
 
       // Try different possible enrollment endpoints
@@ -80,6 +81,17 @@ const CheckoutPage: React.FC = () => {
           console.log('Enrollment response:', response.data);
           enrollmentSuccess = true;
           toast.success('Successfully enrolled in courses!');
+
+          // Update local state with new paid courses
+          const user = JSON.parse(localStorage.getItem('user') || '{}');
+          const currentPaidCourses = user.paidCourses || [];
+          const updatedPaidCourses = [...new Set([...currentPaidCourses, ...courseIds])];
+          dispatch(setPaidCourses(updatedPaidCourses));
+
+          // Update localStorage
+          user.paidCourses = updatedPaidCourses;
+          localStorage.setItem('user', JSON.stringify(user));
+
           break;
         } catch (error: any) {
           console.log(`Enrollment failed for ${endpoint}:`, error);
@@ -94,26 +106,30 @@ const CheckoutPage: React.FC = () => {
         // Provide more specific error messages based on the error
         if (lastErrorMessage.includes('Order not found') || lastErrorMessage.includes('already processed')) {
           toast.warning('Payment successful! Enrollment may take a few moments to process. Please check your courses page.');
+          return true; // Consider this a success since payment went through
         } else if (lastErrorMessage.includes('Unauthorized') || lastErrorMessage.includes('401')) {
           toast.error('Authentication error. Please log in again.');
+          return false;
         } else if (lastErrorMessage.includes('500') || lastErrorMessage.includes('Internal Server Error')) {
           toast.warning('Payment successful! Server is processing enrollment. Please check your courses page in a few minutes.');
+          return true; // Consider this a success since payment went through
         } else {
           toast.error(`Payment successful, but enrollment failed: ${lastErrorMessage}. Please contact support.`);
+          return false;
         }
-
-        // Still navigate to order success page, but user will see the warning
-        console.log('Navigating to order success despite enrollment failure');
       }
 
+      return enrollmentSuccess;
     } catch (error: any) {
       console.error('Enrollment error:', error);
       const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
 
       if (errorMessage.includes('Order not found') || errorMessage.includes('already processed')) {
         toast.warning('Payment successful! Enrollment may take a few moments to process. Please check your courses page.');
+        return true; // Consider this a success since payment went through
       } else {
         toast.error(`Payment successful, but enrollment failed: ${errorMessage}. Please contact support.`);
+        return false;
       }
     }
   };
@@ -131,10 +147,16 @@ const CheckoutPage: React.FC = () => {
 
       // Attempt to enroll user in courses
       const currentCourseIds = cartItems.map((item) => item.id);
-      enrollUserInCourses(currentCourseIds);
-
-      toast.success('Payment successful! Your order has been placed.');
-      navigate('/order1');
+      enrollUserInCourses(currentCourseIds).then((enrollmentSuccess) => {
+        if (enrollmentSuccess) {
+          toast.success('Payment successful! Your order has been placed.');
+          navigate('/order1');
+        } else {
+          // Enrollment failed, but payment succeeded - still show success but warn user
+          toast.warning('Payment successful! Please check your courses page to see your enrolled courses.');
+          navigate('/order1');
+        }
+      });
     } else if (status === 'cancelled') {
       console.log('Payment cancelled via URL params');
       toast.error('Payment was cancelled. Please try again.');
@@ -230,11 +252,19 @@ const paymentData = {
               dispatch(clearCart());
 
               // Attempt to enroll user in courses
-              await enrollUserInCourses(courseIds);
+              const enrollmentSuccess = await enrollUserInCourses(courseIds);
 
-              navigate('/order1');
+              if (enrollmentSuccess) {
+                toast.success('Payment successful! Your order has been placed.');
+                navigate('/order1');
+              } else {
+                // Enrollment failed, but payment succeeded - still show success but warn user
+                toast.warning('Payment successful! Please check your courses page to see your enrolled courses.');
+                navigate('/order1');
+              }
             } else {
               console.log('Payment failed or cancelled:', response.status);
+              toast.error('Payment failed. Please try again.');
               navigate('/order-failed');
             }
           },

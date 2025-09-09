@@ -1,16 +1,17 @@
 .sidebar {
- 
+
   width: 330px;
   height: 450px;
   padding: 1.0rem;
   border: none;
-  margin-top: 60px;
+  position: sticky;
+  top: 80px;
   padding-right: 20px;
 
 
   border-radius: 8px;
    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-  
+
 }
 
 
