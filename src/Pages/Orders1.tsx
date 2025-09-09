@@ -22,5 +22,3 @@ const Orders1: React.FC = () => {
 };
 
 export default Orders1;
-
-

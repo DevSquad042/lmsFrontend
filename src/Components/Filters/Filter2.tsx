@@ -9,9 +9,10 @@ interface Filter2Props {
   count?: string | number;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+  placeholder?: string;
 }
 
-const Filter2: React.FC<Filter2Props> = ({ title, count, searchQuery, setSearchQuery }) => {
+const Filter2: React.FC<Filter2Props> = ({ title, count, searchQuery, setSearchQuery, placeholder }) => {
   return (
     <div className="filter-container">
       {/* Title */}
@@ -28,7 +29,7 @@ const Filter2: React.FC<Filter2Props> = ({ title, count, searchQuery, setSearchQ
           <FaSearch className="search-icon2" />
           <input
             type="text"
-            placeholder="Search your courses..."
+            placeholder={placeholder || "Search your courses..."}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />

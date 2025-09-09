@@ -1,3 +1,4 @@
+// src/Components/cards/CourseSidebar2.tsx
 import { useState } from "react";
 import {
   FaChevronDown,

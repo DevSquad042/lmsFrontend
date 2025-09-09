@@ -7,7 +7,7 @@
   --danger: #d9534f;
 }
 
-
+/* Layout container */
 .container {
   max-width: 1100px;
   margin: 28px auto;
@@ -15,31 +15,52 @@
   background: var(--bg);
 }
 
-/* header */
+/* Header styles */
 .pageTitleRow {
-  width: 400px;
   display: flex;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 18px;
-}
-.pageTitle {
-  margin: 0;
-  font-size: 20px;
-}
-.breadcrumbs {
-width: 250px;
-  display: flex;
-  justify-content: space-between;
-  color:black;
-  font-size: 13px;
-  font-weight: 500;
-}
-.muted .active {
-  color: #2563eb; /* Blue link for active */
+  margin-top: 40px; /* Increased to bring title down and avoid header overlap */
+  margin-bottom: 24px;
+  padding: 12px;
+  background: var(--card);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  position: relative; /* Ensure proper stacking context */
+  z-index: 10; /* Prevent overlap by other elements */
 }
 
-/* layout */
+.pageTitle {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.breadcrumbs a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.breadcrumbs a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumbs .muted {
+  color: var(--muted);
+}
+
+/* Main layout */
 .layout {
   display: grid;
   grid-template-columns: 1fr 360px;
@@ -47,9 +68,8 @@ width: 250px;
   align-items: start;
 }
 
-/* generic card */
+/* Generic card */
 .card {
-  background-color: #F8FAFC;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -58,9 +78,10 @@ width: 250px;
   margin-bottom: 12px;
 }
 
-/* left column */
+/* Left column (form) */
 .leftCol .card {
   padding: 22px;
+  margin-top: 24px; /* From previous update to bring form down */
 }
 
 .formGrid {
@@ -70,26 +91,16 @@ width: 250px;
   margin-bottom: 14px;
 }
 
-.field label
-{
-  font-family: 'inter';
+.field label {
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   display: block;
   font-size: 18px;
-  color:black;
-  margin-bottom: 8px;
-}
-.formField label {
-  font-family: 'inter';
-  font-weight: 400;
-
-  display: block;
-  font-size: 16px;
+  color: black;
   margin-bottom: 8px;
 }
 
-.field input,
-.formField input {
+.field input {
   width: 90%;
   padding: 12px;
   border-radius: 8px;
@@ -97,168 +108,103 @@ width: 250px;
   background: #fbfdff;
 }
 
-/* headings */
+.paymentInfo {
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* Headings */
 .sectionTitle {
   margin-top: 12px;
   margin-bottom: 12px;
   font-size: 15px;
+  font-weight: 600;
 }
 
-/* payment form */
-.paymentCard .radioRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-.radio {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.radio input {
-  accent-color: var(--primary);
-}
-.radioLabel {
-  font-size: 15px;
-}
-.cardIcons {
-  opacity: 0.95;
-}
-
-.formField {
-  margin-bottom: 12px;
-}
-
-/* two column row for expiry / cvc */
-.rowTwo {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-/* divider and paypal line */
-.divider {
-  height: 1px;
-  background: var(--border);
-  margin: 12px 0;
-  border-radius: 2px;
-}
-.radioBottom {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.paypalIcon {
-  margin-left: auto;
-}
-
-/* right column */
+/* Right column (order summary) */
 .rightCol {
   position: sticky;
   top: 24px;
   align-self: start;
- 
-
 }
 
-/* order item */
+/* Order item */
 .orderItem {
   display: flex;
   gap: 12px;
 }
+
 .thumb {
   width: 90px;
-  /* height: 60px; */
   background: #ddd;
   border-radius: 6px;
   object-fit: cover;
 }
-.sectionTitle{
-  font-weight: 600;
-  font-size: 20px;
 
-}
 .desc .category {
   font-size: 12px;
   color: #7b8a9a;
 }
+
 .title {
   font-weight: 600;
   margin-top: 5px;
 }
+
 .meta {
   font-size: 12px;
   color: var(--muted);
   margin-top: 6px;
 }
+
 .price,
 .itemPrice {
   font-weight: 700;
   margin-top: 8px;
 }
 
-/* coupon button */
-/* .couponBtn {
-  align-items: ;
-  width: 100%;
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: transparent;
-  cursor: pointer;
-} */
-
-/* .coupon{
-  width: 100%;
-  display: flex;
-  align-items: center;
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: transparent;
-  cursor: pointer;
-} */
+/* Coupon button */
 .couponBtn {
   background: var(--card);
   width: 100%;
-  margin: 20px 0px;
-  padding: 10px 0px;
- 
+  margin: 20px 0;
+  padding: 10px 0;
   border-radius: 8px;
   border: 1px solid var(--border);
-  display: inline-flex;      
-  align-items: center;       
+  display: inline-flex;
+  align-items: center;
   cursor: pointer;
 }
 
 .couponBtn img {
-  width: 20px;                /* adjust size */
+  width: 20px;
   height: 20px;
-  margin-right: 6px; 
-  padding-left: 10px;         /* <– adds small space */
+  margin-right: 6px;
+  padding-left: 10px;
 }
 
- 
-
-/* summary card */
+/* Summary card */
 .line {
   display: flex;
   justify-content: space-between;
   padding: 10px 0;
   border-bottom: 1px dashed #f1f1f1;
 }
+
 .total {
   display: flex;
   justify-content: space-between;
   padding-top: 12px;
   font-weight: 700;
 }
+
 .neg {
   color: var(--danger);
 }
 
-/* proceed button - at bottom of right column */
+/* Proceed button */
 .proceedBtn {
   width: 100%;
   background: var(--primary);
@@ -268,18 +214,21 @@ width: 250px;
   border: none;
   cursor: pointer;
   margin-top: 12px;
-  box-shadow: 0 2px 6px rgba(11,18,32,0.15);
+  box-shadow: 0 2px 6px rgba(11, 18, 32, 0.15);
 }
 
-/* small screens */
+/* Responsive design */
 @media (max-width: 900px) {
+  .pageTitleRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 32px; /* Slightly less on smaller screens but still visible */
+  }
   .layout {
     grid-template-columns: 1fr;
   }
   .formGrid {
-    grid-template-columns: 1fr;
-  }
-  .rowTwo {
     grid-template-columns: 1fr;
   }
   .rightCol {

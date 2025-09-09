@@ -6,6 +6,7 @@ type ButtonProps = {
   className?: string;   // style it however you want via CSS or Tailwind
   showArrow?: boolean;
   disabled?: boolean;
+  type?: "button" | "submit" | "reset";
 };
 
 const Button: React.FC<ButtonProps> = ({
@@ -14,12 +15,14 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
   showArrow = false,
   disabled = false,
+  type = "button",
 }) => {
   return (
     <button
       className={className}
       onClick={onClick}
       disabled={disabled}
+      type={type}
     >
       {label}
       {showArrow && <span className="arrow">➔</span>}

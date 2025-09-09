@@ -1,5 +1,5 @@
 .breadcrumb {
-  max-width: 50%;
+  max-width: 500px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -10,6 +10,7 @@
 }
 
 .link {
+  /* width: 100px; */
   text-decoration: none;
   color: #555;
   transition: color 0.2s;

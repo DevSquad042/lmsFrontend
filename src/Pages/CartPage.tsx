@@ -14,7 +14,7 @@ import "../Styles/CartPage.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { courseData } from "../data/coursedata";
+
 
 
 
@@ -75,11 +75,8 @@ const CartPage: React.FC = () => {
           </Link>{" "}
           ›{" "}
 
-          <Link to={`/courses/${courseData.id}`} className="breadcrumb-link">
-
-            Details
-          </Link>{" "}
-          › <span className="breadcrumb-current">Shopping Cart</span>
+        
+           <span className="breadcrumb-current">Shopping Cart</span>
         </nav>
       </div>
 
@@ -110,7 +107,7 @@ const CartPage: React.FC = () => {
                       <div className="course-main">
                         <div className="title-price-row">
                           <h3 className="course-title">{course.title}</h3>
-                          <span className="course-price">${course.price.toFixed(2)}</span>
+                          <span className="course-price">₦{course.price.toFixed(2)}</span>
                         </div>
                         <p className="course-instructor">By {course.instructor}</p>
                         <div className="course-rating">
@@ -157,7 +154,7 @@ const CartPage: React.FC = () => {
                     <div className="course-main">
                       <div className="title-price-row">
                         <h3 className="course-title">{course.title}</h3>
-                        <span className="course-price">${course.price.toFixed(2)}</span>
+                        <span className="course-price">₦{course.price.toFixed(2)}</span>
                       </div>
                       <p className="course-instructor">By {course.instructor}</p>
                       <div className="course-actions">

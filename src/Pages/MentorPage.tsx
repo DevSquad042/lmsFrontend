@@ -5,8 +5,8 @@ import { useParams } from "react-router-dom";
 import type { RootState, AppDispatch } from "../store/index";
 import { fetchMentorById } from "../store/slices/mentorSlice";
 import MentorDetails from "../Components/MentorDetail";
-import MentorReviews from "../Components/ComponentStyles/MentorReviews.module.css";
-import CoursesByMentor from "../Components/ComponentStyles/CoursesByMentor.module.css";
+import MentorReviews from "../Components/MentorReviews";
+import CoursesByMentor from "../Components/CourseByMentor";
 import styles from "../Styles/MentorPage.module.css";
 import Header2 from "../Components/shared/Header2";
 import Footer from "../Components/Layout/Footer";
@@ -22,6 +22,7 @@ const MentorPage: React.FC = () => {
 
   const fetchData = () => {
     if (mentorId) {
+      console.log('MentorPage - Fetching mentor with ID:', mentorId);
       dispatch(fetchMentorById(mentorId));
     }
   };
@@ -30,7 +31,12 @@ const MentorPage: React.FC = () => {
     fetchData();
   }, [dispatch, mentorId]);
 
-  if (loading) return <p>Loading mentor...</p>;
+  // Debug logging
+  useEffect(() => {
+    console.log('MentorPage - Current state:', { selectedMentor, loading, error });
+  }, [selectedMentor, loading, error]);
+
+  if (loading === 'pending') return <p>Loading mentor...</p>;
   if (error) return <p>Error: {error}</p>;
   if (!selectedMentor) return <p>No mentor found.</p>;
 

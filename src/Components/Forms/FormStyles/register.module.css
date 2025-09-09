@@ -7,14 +7,17 @@
 .formSection {
   flex: 1;
   max-width: 600px;
-  width: 70%;
+  width: 100%;
   margin: auto;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .formSection h2 {
   margin-bottom: 24px;
   font-size: 24px;
   color: #1d1d1f;
+  text-align: center;
 }
 
 .formSection form {
@@ -35,6 +38,7 @@
   border-radius: 4px;
   font-size: 14px;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .signUpBtn {
@@ -44,12 +48,13 @@
   font-weight: 600;
   font-family: 'Inter', sans-serif;
   border: none;
-  border-radius: 8px;  /* matches inputs */
-  padding: 12px; /* consistent padding */
+  border-radius: 8px;
+  padding: 12px;
   margin-top: auto;
   cursor: pointer;
-  width: 40%;
+  width: 100%;
   transition: background-color 0.25s ease;
+  box-sizing: border-box;
 }
 
 .signUpBtn:hover {
@@ -62,41 +67,49 @@
 }
 
 .passwordGroup {
- display: flex;
-  justify-content: space-between;
-  /* consistent spacing between fields */
+  display: flex;
+  gap: 12px;
   width: 100%;
 }
 
 .passwordGroup input {
-  width: 250px;
-  
-  flex: 1; /* make both fields equal width */
+  flex: 1;
   padding: 12px;
   border: 1px solid #ccc;
-  border-radius: 8px; /* smoother corners */
+  border-radius: 8px;
   font-size: 14px;
-  gap: 12px;
   font-family: 'Inter', sans-serif;
   transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2; /* Ensure input is clickable */
 }
 
 .passwordGroup input:focus {
-  border-color: #2C7A4B; /* primary green */
+  border-color: #2C7A4B;
   outline: none;
   box-shadow: 0 0 0 2px rgba(44, 122, 75, 0.15);
+}
+
+.passwordInput {
+  padding-right: 40px; /* Space for eye icon */
+}
+
+.errorInput {
+  border-color: red;
 }
 
 .error {
   font-size: 0.8rem;
   color: red;
-  margin: 0;
+  margin: 4px 0 0 0;
 }
 
 .success {
   font-size: 0.9rem;
   color: green;
   margin-top: 1rem;
+  text-align: center;
 }
 
 .divider {
@@ -130,6 +143,7 @@
 
 .socialBtn {
   flex: 1;
+  min-width: 120px;
   padding: 10px;
   font-weight: bold;
   border: 1px solid #ccc;
@@ -137,6 +151,10 @@
   cursor: pointer;
   background: white;
   transition: background 0.3s, border-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .socialBtn:hover {
@@ -170,6 +188,7 @@
   height: 100vh;
   object-fit: cover;
 }
+
 .loginRedirect {
   margin-top: 20px;
   font-size: 14px;
@@ -181,8 +200,10 @@
   cursor: pointer;
   text-decoration: underline;
 }
+
 .passwordField {
   position: relative;
+  width: 100%;
 }
 
 .eyeIcon {
@@ -192,23 +213,128 @@
   transform: translateY(-50%);
   cursor: pointer;
   color: #555;
+  font-size: 18px;
+  z-index: 1; /* Below input for clickability */
 }
 
-@media (max-width: 900px) {
+/* Medium screens (tablets) */
+@media (max-width: 1024px) {
+  .container {
+    flex-direction: row;
+  }
+  
+  .formSection {
+    padding: 30px;
+  }
+  
+  .socialBtn {
+    min-width: 100px;
+    font-size: 14px;
+  }
+}
+
+/* Small screens (large phones) */
+@media (max-width: 768px) {
   .container {
     flex-direction: column;
   }
-
+  
   .imageSection {
     order: -1;
-    height: 250px;
+    height: 200px;
+    max-width: 100%;
   }
-
+  
   .imageSection img {
-    height: 250px;
+    height: 200px;
   }
-
+  
   .inputGroup {
     flex-direction: column;
+    gap: 12px;
+  }
+  
+  .passwordGroup {
+    flex-direction: column;
+  }
+  
+  .socialButtons {
+    flex-direction: column;
+  }
+  
+  .socialBtn {
+    width: 100%;
+  }
+  
+  .formSection h2 {
+    font-size: 22px;
+  }
+  
+  .passwordInput {
+    padding-right: 35px; /* Adjusted for smaller screens */
+  }
+  
+  .eyeIcon {
+    font-size: 16px;
+    right: 8px;
+  }
+}
+
+/* Extra small screens (phones) */
+@media (max-width: 480px) {
+  .formSection {
+    padding: 15px;
+  }
+  
+  .formSection h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .imageSection {
+    height: 150px;
+  }
+  
+  .imageSection img {
+    height: 150px;
+  }
+  
+  .divider {
+    margin: 20px 0;
+  }
+  
+  .socialBtn {
+    padding: 8px;
+    font-size: 13px;
+  }
+  
+  .signUpBtn {
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  .passwordInput {
+    padding-right: 30px; /* Further adjusted */
+  }
+  
+  .eyeIcon {
+    font-size: 14px;
+    right: 6px;
+  }
+}
+
+/* Very large screens */
+@media (min-width: 1440px) {
+  .container {
+    justify-content: center;
+  }
+  
+  .formSection {
+    max-width: 700px;
+    padding: 40px;
+  }
+  
+  .imageSection {
+    max-width: 700px;
   }
 }

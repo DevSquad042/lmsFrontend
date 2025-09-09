@@ -26,6 +26,7 @@ export interface Course {
   rating: number; // average rating
   reviews: Review[]; // ✅ now array, not number
   price: number;
+  originalPrice?: number;
   discountPercentage?: number;
   discountExpiry?: string | null;
   discountedPrice?: number;

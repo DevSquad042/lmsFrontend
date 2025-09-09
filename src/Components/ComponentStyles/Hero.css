@@ -163,6 +163,7 @@
 
 /* Text Section */
 .hero-text {
+  margin-top: 70px;
   max-width: 50%;
   font-size: 1rem;
   line-height: 1.6;
@@ -215,7 +216,9 @@
   overflow: hidden;
 }
 
-.main-hero-img {
+.hero-img {
+  margin-top: 50px;
+  margin-left: 100px;
   max-height: 500px;
   width: 100%;
   height: auto;
