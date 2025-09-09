@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from '../Styles/Checkout.module.css';
 import percent from '../assets/logo/percent.png';
-import Header1 from '../Components/shared/Header1';
+import Header2 from '../Components/shared/Header2';
 import Footer from '../Components/Layout/Footer';
 
 const CheckoutPage: React.FC = () => {
@@ -127,7 +127,7 @@ const CheckoutPage: React.FC = () => {
 
   return (
     <>
-      <Header1 />
+      <Header2/>
       <div className={styles.container}>
         <div className={styles.pageTitleRow}>
           <h1 className={styles.pageTitle}>Checkout Page</h1>
