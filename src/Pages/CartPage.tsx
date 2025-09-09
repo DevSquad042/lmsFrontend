@@ -11,11 +11,10 @@ import Header from "../Components/shared/Header2";
 import Footer from "../Components/Layout/Footer";
 import OrderSummaryCard from "../Components/cards/OrderSummaryCard";
 import "../Styles/CartPage.css";
-import {  useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Breadcrumb from "../Components/Breadcrumb";
 
-
+import { courseData } from "../data/coursedata";
 
 
 
@@ -64,12 +63,6 @@ const CartPage: React.FC = () => {
     }
   };
 
-    const breadcrumbLinks = [
-    { label: "Categories", path: "/categories" },
-    { label: "Details", path: "/courses" },
-    { label: "Shopping Cart", path: "/ShoppingCart" },
-  ];
-
   return (
     <div className="shopping-cart-page">
       <Header />
@@ -77,7 +70,16 @@ const CartPage: React.FC = () => {
       <div className="breadcrumb-container">
         <h1 className="cart-title">Shopping Cart</h1>
         <nav className="breadcrumb-nav">
-        <Breadcrumb links={breadcrumbLinks} />
+          <Link to="/categories" className="breadcrumb-link">
+            Categories
+          </Link>{" "}
+          ›{" "}
+
+          <Link to={`/courses/${courseData.id}`} className="breadcrumb-link">
+
+            Details
+          </Link>{" "}
+          › <span className="breadcrumb-current">Shopping Cart</span>
         </nav>
       </div>
 
