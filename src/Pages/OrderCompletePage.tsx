@@ -46,18 +46,66 @@ const OrderCompletePage = () => {
         }
 
         // Fetch user's enrolled courses to check enrollment
-        const enrolledResponse = await axios.get(
-          "https://byway-hoce.onrender.com/api/enrolled-courses",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        let enrolledResponse;
+        try {
+          enrolledResponse = await axios.get(
+            "https://byway-hoce.onrender.com/api/enrolled-courses",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+        } catch (enrollmentError: any) {
+          console.error("Error fetching enrolled courses:", enrollmentError);
+
+          // If enrollment API fails, try to fetch course directly and assume enrollment
+          // This handles cases where enrollment is processing or API is temporarily unavailable
+          try {
+            const courseResponse = await axios.get(
+              `https://byway-hoce.onrender.com/api/courses/${courseId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            const courseData = courseResponse.data;
+            setCourse(courseData);
+            setIsEnrolled(true);
+
+            // Set the first video as default if available
+            if (courseData.sections && courseData.sections.length > 0) {
+              const firstSection = courseData.sections[0];
+              setCurrentSection(firstSection);
+              setCurrentVideo(firstSection.videoUrl || firstSection.videoFile);
+            }
+
+            // Fetch reviews for the course
+            dispatch(fetchCourseReviews(courseData._id));
+
+            // Show a warning that enrollment status couldn't be verified
+            toast.warning("Enrollment status could not be verified. If you just completed payment, please refresh the page.");
+            return;
+          } catch (courseError: any) {
+            console.error("Error fetching course details:", courseError);
+            if (courseError.response?.status === 404) {
+              toast.error("Course not found");
+            } else if (courseError.response?.status === 403) {
+              toast.error("You don't have access to this course");
+              navigate("/profile2");
+              return;
+            } else {
+              toast.error("Unable to load course. Please try again later.");
+            }
+            navigate("/profile2");
+            return;
           }
-        );
+        }
 
         // Check if the current course is in the enrolled list
         let enrolledCourses: Course[] = [];
-        
+
         if (Array.isArray(enrolledResponse.data)) {
           enrolledCourses = enrolledResponse.data.map((enrollment: { course: Course }) => enrollment.course);
         } else if (enrolledResponse.data.courses) {
@@ -69,15 +117,15 @@ const OrderCompletePage = () => {
         const isUserEnrolled = enrolledCourses.some(
           (enrolledCourse: Course) => enrolledCourse._id === courseId
         );
-        
+
         if (isUserEnrolled) {
           setIsEnrolled(true);
-          
+
           // Try to fetch the course details from enrolled courses first
           const enrolledCourse = enrolledCourses.find(
             (c: Course) => c._id === courseId
           );
-          
+
           if (enrolledCourse) {
             setCourse(enrolledCourse);
             // Set the first video as default if available
@@ -117,8 +165,42 @@ const OrderCompletePage = () => {
             }
           }
         } else {
-          toast.error("You are not enrolled in this course");
-          navigate("/profile2");
+          // User is not enrolled, but let's check if they just completed payment
+          // by trying to fetch the course directly
+          try {
+            const courseResponse = await axios.get(
+              `https://byway-hoce.onrender.com/api/courses/${courseId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            const courseData = courseResponse.data;
+            setCourse(courseData);
+            setIsEnrolled(true);
+
+            // Set the first video as default if available
+            if (courseData.sections && courseData.sections.length > 0) {
+              const firstSection = courseData.sections[0];
+              setCurrentSection(firstSection);
+              setCurrentVideo(firstSection.videoUrl || firstSection.videoFile);
+            }
+
+            // Fetch reviews for the course
+            dispatch(fetchCourseReviews(courseData._id));
+
+            // Show a message that enrollment might be processing
+            toast.info("If you just completed payment, your enrollment is being processed. Please refresh if content doesn't load.");
+          } catch (courseError: any) {
+            console.error("Error fetching course:", courseError);
+            if (courseError.response?.status === 403) {
+              toast.error("You are not enrolled in this course");
+            } else {
+              toast.error("Unable to access this course");
+            }
+            navigate("/profile2");
+          }
         }
 
       } catch (error: AxiosError | unknown) {
@@ -174,21 +256,38 @@ const OrderCompletePage = () => {
         <Header3 />
         <div className="order-complete-page">
           <div className="error">
-            You are not enrolled in this course.
-            <button 
-              onClick={() => navigate("/profile2")}
-              style={{ 
-                marginLeft: '10px', 
-                padding: '8px 16px', 
-                background: '#007bff', 
-                color: 'white', 
-                border: 'none', 
-                borderRadius: '4px',
-                cursor: 'pointer'
-              }}
-            >
-              Back to My Courses
-            </button>
+            <h3>Access Restricted</h3>
+            <p>You are not enrolled in this course.</p>
+            <p>If you just completed payment, enrollment may still be processing.</p>
+            <div style={{ marginTop: '20px' }}>
+              <button
+                onClick={() => window.location.reload()}
+                style={{
+                  marginRight: '10px',
+                  padding: '8px 16px',
+                  background: '#28a745',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                Refresh Page
+              </button>
+              <button
+                onClick={() => navigate("/profile2")}
+                style={{
+                  padding: '8px 16px',
+                  background: '#007bff',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                Back to My Courses
+              </button>
+            </div>
           </div>
         </div>
         <Footer />

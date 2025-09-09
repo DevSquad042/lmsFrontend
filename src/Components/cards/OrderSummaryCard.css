@@ -60,3 +60,67 @@
   background: hsl(0, 0%, 40%);
 }
 
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .order-summary {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .summary-title {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+
+  .summary-details {
+    padding: 12px 0;
+    margin-bottom: 15px;
+  }
+
+  .summary-row {
+    font-size: 14px;
+    margin: 8px 0;
+  }
+
+  .summary-row.total-row {
+    font-size: 16px;
+  }
+
+  .checkout-btn {
+    font-size: 15px;
+    padding: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .order-summary {
+    padding: 15px;
+    border-radius: 6px;
+  }
+
+  .summary-title {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .summary-details {
+    padding: 10px 0;
+    margin-bottom: 12px;
+  }
+
+  .summary-row {
+    font-size: 13px;
+    margin: 6px 0;
+  }
+
+  .summary-row.total-row {
+    font-size: 15px;
+  }
+
+  .checkout-btn {
+    font-size: 14px;
+    padding: 12px;
+  }
+}
+

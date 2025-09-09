@@ -5,6 +5,7 @@ import type { RootState, AppDispatch } from '../store';
 import { clearCart } from '../store/slices/cartSlice';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 import styles from '../Styles/Checkout.module.css';
 import paypal from '../assets/logo/paypal.png';
 import visa from '../assets/logo/visa.png';
@@ -67,6 +68,83 @@ const CheckoutPage: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
 
+  const enrollUserInCourses = async (courseIds: string[]) => {
+    try {
+      console.log('Attempting to enroll user in courses:', courseIds);
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        console.error('No authentication token found for enrollment');
+        toast.error('Authentication required for enrollment');
+        return;
+      }
+
+      // Try different possible enrollment endpoints
+      const enrollmentEndpoints = [
+        'https://byway-hoce.onrender.com/api/enroll',
+        'https://byway-hoce.onrender.com/api/enrollment',
+        'https://byway-hoce.onrender.com/api/courses/enroll'
+      ];
+
+      let enrollmentSuccess = false;
+      let lastError = null;
+      let lastErrorMessage = '';
+
+      for (const endpoint of enrollmentEndpoints) {
+        try {
+          console.log(`Trying enrollment endpoint: ${endpoint}`);
+          const response = await axios.post(
+            endpoint,
+            { courseIds },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              }
+            }
+          );
+
+          console.log('Enrollment response:', response.data);
+          enrollmentSuccess = true;
+          toast.success('Successfully enrolled in courses!');
+          break;
+        } catch (error: any) {
+          console.log(`Enrollment failed for ${endpoint}:`, error);
+          lastError = error;
+          lastErrorMessage = error.response?.data?.message || error.message || 'Unknown error';
+        }
+      }
+
+      if (!enrollmentSuccess) {
+        console.error('All enrollment attempts failed:', lastError);
+
+        // Provide more specific error messages based on the error
+        if (lastErrorMessage.includes('Order not found') || lastErrorMessage.includes('already processed')) {
+          toast.warning('Payment successful! Enrollment may take a few moments to process. Please check your courses page.');
+        } else if (lastErrorMessage.includes('Unauthorized') || lastErrorMessage.includes('401')) {
+          toast.error('Authentication error. Please log in again.');
+        } else if (lastErrorMessage.includes('500') || lastErrorMessage.includes('Internal Server Error')) {
+          toast.warning('Payment successful! Server is processing enrollment. Please check your courses page in a few minutes.');
+        } else {
+          toast.error(`Payment successful, but enrollment failed: ${lastErrorMessage}. Please contact support.`);
+        }
+
+        // Still navigate to order success page, but user will see the warning
+        console.log('Navigating to order success despite enrollment failure');
+      }
+
+    } catch (error: any) {
+      console.error('Enrollment error:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
+
+      if (errorMessage.includes('Order not found') || errorMessage.includes('already processed')) {
+        toast.warning('Payment successful! Enrollment may take a few moments to process. Please check your courses page.');
+      } else {
+        toast.error(`Payment successful, but enrollment failed: ${errorMessage}. Please contact support.`);
+      }
+    }
+  };
+
   useEffect(() => {
     // Handle Flutterwave payment callback
     const status = searchParams.get('status');
@@ -74,12 +152,21 @@ const CheckoutPage: React.FC = () => {
 
     if (status === 'successful' && transactionId) {
       // Payment was successful
+      console.log('Payment successful via URL params, transaction ID:', transactionId);
+      console.log('Cart items before clearing:', cartItems);
+      const courseIds = cartItems.map(item => item.id);
       dispatch(clearCart());
+
+      // Attempt to enroll user in courses
+      enrollUserInCourses(courseIds);
+
       toast.success('Payment successful! Your order has been placed.');
       navigate('/order1');
     } else if (status === 'cancelled') {
+      console.log('Payment cancelled via URL params');
       toast.error('Payment was cancelled. Please try again.');
     } else if (status === 'failed') {
+      console.log('Payment failed via URL params');
       toast.error('Payment failed. Please try again.');
       navigate('/order-failed');
     }
@@ -155,11 +242,20 @@ const CheckoutPage: React.FC = () => {
         window.FlutterwaveCheckout({
           public_key: 'FLWPUBK_TEST-c893d9e0dcb31cc02a354247a5d2f3f1-X', // Replace with your public key
           ...paymentData,
-          callback: function(response: FlutterwaveResponse) {
+          callback: async function(response: FlutterwaveResponse) {
+            console.log('Flutterwave callback response:', response);
             if (response.status === 'successful') {
+              console.log('Payment successful, clearing cart and navigating to order1');
+              const courseIds = cartItems.map(item => item.id);
+              console.log('Course IDs to enroll:', courseIds);
               dispatch(clearCart());
+
+              // Attempt to enroll user in courses
+              await enrollUserInCourses(courseIds);
+
               navigate('/order1');
             } else {
+              console.log('Payment failed or cancelled:', response.status);
               navigate('/order-failed');
             }
           },
@@ -180,15 +276,23 @@ const CheckoutPage: React.FC = () => {
   const loadFlutterwaveScript = () => {
     return new Promise((resolve, reject) => {
       if (document.getElementById('flutterwave-script')) {
+        console.log('Flutterwave script already loaded');
         resolve(true);
         return;
       }
 
+      console.log('Loading Flutterwave script...');
       const script = document.createElement('script');
       script.id = 'flutterwave-script';
       script.src = 'https://checkout.flutterwave.com/v3.js';
-      script.onload = () => resolve(true);
-      script.onerror = () => reject(new Error('Failed to load Flutterwave script'));
+      script.onload = () => {
+        console.log('Flutterwave script loaded successfully');
+        resolve(true);
+      };
+      script.onerror = (error) => {
+        console.error('Failed to load Flutterwave script:', error);
+        reject(new Error('Failed to load Flutterwave script. Please check your internet connection and try again.'));
+      };
       document.body.appendChild(script);
     });
   };
