@@ -108,6 +108,7 @@ export const fetchUserReviews = createAsyncThunk(
       getAuthHeader()
     );
     const response = res.data;
+    console.log('fetchUserReviews - Raw response:', response);
     let rawReviews: any[];
     if (Array.isArray(response)) {
       rawReviews = response;
@@ -116,6 +117,7 @@ export const fetchUserReviews = createAsyncThunk(
     } else {
       rawReviews = [];
     }
+    console.log('fetchUserReviews - Raw reviews:', rawReviews);
     // Transform snake_case to camelCase to match Review interface
     const result: Review[] = rawReviews.map((review: any) => ({
       id: review.id,
@@ -125,7 +127,43 @@ export const fetchUserReviews = createAsyncThunk(
       comment: review.comment,
       created_at: review.created_at,
     }));
+    console.log('fetchUserReviews - Transformed reviews:', result);
     return result;
+  }
+);
+// 👉 GET course reviews (requires courseId)
+export const fetchCourseReviews = createAsyncThunk(
+  "reviews/fetchCourseReviews",
+  async (courseId: string) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:3000/api/review/courseReviews/${courseId}`,
+        getAuthHeader()
+      );
+      const response = res.data;
+      let rawReviews: any[];
+      if (response.data && response.data.reviews && Array.isArray(response.data.reviews)) {
+        rawReviews = response.data.reviews;
+      } else if (Array.isArray(response)) {
+        rawReviews = response;
+      } else if (response.data && Array.isArray(response.data)) {
+        rawReviews = response.data;
+      } else {
+        throw new Error("Invalid response structure");
+      }
+      // Transform snake_case to camelCase to match Review interface
+      const result: Review[] = rawReviews.map((review: any) => ({
+        id: review.id,
+        courseId: review.course_id,
+        userId: review.user_id,
+        rating: review.rating,
+        comment: review.comment,
+        created_at: review.created_at,
+      }));
+      return result;
+    } catch (error) {
+      throw error; // Let RTK handle it
+    }
   }
 );
 
@@ -172,6 +210,20 @@ const reviewsSlice = createSlice({
         state.userReviewsLoading = false;
         state.userReviewsError = action.error.message || "Failed to fetch user reviews";
         state.userReviews = []; // Reset to empty array on error
+      })
+
+      // fetchCourseReviews
+      .addCase(fetchCourseReviews.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCourseReviews.fulfilled, (state, action: PayloadAction<Review[]>) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(fetchCourseReviews.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to fetch course reviews";
       });
   },
 });
@@ -182,3 +234,7 @@ export default reviewsSlice.reducer;
 export const selectUserReviews = (state: { reviews: ReviewsState }) => state.reviews.userReviews;
 export const selectUserReviewsLoading = (state: { reviews: ReviewsState }) => state.reviews.userReviewsLoading;
 export const selectUserReviewsError = (state: { reviews: ReviewsState }) => state.reviews.userReviewsError;
+
+export const selectCourseReviews = (state: { reviews: ReviewsState }) => state.reviews.data;
+export const selectReviewsLoading = (state: { reviews: ReviewsState }) => state.reviews.loading;
+export const selectReviewsError = (state: { reviews: ReviewsState }) => state.reviews.error;

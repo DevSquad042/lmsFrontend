@@ -1,11 +1,10 @@
 export interface Review {
   id: string;
-  courseId: number;
-  userId: string;
+  userName: string;
+  userAvatar: string;
   rating: number; // 1..5
-  comment: string;
-
-  created_at: string;
+  reviewText: string;
+  date: string;
 }
 
 export interface ReviewList {

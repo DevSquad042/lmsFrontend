@@ -1,55 +1,13 @@
-
-
 import React from 'react';
 import './ReviewCard.css';
-
-
-
-export interface Review {
-  id: string;
-  userName: string;
-  userAvatar: string;
-  rating: number;
-  date: string;
-  reviewText: string;
-}
+import type { Review } from '../../store/slices/reviewsSlice';
 
 interface ReviewCardProps {
   review: Review;
   className?: string;
 }
 
-
 const ReviewCard: React.FC<ReviewCardProps> = ({ review, className = "" }) => {
-  
-  // Format date to readable format
-  const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    };
-    
-    // Add ordinal suffix to day
-    const day = date.getDate();
-    const ordinalSuffix = getOrdinalSuffix(day);
-    
-    const formattedDate = date.toLocaleDateString('en-US', options);
-    return formattedDate.replace(day.toString(), `${day}${ordinalSuffix}`);
-  };
-
-  // Get ordinal suffix for date (1st, 2nd, 3rd, etc.)
-  const getOrdinalSuffix = (day: number): string => {
-    if (day > 3 && day < 21) return 'th';
-    switch (day % 10) {
-      case 1: return 'st';
-      case 2: return 'nd';
-      case 3: return 'rd';
-      default: return 'th';
-    }
-  };
-
   // Render star rating
   const renderStars = (rating: number): React.ReactElement[] => {
     return Array.from({ length: 5 }, (_, index) => (
@@ -64,39 +22,17 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, className = "" }) => {
 
   return (
     <div className={`review-card2 ${className}`}>
-      {/* User Profile Section */}
-      <div className="review-header">
-        <div className="user-info">
-          <div className="user-avatar-container">
-            <img
-              src={review.userAvatar}
-              alt={`${review.userName}'s profile`}
-              className="user-avatar"
-              loading="lazy"
-            />
-          </div>
-          <div className="user-details">
-            <h3 className="user-name">{review.userName}</h3>
-          </div>
+      {/* Rating Section */}
+      <div className="rating-container">
+        <div className="stars-wrapper">
+          {renderStars(review.rating)}
         </div>
-        
-        {/* Rating and Date Section */}
-        <div className="review-meta">
-          <div className="rating-container">
-            <div className="stars-wrapper">
-              {renderStars(review.rating)}
-            </div>
-            <span className="rating-number">{review.rating}</span>
-          </div>
-          <div className="review-date">
-            Reviewed on {formatDate(review.date)}
-          </div>
-        </div>
+        <span className="rating-number">{review.rating}</span>
       </div>
 
-      {/* Review Text Section */}
+      {/* Comment Section */}
       <div className="review-content">
-        <p className="review-text">{review.reviewText}</p>
+        <p className="review-text">{review.comment}</p>
       </div>
     </div>
   );
