@@ -307,6 +307,53 @@
   .header{
     width: 99.9%;
     margin: 0;
+    height: 60px;
+    align-items: center;
+  }
+  .header-right{
+    margin-top: -3px;
+  }
+  .header-left2{
+    margin-left:6px;
+    width: 50%;
+    /* gap:4px; */
+  }
+  .header-cart{
+    /* visibility: hidden; */
+  }
+  ._cardLink_1a4nq_17{
+    width: 106%;
+    margin-right: 2px;
+  }
+  .top-courses-grid{
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .top-courses-see-all {
+    width: 90px;
+    height: 14px;
+  }
+  .top-instructors-see-all{
+    width: 100px;
+    height: 14px;
+  }
+  .top-instructors-title{
+    /* font-size: 20px; */
+    width: 200px;
+    margin-left: 30px;
+  }
+  .input-forms{
+    display: flex;
+    flex-direction: column;
+  }
+  #imageInput{
+    width: 99%;
+    margin-left: 12px;
+    margin-bottom: 15px;
+  }
+  ._card_1a4nq_1{
+    width: 90%;
   }
   .root{
     width: 100%;
@@ -343,7 +390,21 @@
     border-radius: 20px;
     padding: 1rem;
   }
-
+ .btn-outline{
+    width: 67px;
+    height: 28px;
+    font-size: 0.95rem;
+ }
+  .btn-filled{
+    width: 80px;
+    height: 28px;
+    font-size: 0.95rem;
+ }
+ .header-right{
+  margin-top:-1px;
+  gap:4px;
+  margin-right:6px;
+ }
   .main-hero-img {
     max-height: 280px;
   }
