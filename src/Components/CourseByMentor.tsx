@@ -9,6 +9,7 @@ interface Props {
   mentorId: string | { _id?: string; id?: string };
 }
 
+
 const CoursesByMentor: React.FC<Props> = ({ mentorId }) => {
   console.log('CoursesByMentor - Received mentorId:', mentorId, typeof mentorId);
   const [courses, setCourses] = useState<Course[]>([]);
@@ -22,7 +23,7 @@ const CoursesByMentor: React.FC<Props> = ({ mentorId }) => {
         const mentorIdString = typeof mentorId === 'object' ? mentorId._id || mentorId.id : mentorId;
         console.log('CoursesByMentor - Using mentorIdString:', mentorIdString);
         const response = await axios.get<Course[]>(
-          `http://localhost:3000/api/instructors/${mentorIdString}/courses`
+          `https://byway-hoce.onrender.com/api/instructors/${mentorIdString}/courses`
         );
         setCourses(response.data);
       } catch (err) {

@@ -32,7 +32,7 @@ const initialState: ReviewsState = {
 };
 
 // 👉 API Base URL
-const API_BASE = "http://localhost:3000";
+const API_BASE = "https://byway-hoce.onrender.com";
 
 // 👉 Helper to attach token to headers
 const getAuthHeader = () => {
