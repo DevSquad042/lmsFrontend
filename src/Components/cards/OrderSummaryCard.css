@@ -2,7 +2,7 @@
   width: 300px;
   background: #fff;
   border-radius: 8px;
-  padding: 20px;
+  padding: 15px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
   font-family: "Inter", sans-serif;
 }
@@ -16,7 +16,7 @@
 .summary-details {
   border-top: 1px solid #eee;
   border-bottom: 1px solid #eee;
-  padding: 15px 0;
+  padding: 15px ;
   margin-bottom: 20px;
 }
 

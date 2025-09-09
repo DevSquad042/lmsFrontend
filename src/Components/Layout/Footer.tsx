@@ -11,7 +11,8 @@ const Footer: React.FC = () => {
   return (
     <div className='Footer-container'>
       <div className='Sub-container'>
-        <img src={Logo} alt="Logo" />
+      <img src={Logo} alt="Byway Logo" className="Footer-logo" />
+
         <p>Empowering learners through accessible and engaging online  <br />education.</p>
         <p>Byway is a leading online learning platform dedicated to <br /> providing high-quality, flexible, and affordable educational <br /> experiences.</p>
       </div>
@@ -67,4 +68,5 @@ const Footer: React.FC = () => {
 };
 
 export default Footer;
+
 

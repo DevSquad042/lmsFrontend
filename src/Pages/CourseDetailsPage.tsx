@@ -11,7 +11,6 @@ import RelatedCourses from "../Components/RelatedCourses";
 import TestimonialCard from "../Components/TestimonialsSection";
 import Breadcrumb from "../Components/Breadcrumb";
 import styles from "../Styles/CourseDetailsPage.module.css";
-
 import Header2 from "../Components/shared/Header2";
 import Footer from "../Components/Layout/Footer";
 import { BsAward } from "react-icons/bs";
@@ -61,7 +60,15 @@ const CoursePage: React.FC = () => {
     }
   }, [dispatch, id]);
 
-  if (loading === "pending") return <p>Loading course...</p>;
+  if (loading === "pending") {
+    return (
+      <div className={styles.loadingContainer}>
+        <div className={styles.loadingSpinner}></div>
+        <p className={styles.loadingText}>Loading course...</p>
+      </div>
+    );
+  }
+
   if (error) return <p>Error: {error}</p>;
   if (!selectedCourse) return <p>No course found.</p>;
 
@@ -74,51 +81,38 @@ const CoursePage: React.FC = () => {
   return (
     <>
       <Header2 />
- 
       <main className={styles.main}>
-       
         <div className={styles.coursePage}>
           <div className={styles.mainContent}>
-           <div className={styles.detailsss}>
-            <Breadcrumb links={breadcrumbLinks} />
-             <CourseDetails course={selectedCourse} />
-
-            {/* Tabs */}
-            <div className={styles.tabss}>
-              <a href="#course-details" className="active">Details</a>
-              <a href="#instructor-details">Instructor</a>
-              <a href="#syllabus-details">Courses</a>
-              <a href="#reviews-section">Reviews</a>
+            <div className={styles.detailsss}>
+              <Breadcrumb links={breadcrumbLinks} />
+              <CourseDetails course={selectedCourse} />
+              <div className={styles.tabss}>
+                <a href="#course-details" className="active">Details</a>
+                <a href="#instructor-details">Instructor</a>
+                <a href="#more-courses">Courses</a>
+                <a href="#reviews-section">Reviews</a>
+              </div>
             </div>
-
-           
+            <CourseSidebar course={selectedCourse} />
           </div>
-           <CourseSidebar course={selectedCourse} />
-          </div>
-
-
-           {/* Course Overview */}
-            <section className={styles.courseDetailss}>
-              <h2>Course Overview</h2>
-              <p>
-                This interactive e-learning course is designed to give you a solid foundation in the subject area while keeping learning practical,
-                 engaging, and easy to follow. Through step-by-step modules,
-                 you’ll explore core concepts, proven strategies, and hands-on applications that prepare you for real-world scenarios.
-              </p>
-              <h2>Certificate</h2>
-              <p>
-                At Byway, we understand the significance of formal recognition for your hard work and dedication to continuous learning. <br />Upon successful completion of our courses, you will earn a prestigious certification that not only validates your expertise <br />but also opens doors to new opportunities in your chosen field.
-              </p>
-            </section>
-
-            {/* Instructor */}
-            <section className={styles.instructorDetails}>
-
-              <div className={styles.instructorInfo}>
-                 <h2>Instructor</h2>
+          <section className={styles.courseDetailss}>
+            <h2>Course Overview</h2>
+            <p>
+              This interactive e-learning course is designed to give you a solid foundation in the subject area while keeping learning practical,
+              engaging, and easy to follow. Through step-by-step modules,
+              you’ll explore core concepts, proven strategies, and hands-on applications that prepare you for real-world scenarios.
+            </p>
+            <h2>Certificate</h2>
+            <p>
+              At Byway, we understand the significance of formal recognition for your hard work and dedication to continuous learning. <br />Upon successful completion of our courses, you will earn a prestigious certification that not only validates your expertise <br />but also opens doors to new opportunities in your chosen field.
+            </p>
+          </section>
+          <section className={styles.instructorDetails}>
+            <div className={styles.instructorInfo}>
+              <h2>Instructor</h2>
               <span className="instructor-name">Ronald Richards</span>
               <h2 className="instructor-role">UI/UX Designer</h2>
-
               <div className="instructor-profile">
                 <img
                   src={Image}
@@ -131,19 +125,12 @@ const CoursePage: React.FC = () => {
                   <div><IoPlayOutline size={18} /> <span>15 Courses</span></div>
                 </div>
               </div>
-              <p className={styles.textss}>With over a decade of industry experience, Ronald brings a wealth of practical knowledge to the classroom. He <br /> has played  a pivotal role in designing user-centric interfaces for renowned tech companies, ensuring seamless <br /> brand engaging user experiences.</p>
-              </div>
-             
-                 <CourseContent course={selectedCourse} />
-            </section>
-
-         
-{/*             
-          <div className={styles.sidebar}>
-           </div> */}
-           
-
-
+              <p className={styles.textss}>
+                With over a decade of industry experience, Ronald brings a wealth of practical knowledge to the classroom. He <br /> has played a pivotal role in designing user-centric interfaces for renowned tech companies, ensuring seamless <br /> brand engaging user experiences.
+              </p>
+            </div>
+            <CourseContent course={selectedCourse} />
+          </section>
           <div className={styles.review}>
             <div className="container">
               <section className="reviews-section" id="reviews-section">
@@ -167,11 +154,9 @@ const CoursePage: React.FC = () => {
                       )}
                       <button className={styles.button}>View more</button>
                     </div>
-
                   </aside>
                 </div>
               </section>
-
               <TestimonialCard />
               <RelatedCourses
                 categories={selectedCourse.categories}
@@ -181,7 +166,6 @@ const CoursePage: React.FC = () => {
           </div>
         </div>
       </main>
-
       <Footer />
     </>
   );
