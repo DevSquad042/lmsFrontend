@@ -36,7 +36,7 @@ export const fetchMentorById = createAsyncThunk<Mentor, string>(
   'mentors/fetchMentorById',
   async (id) => {
     const response = await axios.get(
-      `https://byway-hoce.onrender.com/api/instructors/${id}`
+      `http://localhost:3000/api/instructors/${id}`
     );
     return { ...response.data, id: response.data._id } as Mentor;
   }

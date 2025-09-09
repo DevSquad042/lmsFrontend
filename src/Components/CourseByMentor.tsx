@@ -6,10 +6,11 @@ import CourseCard from "./cards/CourseCard";
 import styles from "../Components/ComponentStyles/CoursesByMentor.module.css";
 
 interface Props {
-  mentorId: string;
+  mentorId: string | { _id?: string; id?: string };
 }
 
 const CoursesByMentor: React.FC<Props> = ({ mentorId }) => {
+  console.log('CoursesByMentor - Received mentorId:', mentorId, typeof mentorId);
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,8 +19,10 @@ const CoursesByMentor: React.FC<Props> = ({ mentorId }) => {
     const fetchCourses = async () => {
       try {
         setLoading(true);
+        const mentorIdString = typeof mentorId === 'object' ? mentorId._id || mentorId.id : mentorId;
+        console.log('CoursesByMentor - Using mentorIdString:', mentorIdString);
         const response = await axios.get<Course[]>(
-          `https://byway-hoce.onrender.com/api/courses?mentorId=${mentorId}`
+          `http://localhost:3000/api/instructors/${mentorIdString}/courses`
         );
         setCourses(response.data);
       } catch (err) {

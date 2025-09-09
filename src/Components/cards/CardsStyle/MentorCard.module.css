@@ -139,3 +139,15 @@
 .messageIcon {
   font-size: 16px;
 }
+
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: all 0.3s ease;
+}
+
+.cardLink:hover {
+  text-decoration: none;
+  color: inherit;
+}

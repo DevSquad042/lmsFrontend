@@ -21,6 +21,7 @@ import TeachersPage from "./Pages/TeachersPage";
 import OrderFailed from "./Pages/OrderFailed";
 import NotFoundPage from "./Pages/404page";
 import OrderCompletePage from "./Pages/OrderCompletePage";
+import MentorPage from "./Pages/MentorPage";
 
 // ✅ Toastify
 import { ToastContainer } from "react-toastify";
@@ -61,6 +62,7 @@ function App() {
         <Route path="/categories" element={<CategoryPage />} />
         <Route path="/courses/:id" element={<CoursePage />} /> {/* Use your CoursePage component */}
         <Route path="/teacher/:id" element={<InstructorDetailPage />} />
+        <Route path="/mentors/:mentorId" element={<MentorPage />} />
         
         {/* Protected Routes */}
         <Route
