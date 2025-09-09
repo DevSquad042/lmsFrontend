@@ -31,7 +31,10 @@ const TopInstructors: React.FC = () => {
         <header className="top-instructors-header">
           <h2 className="top-instructors-title">Top Instructors</h2>
         </header>
-        <p>Loading instructors...</p>
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p className="loading-text">Loading instructors...</p>
+        </div>
       </section>
     );
   }

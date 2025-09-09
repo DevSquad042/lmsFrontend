@@ -1,22 +1,26 @@
 .Footer-container {
   background-color: #1E293B;
   color: white;
-  height: 50vh;
   width: 100%;
   display: flex;
   justify-content: space-around;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
-  padding: 30px;
+  padding: 40px 20px;
+  gap: 30px;
 }
 
-.Sub-container {
+/* Footer Sections */
+.Sub-container,
+.Sub-container2 {
   font-weight: 500;
   font-size: 14px;
-  height: 190px;
-  line-height: 200%;
+  line-height: 1.8;
+  min-width: 220px;
+  flex: 1;
 }
-.Sub-container a{
+
+.Sub-container a {
   color: white;
   text-decoration: none;
 }
@@ -25,54 +29,104 @@
   text-decoration: underline;
 }
 
-.Sub-container > h3 {
+.Sub-container > h3,
+.Sub-container2 > h3 {
   font-size: 16px;
+  margin-bottom: 10px;
 }
 
 .Sub-container2 {
-  height: 200px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 12px;
 }
-
 
 .Icons {
-  width: 200px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 18px;
   font-size: 20px;
+  margin-top: 12px;
 }
+
 .Icons a {
   color: white;
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
-/* ✅ Responsive for screens smaller than 768px */
-@media (max-width: 768px) {
+.Icons a:hover {
+  color: #38bdf8; /* light blue hover */
+}
+
+/* ✅ Tablet (≤992px) */
+@media (max-width: 992px) {
+  .Footer-container {
+    justify-content: center;
+    text-align: center;
+    gap: 40px;
+  }
+
+  .Sub-container,
+  .Sub-container2 {
+    flex: 1 1 45%;
+    min-width: 200px;
+  }
+
+  .Icons {
+    justify-content: center;
+  }
+}
+
+/* ✅ Mobile (≤600px) */
+@media (max-width: 600px) {
   .Footer-container {
     flex-direction: column;
-    height: auto;
-    text-align: center;
     align-items: center;
-
+    text-align: center;
+    gap: 25px;
+    padding: 30px 15px;
   }
 
-  .Sub-container, .Sub-container2 {
-    width: 90%;
+  .Sub-container,
+  .Sub-container2 {
+    width: 100%;
     font-size: 13px;
-    height: fit-content;
-    line-height: 2.5;
   }
 
-  .Sub-container > h3 {
-    font-size: 15px;
+  .Sub-container > h3,
+  .Sub-container2 > h3 {
+    font-size: 14px;
   }
 
   .Icons {
     width: 100%;
-    font-size: 18px;
     justify-content: center;
-    gap: 20px;
+    font-size: 18px;
+    flex-wrap: wrap;
+    gap: 15px;
   }
 }
+.Footer-logo {
+  width: 140px;     /* control size */
+  height: auto;     /* keep aspect ratio */
+  margin-bottom: 15px;
+  display: block;
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+  .Footer-logo {
+    width: 120px;
+    margin: 0 auto 15px; /* center */
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .Footer-logo {
+    width: 100px;
+    margin: 0 auto 12px;
+  }
+}
+
