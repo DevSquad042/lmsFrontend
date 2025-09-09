@@ -127,8 +127,6 @@ const Header2: React.FC = () => {
       </div>
 
       <div className="right-header2">
-        <Link to="/" className="header-link2">Teach on Byway</Link>
-
         <div className="icons2">
           <Link to="/profile">
             <IoMdHeartEmpty className="header-heart" />
@@ -152,11 +150,15 @@ const Header2: React.FC = () => {
             <div className="user-avatar">{userInitials}</div>
             {dropdownOpen && (
               <div className="user-dropdown">
-                <Link to="/">Home</Link>
-                <Link to="/profile1">Settings</Link>
-                <Link to="/">
+                <Link to="/" onClick={() => setDropdownOpen(false)}>Home</Link>
+                <Link to="/profile1" onClick={() => setDropdownOpen(false)}>Profile</Link>
+                <Link to="/profile2" onClick={() => setDropdownOpen(false)}>My Courses</Link>
+                <Link to="/profile4" onClick={() => setDropdownOpen(false)}>Teachers</Link>
+                <Link to="/profile5" onClick={() => setDropdownOpen(false)}>Message</Link>
+                <Link to="/profile3" onClick={() => setDropdownOpen(false)}>My Reviews</Link>
+                <div onClick={() => setDropdownOpen(false)}>
                   <LogoutButton onLogoutSuccess={handleLogoutSuccess} />
-                </Link>
+                </div>
               </div>
             )}
           </div>

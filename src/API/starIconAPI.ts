@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { ReviewSummary, ReviewList } from "../Types/rating";
 
-const BASE = "http://localhost:3000/api/review";
+const BASE = "https://byway-hoce.onrender.com/api/review";
 
 export async function getSummary(courseId: string): Promise<ReviewSummary> {
   const { data } = await axios.get(`${BASE}/courseAverage/${courseId}`);
