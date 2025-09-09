@@ -28,8 +28,7 @@ const TeachersPage: React.FC = () => {
 
         const data = Array.isArray(res.data) ? res.data : res.data.data || [];
 
-        // If your API doesn't provide studentsCount, we'll need to fetch it separately
-        // For now, I'll use a placeholder or you can implement a separate API call
+        // Transform the mentor data from API response
         const transformedMentors: Mentor[] = data.map((instructor: any) => ({
           // Core identity fields
           _id: instructor._id,
@@ -39,19 +38,18 @@ const TeachersPage: React.FC = () => {
           name: `${instructor.firstName || ""} ${instructor.lastName || ""}`.trim(),
           email: instructor.email,
           role: instructor.role || "instructor",
-          
+
           // Profile data
           profile: instructor.profile,
           profilePicture: instructor.profile?.profilePicture || "",
-          
+
           // Ratings and reviews
           avgRating: instructor.avgRating ?? 0,
           totalReviews: instructor.totalReviews || 0,
           reviews: instructor.reviews || [],
-          
-          // Student count - you'll need to replace this with actual data from your API
-          // For now using a random number as placeholder
-          studentsCount: Math.floor(Math.random() * 100) + 1, // Replace with actual data
+
+          // Student count - use actual data from API or default to 0
+          studentsCount: instructor.studentsCount || instructor.studentCount || instructor.students || 0,
         }));
 
         setMentors(transformedMentors);
