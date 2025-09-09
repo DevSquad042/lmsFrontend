@@ -87,7 +87,7 @@ const CoursePage: React.FC = () => {
             <div className={styles.tabss}>
               <a href="#course-details" className="active">Details</a>
               <a href="#instructor-details">Instructor</a>
-              <a href="#more-courses">Courses</a>
+              <a href="#syllabus-details">Courses</a>
               <a href="#reviews-section">Reviews</a>
             </div>
 
