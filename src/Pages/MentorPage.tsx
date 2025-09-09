@@ -22,6 +22,7 @@ const MentorPage: React.FC = () => {
 
   const fetchData = () => {
     if (mentorId) {
+      console.log('MentorPage - Fetching mentor with ID:', mentorId);
       dispatch(fetchMentorById(mentorId));
     }
   };
@@ -30,7 +31,12 @@ const MentorPage: React.FC = () => {
     fetchData();
   }, [dispatch, mentorId]);
 
-  if (loading) return <p>Loading mentor...</p>;
+  // Debug logging
+  useEffect(() => {
+    console.log('MentorPage - Current state:', { selectedMentor, loading, error });
+  }, [selectedMentor, loading, error]);
+
+  if (loading === 'pending') return <p>Loading mentor...</p>;
   if (error) return <p>Error: {error}</p>;
   if (!selectedMentor) return <p>No mentor found.</p>;
 

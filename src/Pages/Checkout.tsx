@@ -6,51 +6,23 @@ import { clearCart } from '../store/slices/cartSlice';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from '../Styles/Checkout.module.css';
-import paypal from '../assets/logo/paypal.png';
-import visa from '../assets/logo/visa.png';
 import percent from '../assets/logo/percent.png';
-import Header1 from '../Components/shared/Header1';
+import Header2 from '../Components/shared/Header2';
 import Footer from '../Components/Layout/Footer';
-
-// Define interface for form data
-interface FormData {
-  country: string;
-  state: string;
-  email: string;
-  method: 'flutterwave' | 'card' | 'paypal';
-  cardName: string;
-  cardNumber: string;
-  expiry: string;
-  cvc: string;
-}
-
-// Define interface for cart item (adjust based on your actual cart item structure)
-interface CartItem {
-  id: string;
-  title: string;
-  price: number;
-  quantity: number;
-  image: string;
-}
 
 const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [searchParams] = useSearchParams();
-  const cartItems = useSelector((state: RootState) => state.cart.items) as CartItem[];
+  const cartItems = useSelector((state: RootState) => state.cart.items);
 
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState({
     country: '',
     state: '',
     email: '',
-    method: 'flutterwave', // Default to Flutterwave
-    cardName: '',
-    cardNumber: '',
-    expiry: '',
-    cvc: '',
   });
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const status = searchParams.get('status');
@@ -76,19 +48,7 @@ const CheckoutPage: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const isValidCardNumber = (num: string): boolean => /^\d{16}$/.test(num);
-  const isValidExpiry = (exp: string): boolean => {
-    const [monthStr, yearStr] = exp.split('/').map((s) => s.trim());
-    const month = parseInt(monthStr, 10);
-    const year = parseInt(yearStr, 10);
-    if (!month || !year || month < 1 || month > 12) return false;
-    const now = new Date();
-    const expiryDate = new Date(2000 + year, month);
-    return expiryDate > now;
-  };
-  const isValidCVC = (cvc: string): boolean => /^\d{3,4}$/.test(cvc);
-  const isValidName = (name: string): boolean => /^[A-Za-z\s]{2,}$/.test(name);
-  const isValidEmail = (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleCheckout = async () => {
     console.log('Cart items at checkout time:', cartItems);
@@ -105,18 +65,6 @@ const CheckoutPage: React.FC = () => {
     if (!isValidEmail(formData.email)) {
       toast.error('Please enter a valid email address.');
       return;
-    }
-
-    if (formData.method === 'card') {
-      if (
-        !isValidName(formData.cardName) ||
-        !isValidCardNumber(formData.cardNumber) ||
-        !isValidExpiry(formData.expiry) ||
-        !isValidCVC(formData.cvc)
-      ) {
-        toast.error('Invalid card details. Please check and try again.');
-        return;
-      }
     }
 
     const courseIds = cartItems.map((item) => item.id);
@@ -151,20 +99,20 @@ const CheckoutPage: React.FC = () => {
       });
 
       console.log('Response status:', response.status);
-      const result: { checkoutLink?: string; data?: { link?: string }; message?: string } = await response.json();
+      const result = await response.json();
       console.log('API response:', result);
 
       if (response.ok) {
         const link = result.checkoutLink || result.data?.link;
         if (link) {
-          window.location.href = link;
+          window.location.href = link; // Redirect to Flutterwave's payment page
         } else {
           toast.error('Payment initiation failed: No payment link received.');
         }
       } else {
         toast.error(result.message || 'Payment initiation failed. Please try again.');
       }
-    } catch (error: unknown) {
+    } catch (error) {
       console.error('Payment error:', error);
       toast.error('An error occurred during payment. Please try again.');
     } finally {
@@ -179,7 +127,7 @@ const CheckoutPage: React.FC = () => {
 
   return (
     <>
-      <Header1 />
+      <Header2 />
       <div className={styles.container}>
         <div className={styles.pageTitleRow}>
           <h1 className={styles.pageTitle}>Checkout Page</h1>
@@ -192,6 +140,7 @@ const CheckoutPage: React.FC = () => {
         <div className={styles.layout}>
           <div className={styles.leftCol}>
             <div className={styles.card}>
+              <h3 className={styles.sectionTitle}>Billing Information</h3>
               <div className={styles.formGrid}>
                 <div className={styles.field}>
                   <label>Country</label>
@@ -227,97 +176,9 @@ const CheckoutPage: React.FC = () => {
                   />
                 </div>
               </div>
-              <h3 className={styles.sectionTitle}>Payment Method</h3>
-              <div className={styles.paymentCard}>
-                <div className={styles.radioRow}>
-                  <label className={styles.radio}>
-                    <input
-                      type="radio"
-                      name="method"
-                      value="flutterwave"
-                      checked={formData.method === 'flutterwave'}
-                      onChange={handleChange}
-                    />
-                    <span className={styles.radioLabel}>Flutterwave</span>
-                  </label>
-                </div>
-                <div className={styles.divider} />
-                <div className={styles.radioRow}>
-                  <label className={styles.radio}>
-                    <input
-                      type="radio"
-                      name="method"
-                      value="card"
-                      checked={formData.method === 'card'}
-                      onChange={handleChange}
-                    />
-                    <span className={styles.radioLabel}>Credit/Debit Card</span>
-                  </label>
-                  <div className={styles.cardIcons}>
-                    <img src={visa} alt="visa logo" />
-                  </div>
-                </div>
-                {formData.method === 'card' && (
-                  <>
-                    <div className={styles.formField}>
-                      <label>Name of Card</label>
-                      <input
-                        name="cardName"
-                        value={formData.cardName}
-                        onChange={handleChange}
-                        placeholder="Name on card"
-                        required
-                      />
-                    </div>
-                    <div className={styles.formField}>
-                      <label>Card Number</label>
-                      <input
-                        name="cardNumber"
-                        value={formData.cardNumber}
-                        onChange={handleChange}
-                        placeholder="1234 5678 9012 3456"
-                        required
-                      />
-                    </div>
-                    <div className={styles.rowTwo}>
-                      <div className={styles.formField}>
-                        <label>Expiry Date</label>
-                        <input
-                          name="expiry"
-                          value={formData.expiry}
-                          onChange={handleChange}
-                          placeholder="MM / YY"
-                          required
-                        />
-                      </div>
-                      <div className={styles.formField}>
-                        <label>CVC/CVV</label>
-                        <input
-                          name="cvc"
-                          value={formData.cvc}
-                          onChange={handleChange}
-                          placeholder="CVC"
-                          required
-                        />
-                      </div>
-                    </div>
-                  </>
-                )}
-                <div className={styles.divider} />
-                <label className={styles.radioBottom}>
-                  <input
-                    type="radio"
-                    name="method"
-                    value="paypal"
-                    checked={formData.method === 'paypal'}
-                    onChange={handleChange}
-                  />
-                  <span className={styles.radioLabel}>PayPal</span>
-                  <span className={styles.paypalIcon}>
-                    <img src={paypal} alt="paypal logo" />
-                  </span>
-                </label>
-              </div>
+              <p className={styles.paymentInfo}>
+                You will be redirected to Flutterwave to complete your payment securely.
+              </p>
             </div>
           </div>
           <aside className={styles.rightCol}>
@@ -331,7 +192,7 @@ const CheckoutPage: React.FC = () => {
                       <div className={styles.category}>Course</div>
                       <div className={styles.title}>{item.title}</div>
                       <div className={styles.meta}>Qty: {item.quantity}</div>
-                      <div className={styles.price}>${(item.price * item.quantity).toFixed(2)}</div>
+                      <div className={styles.price}>NGN{(item.price * item.quantity).toFixed(2)}</div>
                     </div>
                   </div>
                 ))
@@ -354,7 +215,7 @@ const CheckoutPage: React.FC = () => {
               </div>
               <div className={styles.line}>
                 <span>Discount</span>
-                <span className={styles.neg}>${discount.toFixed(2)}</span>
+                <span className={styles.neg}>NGN{discount.toFixed(2)}</span>
               </div>
               <div className={styles.line}>
                 <span>Tax</span>
